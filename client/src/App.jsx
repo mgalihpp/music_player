@@ -1,6 +1,7 @@
 import Navbar from "./components/Navbar";
 import Main from "./components/Main";
 import { Footer } from "./components/Footer";
+import AudioPlayerComponent from './components/AudioPlayerComponents';
 
 function App() {
   return (
@@ -14,7 +15,7 @@ function App() {
         </main>
       </div>
       <footer className="bg-zinc-900 border-t border-zinc-700 p-6 flex items-center justify-between">
-        <Footer />
+        <AudioPlayerComponent/>
       </footer>
     </div>
   );

@@ -1,43 +1,21 @@
-import { useEffect, useState } from "react";
+import Navbar from "./components/Navbar";
+import Main from "./components/Main";
+import { Footer } from "./components/Footer";
 
 function App() {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await fetch("http://localhost:5000/music", {
-          method: "GET",
-        });
-        if (!res.ok) {
-          throw new Error(`HTTP Error! Status: ${res.status}`);
-        }
-        const musicData = await res.json();
-        setData(musicData);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
-
   return (
-    <div>
-      {loading ? (
-        <div>Loading...</div>
-      ) : (
-        data.map((music) => (
-          <div key={music[0]}>
-            {/* Render your music data here */}
-            <p>ID: {music[0]}</p>
-            <p>File Path: {music[1]}</p>
-            <p>Artist: {music[2]}</p>
-          </div>
-        ))
-      )}
+    <div className="h-screen flex flex-col overflow-hidden">
+      <div className="flex flex-1 overflow-hidden">
+        <aside className="w-72 bg-zinc-950 p-6">
+          <Navbar />
+        </aside>
+        <main className="flex-1 p-6 overflow-x-auto">
+          <Main />
+        </main>
+      </div>
+      <footer className="bg-zinc-900 border-t border-zinc-700 p-6 flex items-center justify-between">
+        <Footer />
+      </footer>
     </div>
   );
 }

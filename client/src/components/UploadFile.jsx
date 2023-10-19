@@ -16,7 +16,7 @@ const UploadFile = () => {
       const res = await fetch("http://localhost:5000/upload", {
         method: "POST",
         body: formData,
-      });
+      })
       const data = await res.data;
       return data;
     } catch (error) {

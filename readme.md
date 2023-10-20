@@ -4,6 +4,10 @@
     <img src='./docs/preview.png' alt='preview'>
 </p>
 
+## Stack
+![React JS](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![FLASK](https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white)
+
 ## Installation
 
 1. Install Python and pip

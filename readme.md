@@ -7,6 +7,10 @@
 ## Installation
 
 1. Install Python and pip
+```txt
+python ver. 3.9
+
+```
 
 2. Clone the repository to your local machine:
 ```
@@ -32,4 +36,3 @@ CREATE DATABASE music_streaming
 6. Run application:
 ```
 flask --app app run
-```

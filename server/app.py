@@ -80,8 +80,22 @@ def get_all_music():
     #mendapat semua file dari database 
     cursor.execute("SELECT * FROM music_list")
     musics = cursor.fetchall()
-    return musics
+    return jsonify(musics);
 
+@app.route('/<int:music_id>', methods=['GET'])
+def play_music(music_id):
+
+    print(music_id)
+    cursor.execute("SELECT music_name, path FROM music_list WHERE id = %s", (music_id,))
+    music = cursor.fetchone()
+
+    if music is not None:
+        music_path = os.path.normpath(music[1])
+        music_path = music_path.replace("\\", "/")
+
+        return jsonify({'path': music_path})
+    else:
+        return "Song not found"
 
 if __name__ == "__main__":
     app.run(debug=True)

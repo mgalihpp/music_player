@@ -1,6 +1,30 @@
-import { ChevronLeft, ChevronRight, Play } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import MusicCard from "./MusicCard";
+import { useEffect, useState } from "react";
 
 const Main = () => {
+  const [musicData, setMusicData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch("http://localhost:5000/music"); // Replace with your Flask server URL and endpoint
+        if (response.ok) {
+          const data = await response.json();
+          setMusicData(data);
+          setIsLoading(false);
+        } else {
+          console.error("Failed to fetch data");
+        }
+      } catch (error) {
+        console.error("Error: " + error);
+      }
+    }
+
+    fetchData();
+  }, []);
+
   return (
     <>
       <div className="flex items-center gap-4">
@@ -12,53 +36,18 @@ const Main = () => {
         </button>
       </div>
 
-      <h1 className="text-4xl font-semibold mt-10">Good Night!</h1>
+      <h1 className="text-4xl font-semibold mt-10">Let&apos;s Play a Music!</h1>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-4">
-        <div className="bg-white/5 group rounded flex items-center gap-4 overflow-hidden hover:bg-white/20 transition-all">
-          <img src="/img/download.jpeg" alt="cover" width={104} height={104} />
-          <strong>Close The Sun</strong>
-          <button className="flex items-center justify-center pl-2.5 p-2 rounded-full bg-green-600 text-black ml-auto mr-8 invisible group-hover:visible hover:scale-105 transition-all group">
-            <Play />
-          </button>
-        </div>
-        <div className="bg-white/5 group rounded flex items-center gap-4 overflow-hidden hover:bg-white/20 transition-all">
-          <img src="/img/download.jpeg" alt="cover" width={104} height={104} />
-          <strong>Close The Sun</strong>
-          <button className="flex items-center justify-center pl-2.5 p-2 rounded-full bg-green-600 text-black ml-auto mr-8 invisible group-hover:visible hover:scale-105 transition-all group">
-            <Play />
-          </button>
-        </div>
-        <div className="bg-white/5 group rounded flex items-center gap-4 overflow-hidden hover:bg-white/20 transition-all">
-          <img src="/img/download.jpeg" alt="cover" width={104} height={104} />
-          <strong>Close The Sun</strong>
-          <button className="flex items-center justify-center pl-2.5 p-2 rounded-full bg-green-600 text-black ml-auto mr-8 invisible group-hover:visible hover:scale-105 transition-all group">
-            <Play />
-          </button>
-        </div>
-        <div className="bg-white/5 group rounded flex items-center gap-4 overflow-hidden hover:bg-white/20 transition-all">
-          <img src="/img/download.jpeg" alt="cover" width={104} height={104} />
-          <strong>Close The Sun</strong>
-          <button className="flex items-center justify-center pl-2.5 p-2 rounded-full bg-green-600 text-black ml-auto mr-8 invisible group-hover:visible hover:scale-105 transition-all group">
-            <Play />
-          </button>
-        </div>
-      </div>
-
-      <h1 className="font-semibold text-2xl mt-10">Hello World!</h1>
-
-      <div className="grid grid-cols-2 sm:grid-cols-6 gap-4 mt-4">
-        <div className="bg-white/5 p-2 rounded-md hover:bg-white/10 flex flex-col gap-2">
-          <img
-            src="/img/download.jpeg"
-            className="w-full"
-            alt="cover"
-            width={120}
-            height={120}
-          />
-          <strong className="font-semibold">Close The Sun</strong>
-          <span className="text-xs text-zinc-400">TheFatRat</span>
-        </div>
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+        {isLoading ? (
+          <div>Loading...</div>
+        ) : (
+          musicData.map((music, index) => (
+            <div key={index}>
+              <MusicCard musicName={music[2]} musicPath={music[1]}/>
+            </div>
+          ))
+        )}
       </div>
     </>
   );

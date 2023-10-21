@@ -45,7 +45,7 @@ def validate_form_data(request):
     return music_file, music_name, music_artist, music_image
 
 def save_music_to_server(file, filename):
-    #metode untuk menyimpan file ke folder "static/file" di dalam server
+    #metode untuk menyimpan file music ke folder "static/file" di dalam server
     file_path = os.path.join(UPLOAD_FOLDER, filename)
     file.save(file_path)
     return file_path

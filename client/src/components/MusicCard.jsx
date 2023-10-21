@@ -14,7 +14,7 @@ const MusicCard = (props) => {
 
   return (
     <div className="bg-white/5 group rounded flex items-center gap-4 overflow-hidden hover:bg-white/20 transition-all">
-      <img src={`http://localhost:5000/${musicImage}`} alt="cover" width={104} height={104} style={{minWidth: '104px', minHeight:'104px', objectFit: 'cover', maxWidth: '104px', maxHeight:'104px'}}/>
+      <img loading="lazy" src={`http://localhost:5000/${musicImage}`} alt="cover" width={104} height={104} style={{minWidth: '104px', minHeight:'104px', objectFit: 'cover', maxWidth: '104px', maxHeight:'104px'}}/>
       <Link to={'/music/' + musicName}>
       <strong className="hover:underline">{musicName}</strong>
       </Link>

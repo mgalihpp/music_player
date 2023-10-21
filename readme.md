@@ -10,9 +10,10 @@
 
 ## Installation
 
-1. Install Python and pip
+1. Install Python and node js
 ```txt
 python ver. 3.9
+node -v
 
 ```
 

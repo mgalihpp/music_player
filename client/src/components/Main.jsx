@@ -25,6 +25,7 @@ const Main = () => {
         <button className="p-1 rounded-full bg-black/20" aria-label="right">
           <ChevronRight />
         </button>
+        <img src="/vite.svg" alt="logo" />
       </div>
 
       <h1 className="text-4xl font-semibold mt-10">Let&apos;s Play a Music!</h1>

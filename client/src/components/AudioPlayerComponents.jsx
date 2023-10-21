@@ -8,7 +8,6 @@ import { Link } from "react-router-dom";
 
 const AudioPlayerComponent = () => {
   const { selectedAudio } = useContext(AudioContext);
-  console.log(selectedAudio);
 
   return (
     <div className="flex items-center gap-3 w-full">
@@ -43,7 +42,6 @@ const AudioPlayerComponent = () => {
             ? `http://localhost:5000/${selectedAudio.musicPath}`
             : ""
         }
-        onPlay={() => console.log("onPlay")}
         // other props here
       />
     </div>

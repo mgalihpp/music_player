@@ -8,7 +8,7 @@ export function useMusicContext() {
 }
 
 const timestamp = Date.now();
-const url = `http://localhost:5000/music?timestamp=${timestamp}`;
+const url = `http://localhost:5000/music?t=${timestamp}`;
 
 
 export function MusicProvider({ children }) {

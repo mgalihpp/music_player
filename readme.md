@@ -23,7 +23,7 @@ git clone https://github.com/mgalihpp/music_player.git
 
 3. Create Virtual Enviroment for Python:
 ```
-cd/server
+cd server
 Python -m venv .venv
 .venv\Scripts\activate
 ```
@@ -45,7 +45,7 @@ flask --app app run
 
 7. Run Client Application
 ```
-cd/client
+cd client
 ```
 
 8. Install dependecies and Run Application:

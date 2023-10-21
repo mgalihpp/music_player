@@ -1,13 +1,13 @@
 import { useContext } from "react";
 import AudioPlayer from "react-h5-audio-player";
-import "react-h5-audio-player/lib/styles.css";
 import { AudioContext } from "../Context/AudioContext";
 import { Link } from "react-router-dom";
+// import "react-h5-audio-player/lib/styles.css";
 // import 'react-h5-audio-player/lib/styles.less' Use LESS
 // import 'react-h5-audio-player/src/styles.scss' Use SASS
 
 const AudioPlayerComponent = () => {
-  const { selectedAudio } = useContext(AudioContext);
+  const { selectedAudio, setIsPause } = useContext(AudioContext);
 
   return (
     <div className="flex items-center gap-3 w-full">
@@ -21,7 +21,13 @@ const AudioPlayerComponent = () => {
           alt="cover"
           width={56}
           height={56}
-          style={{objectFit: "cover", minHeight: '56px', minWidth: '56px', maxWidth: '104px', maxHeight:'104px'}}
+          style={{
+            objectFit: "cover",
+            minHeight: "56px",
+            minWidth: "56px",
+            maxWidth: "104px",
+            maxHeight: "104px",
+          }}
         />
         <div className="flex flex-col">
           <Link to={selectedAudio ? `/music${selectedAudio.musicName}` : ""}>
@@ -37,6 +43,9 @@ const AudioPlayerComponent = () => {
       <AudioPlayer
         className="w-full"
         autoPlay
+        onPlay={() => setIsPause(false)}
+        onPause={() => setIsPause(true)}
+        onEnded={() => setIsPause(true)}
         src={
           selectedAudio
             ? `http://localhost:5000/${selectedAudio.musicPath}`

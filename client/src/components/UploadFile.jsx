@@ -74,7 +74,7 @@ const UploadFile = () => {
         />
         <label htmlFor="music_name">Music Name</label>
         <input
-          className="border-2 text-black"
+          className="border-2 text-white"
           type="text"
           name="music_name"
           id="music_name"
@@ -84,7 +84,7 @@ const UploadFile = () => {
         />
         <label htmlFor="music_artist">Artist Name</label>
         <input
-          className="border-2 text-black"
+          className="border-2 text-white"
           type="text"
           name="music_artist"
           id="music_artist"
@@ -94,7 +94,7 @@ const UploadFile = () => {
         />
         <button
           type="submit"
-          className="bg-white text-black px-6 py-1 rounded-md"
+          className="bg-white text-white px-6 py-1 rounded-md"
           onClick={() => setIsFetching(true)}
         >
           Submit

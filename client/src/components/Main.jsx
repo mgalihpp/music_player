@@ -16,6 +16,8 @@ const Main = () => {
     }
   }, [isFetching, setIsFetching, isLoading, fetchData]);
 
+  const sortedMusicData = [...musicData].sort((a, b) => a[2].localeCompare(b[2]));
+
   return (
     <>
       <div className="flex items-center gap-4">
@@ -46,7 +48,7 @@ const Main = () => {
         ) : musicData.length === 0 ? (
           <h1>No Musics Found</h1>
         ) : (
-          musicData.map((music, index) => (
+          sortedMusicData.map((music, index) => (
             <div key={index}>
               <MusicCard
                 musicName={music[2]}

@@ -24,7 +24,7 @@ body {
 
 .playing__bar {
   display: inline-block;
-  background: white;
+  background: rgb(34 197 94);
   width: 30%;
   height: 100%;
   animation: up-and-down 1.3s ease infinite alternate;

@@ -94,7 +94,7 @@ const UploadFile = () => {
         />
         <button
           type="submit"
-          className="bg-white text-white px-6 py-1 rounded-md"
+          className="bg-white text-black px-6 py-1 rounded-md"
           onClick={() => setIsFetching(true)}
         >
           Submit

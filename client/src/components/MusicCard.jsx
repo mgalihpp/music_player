@@ -24,7 +24,7 @@ const MusicCard = (props) => {
     <div className="bg-white/5 group rounded flex items-center gap-4 overflow-hidden hover:bg-white/20 transition-all">
       <img
         loading="lazy"
-        src={`http://localhost:5000/${musicImage}`}
+        src={musicImage === "" ? "/img/download.jpeg" : `http://localhost:5000/${musicImage}`}
         alt="cover"
         width={104}
         height={104}

@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, make_response
 from flask_cors import CORS
 from flask_mysqldb import MySQL
 import os
@@ -26,21 +26,23 @@ cursor= db.cursor()
 
 @app.route('/')
 def index():
-    return jsonify({'message': 'ok'})
+    return jsonify({'message': 'server ok'})
 
-#membuat route upload file mp3
+#membuat route folder upload file mp3
 UPLOAD_FOLDER = 'static/files'
+UPLOAD_IMG = 'static/img'
 
 #membuat handler untuk upload file 
 def validate_form_data(request):
     music_file = request.files.get('music_file')
+    music_image = request.files.get('music_image')
     music_name = request.form.get('music_name')
     music_artist = request.form.get('music_artist')
 
-    if not (music_file and music_name and music_artist):
+    if not (music_file and music_name and music_artist and music_image):
         return None  # data tidak valid
 
-    return music_file, music_name, music_artist
+    return music_file, music_name, music_artist, music_image
 
 def save_music_to_server(file, filename):
     #metode untuk menyimpan file ke folder "static/file" di dalam server
@@ -48,10 +50,17 @@ def save_music_to_server(file, filename):
     file.save(file_path)
     return file_path
 
-def insert_music_into_db(file_path, music_name, music_artist):
+def save_image_to_server(file, image_name):
+    #metode untuk menyimpan image ke folder "static/image" di dalam server
+    image_path = os.path.join(UPLOAD_IMG, image_name)
+    file.save(image_path)
+    return image_path
+
+
+def insert_music_into_db(file_path, music_name, music_artist, music_image):
     #TODO : memasukkan form data ke dalam database 
-    SQL_QUERY = 'INSERT INTO music_list (path, music_name) VALUES(%s, %s)'
-    VALUES = (file_path, music_name)
+    SQL_QUERY = 'INSERT INTO musics (path, name, artist, image) VALUES(%s, %s, %s, %s)'
+    VALUES = (file_path, music_name, music_artist, music_image)
     
     #menjalankan sql
     cursor.execute(SQL_QUERY, VALUES)
@@ -66,21 +75,30 @@ def upload_music():
         return 'Invalid form data', 400
     
     #mendatapatkan file,name dari form data
-    music_file, music_name, music_artist = form_data
+    music_file, music_name, music_artist, music_image = form_data
     file_path = save_music_to_server(music_file, music_file.filename)
+    image_path = save_image_to_server(music_image, music_image.filename)
 
     #metode untuk menyimpan form data ke dalam database
-    insert_music_into_db(file_path, music_name, music_artist)
+    insert_music_into_db(file_path, music_name, music_artist, image_path)
 
-    return jsonify({'message': 'Music uploaded successfully', 'file_url': '/static/music/' + music_file.filename}), 201
+    return jsonify({'message': 'Music uploaded successfully', 'file_url': '/static/music/' + music_file.filename, 'file_name': music_name, 'image_url': '/static/img' + music_image.filename }), 201
 
 @app.route('/music', methods=['GET'])
 def get_all_music():
 
     #mendapat semua file dari database 
-    cursor.execute("SELECT * FROM music_list")
+    cursor.execute("SELECT * FROM musics")
     musics = cursor.fetchall()
-    return jsonify(musics);
+    # Create a JSON response
+    response = make_response(jsonify(musics))
+
+    # Set Cache-Control headers to prevent caching
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+
+    return response
 
 @app.route('/<int:music_id>', methods=['GET'])
 def play_music(music_id):

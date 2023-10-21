@@ -1,27 +1,28 @@
 import { Home, PlusSquare, Search } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   return (
     <>
       <nav className="space-y-6">
-        <a
-          href=""
+        <Link
+          to='/'
           className="flex items-center text-sm text-zinc-200 gap-3 font-semibold"
         >
           <Home /> Home
-        </a>
-        <a
-          href=""
+        </Link>
+        <Link
+          to='/search'
           className="flex items-center text-sm text-zinc-200 gap-3 font-semibold"
         >
           <Search /> Search
-        </a>
-        <a
-          href=""
+        </Link>
+        <Link
+          to='/upload'
           className="flex items-center text-sm text-zinc-200 gap-3 font-semibold"
         >
           <PlusSquare /> Create
-        </a>
+        </Link>
       </nav>
 
       <hr className="border border-zinc-700 mt-5" />

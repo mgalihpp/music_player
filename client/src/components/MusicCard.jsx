@@ -4,6 +4,7 @@ import { AudioContext } from "../Context/AudioContext";
 import { Link } from "react-router-dom";
 
 const MusicCard = (props) => {
+  // eslint-disable-next-line react/prop-types
   const { musicName, musicImage } = props;
   const { selectedAudio, setSelectedAudio, isPause, setIsPause } =
     useContext(AudioContext);

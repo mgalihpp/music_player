@@ -24,6 +24,7 @@ git clone https://github.com/mgalihpp/music_player.git
 3. Create Virtual Enviroment for Python:
 ```
 cd/server
+Python -m venv .venv
 .venv\Scripts\activate
 ```
 

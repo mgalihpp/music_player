@@ -7,7 +7,7 @@ import mysql.connector
 
 app = Flask(__name__)
 app.secret_key = 'secret21'
-CORS(app, origins=['http://localhost:5173'])
+CORS(app, resources={r"/music": {"origins": "http://127.0.0.1:5173", "methods": ["GET"]}, r"/upload": {"origins": "http://127.0.0.1:5173", "methods": ["POST"]}})
 
 #koneksi ke database my sql
 db = mysql.connector.connect(
@@ -114,6 +114,10 @@ def play_music(music_id):
         return jsonify({'path': music_path})
     else:
         return "Song not found"
+    
+@app.route('/searchq?=<int:music_id>')
+def search_music(music_id):
+    print()
 
 if __name__ == "__main__":
     app.run(debug=True)

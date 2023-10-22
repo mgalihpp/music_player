@@ -10,6 +10,7 @@ import { AudioProvider } from "./Context/AudioContext.jsx";
 import AudioPlayerComponent from "./components/AudioPlayerComponents.jsx";
 import { MusicProvider } from "./Context/MusicContext.jsx";
 import { UploadProvider } from "./Context/UploadContext.jsx";
+import SearchMusic from "./components/SearchMusic.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -30,6 +31,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
                       path="/music/:musicName"
                       Component={SingleMusicCard}
                     />
+                    <Route path="/search" Component={SearchMusic} />
                   </Routes>
                 </main>
               </div>

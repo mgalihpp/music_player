@@ -1,5 +1,6 @@
 // MusicContext.js
 import { createContext, useContext, useState } from "react";
+import { PropTypes } from "prop-types";
 
 const MusicContext = createContext();
 
@@ -41,3 +42,7 @@ export function MusicProvider({ children }) {
     </MusicContext.Provider>
   );
 }
+
+MusicProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+};

@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from "react";
+import { PropTypes } from 'prop-types';
 
 const UploadContext = createContext();
 
@@ -14,4 +15,8 @@ export function UploadProvider({ children }) {
       {children}
     </UploadContext.Provider>
   );
+}
+
+UploadProvider.propTypes = {
+  children: PropTypes.node.isRequired
 }

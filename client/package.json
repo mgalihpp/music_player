@@ -12,14 +12,13 @@
   },
   "dependencies": {
     "lucide-react": "^0.288.0",
+    "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-h5-audio-player": "^3.9.0",
     "react-router-dom": "^6.17.0"
   },
   "devDependencies": {
-    "@types/react": "^18.2.15",
-    "@types/react-dom": "^18.2.7",
     "@vitejs/plugin-react-swc": "^3.3.2",
     "autoprefixer": "^10.4.16",
     "eslint": "^8.45.0",

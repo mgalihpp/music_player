@@ -23,6 +23,7 @@ const MusicCard = (props) => {
   return (
     <div className="bg-white/5 group rounded flex items-center gap-4 overflow-hidden hover:bg-white/20 transition-all">
       <img
+        title={musicName}
         loading="lazy"
         src={musicImage === "" ? "/img/download.jpeg" : `http://localhost:5000/${musicImage}`}
         alt="cover"
@@ -51,6 +52,7 @@ const MusicCard = (props) => {
       </div>
 
       <button
+        title="Play Music?"
         onClick={handlePlayClick}
         className={`items-center justify-center pl-4 p-3 rounded-full bg-green-600 text-black ml-auto mr-8 ${
           isCurrentSelected && isPause

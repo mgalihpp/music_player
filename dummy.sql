@@ -19,7 +19,7 @@ INSERT INTO `musics` (`id`,`path`,`name`,`artist`,`image`) VALUES (14,'static/fi
 INSERT INTO `musics` (`id`,`path`,`name`,`artist`,`image`) VALUES (15,'static/files\\y2mate.com - Keane  Somewhere Only We Know Official Music Video.mp3','Somewhere Only We Know','Keane','static/img\\somwhereonlyweknow.jpg');
 INSERT INTO `musics` (`id`,`path`,`name`,`artist`,`image`) VALUES (16,'static/files\\y2mate.com - Anggi Marito  Tak Segampang Itu Official Lyric Video.mp3','Tak Segampang Itu','Anggi Marito','static/img\\tak-segampang-itu.jpeg');
 INSERT INTO `musics` (`id`,`path`,`name`,`artist`,`image`) VALUES (17,'static/files\\y2mate.com - HER  Best Part Lyrics Ft Daniel Caesar.mp3','Best Part','H.E.R','static/img\\best-partjpg.jpg');
-INSERT INTO `musics` (`id`,`path`,`name`,`artist`,`image`) VALUES (18,'static/files\\y2mate.com - Celina Sharma  Harris J  247 Official Video.mp3','24/7','Celina Sharma & Harris J','static/img\\24-7.jpg');
+INSERT INTO `musics` (`id`,`path`,`name`,`artist`,`image`) VALUES (18,'static/files\\y2mate.com - Celina Sharma  Harris J  247 Official Video.mp3','247','Celina Sharma & Harris J','static/img\\24-7.jpg');
 INSERT INTO `musics` (`id`,`path`,`name`,`artist`,`image`) VALUES (19,'static/files\\y2mate.com - FIFTY FIFTY  Cupid Twin Version Lyrics.mp3','Cupid','Fifty Fifty','static/img\\cupid.jpg');
 INSERT INTO `musics` (`id`,`path`,`name`,`artist`,`image`) VALUES (20,'static/files\\y2mate.com - Old Love  Yuji  Putri Dahlia Official Lyrics Video.mp3','Old Love','Putri Dahlia','static/img\\old-love.jpg');
 INSERT INTO `musics` (`id`,`path`,`name`,`artist`,`image`) VALUES (21,'static/files\\y2mate.com - Heavenly.mp3','Heavenly','Cigarettes After Sex','static/img\\heavenly.jpeg');

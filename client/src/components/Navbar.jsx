@@ -4,24 +4,27 @@ import { Link } from "react-router-dom";
 const Navbar = () => {
   return (
     <>
-      <nav className="space-y-6">
+      <nav className="space-y-4">
         <Link
+          title="Home"
           to='/'
-          className="flex items-center text-sm text-zinc-200 gap-3 font-semibold"
+          className="flex items-center text-base text-zinc-200 gap-3 font-semibold rounded-md p-3.5 hover:bg-white/5"
         >
           <Home /> Home
         </Link>
         <Link
+          title="Search?"
           to='/search'
-          className="flex items-center text-sm text-zinc-200 gap-3 font-semibold"
+          className="flex items-center text-base text-zinc-200 gap-3 font-semibold rounded-md p-3.5 hover:bg-white/5"
         >
           <Search /> Search
         </Link>
         <Link
+          title="Upload Music?"
           to='/upload'
-          className="flex items-center text-sm text-zinc-200 gap-3 font-semibold"
+          className="flex items-center text-base text-zinc-200 gap-3 font-semibold rounded-md p-3.5 hover:bg-white/5"
         >
-          <PlusSquare /> Create
+          <PlusSquare /> Upload
         </Link>
       </nav>
 

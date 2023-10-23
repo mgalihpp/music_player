@@ -10,7 +10,7 @@ const AudioPlayerComponent = () => {
   const { selectedAudio, setIsPause } = useContext(AudioContext);
 
   return (
-    <div className="flex items-center gap-3 w-full">
+    <div className="flex items-center gap-3 w-full p-6">
       <div className="w-72 flex items-center gap-2">
         <img
           src={

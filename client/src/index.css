@@ -3,28 +3,96 @@
 @tailwind utilities;
 
 :root {
-    color-scheme: dark;
-    scroll-behavior: smooth;
-  }
+  color-scheme: dark;
+  scroll-behavior: smooth;
+}
 
-body {
-    @apply bg-zinc-900 text-zinc-50
+html {
+  transition: background 5s ease-in;
+  transition: background-color 1s ease;
+}
+
+.dark {
+  @apply bg-zinc-950 text-zinc-50;
+}
+
+.gradient {
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 195, 255, 0.1),
+    rgba(148, 0, 211, 0.1),
+    rgba(0, 0, 255, 0.1),
+    rgba(255, 0, 230, 0.1)
+  );
+  background-size: 400% 400%;
+  animation: gradient 10s ease-in-out infinite;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 100%;
+  }
+  50% {
+    background-position: 100% 0%;
+  }
+  100% {
+    background-position: 0% 100%;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 16px;
+}
+
+/* Track */
+/* ::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgb(24 24 27 / 1);
+} */
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background-color: rgb(44, 44, 46);
+}
+
+.button-transition {
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+.music-card {
+  transition: transform 0.8s ease-in-out; /* Add a CSS transition */
 }
 
 .playing {
-  background: rgba(255,255,255,.1);
+  background: rgba(255, 255, 255, 0.1);
   width: 2rem;
   height: 2rem;
-  border-radius: .3rem;
+  border-radius: 0.3rem;
   justify-content: space-between;
   align-items: flex-end;
-  padding: .5rem;
+  padding: 0.5rem;
   box-sizing: border-box;
+}
+
+.playing-ui {
+  background: rgba(0, 0, 0, 0.3);
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.3rem;
+  gap: 1px;
+  padding: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  box-sizing: border-box;
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  z-index: 999;
 }
 
 .playing__bar {
   display: inline-block;
-  background: rgb(34 197 94);
+  background-color: rgb(34 197 94 / 1);
   width: 30%;
   height: 100%;
   animation: up-and-down 1.3s ease infinite alternate;
@@ -48,24 +116,23 @@ body {
   10% {
     height: 30%;
   }
-  
+
   30% {
     height: 100%;
   }
-  
+
   60% {
     height: 50%;
   }
-  
+
   80% {
     height: 75%;
   }
-  
+
   100% {
     height: 60%;
   }
 }
-
 
 .rhap_container {
   box-sizing: border-box;
@@ -75,7 +142,6 @@ body {
   font-family: inherit;
   width: 100%;
   padding: 10px 15px;
-  background-color: rgb(24 24 27 / 1);
   box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2);
 }
 .rhap_container:focus:not(:focus-visible) {
@@ -158,7 +224,7 @@ body {
   z-index: 0;
   width: 100%;
   height: 5px;
-  background-color: rgb(228 228 231);;
+  background-color: rgb(228 228 231);
   border-radius: 2px;
 }
 
@@ -166,7 +232,7 @@ body {
   height: 100%;
   position: absolute;
   z-index: 2;
-  background-color: rgb(34 197 94);
+  background-color: rgb(34 197 94 / 1);
   border-radius: 2px;
 }
 
@@ -190,7 +256,7 @@ body {
   height: 20px;
   margin-left: -10px;
   top: -8px;
-  background: rgb(226 232 240);;
+  background: rgb(226 232 240);
   border-radius: 50px;
   box-shadow: rgba(134, 134, 134, 0.5) 0 0 5px;
 }
@@ -303,7 +369,7 @@ body {
   height: 100%;
   position: absolute;
   z-index: 2;
-  background-color: rgb(34 197 94);
+  background-color: rgb(34 197 94 / 1);
   border-radius: 2px;
 }
 

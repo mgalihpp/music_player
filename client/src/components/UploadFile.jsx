@@ -16,6 +16,7 @@ const UploadFile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    SetIsSubmit(true);
 
     try {
       const formData = new FormData();
@@ -30,7 +31,6 @@ const UploadFile = () => {
         },
         body: formData,
       });
-      SetIsSubmit(true);
       return res;
     } catch (error) {
       console.log(error);
@@ -43,12 +43,13 @@ const UploadFile = () => {
       setImage(null);
       setFileName("");
       setArtist("");
+      SetIsSubmit(false);
     }
   };
 
   return (
     <>
-      <div className="flex justify-center h-full mx-auto w-[600px] rounded-xl items-center bg-zinc-950 text-white">
+      <div className="flex justify-center h-full mx-auto w-[600px] rounded-xl items-center bg-white/5 text-white">
         <form
           onSubmit={handleSubmit}
           className="flex flex-col items-center justify-center gap-2"
@@ -57,7 +58,7 @@ const UploadFile = () => {
             Upload Music
           </label>
           <input
-            className="border-2 text-white"
+            className="border-2 text-white bg-transparent"
             type="file"
             name="music_file"
             id="music_file"
@@ -68,7 +69,7 @@ const UploadFile = () => {
           />
           <label htmlFor="music_image">Upload Image</label>
           <input
-            className="border-2 text-white"
+            className="border-2 text-white bg-transparent"
             type="file"
             name="music_image"
             id="music_image"
@@ -79,7 +80,7 @@ const UploadFile = () => {
           />
           <label htmlFor="music_name">Music Name</label>
           <input
-            className="border-2 text-white"
+            className="border-2 text-white bg-transparent"
             type="text"
             name="music_name"
             id="music_name"
@@ -89,7 +90,7 @@ const UploadFile = () => {
           />
           <label htmlFor="music_artist">Artist Name</label>
           <input
-            className="border-2 text-white"
+            className="border-2 text-white bg-transparent"
             type="text"
             name="music_artist"
             id="music_artist"
@@ -99,7 +100,7 @@ const UploadFile = () => {
           />
           <button
             type="submit"
-            className="bg-white text-black px-6 py-1 rounded-md"
+            className="bg-white hover:bg-white/90 font-bold text-black px-6 py-2 rounded-md"
             onClick={() => setIsFetching(true)}
             disabled={isSubmit}
           >

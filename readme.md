@@ -37,6 +37,17 @@ pip install -r requirements.txt
 5. Create a MYSQL Database:
 ```
 CREATE DATABASE music_streaming
+
+use music_streaming
+
+CREATE TABLE musics (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `path` varchar(1000) DEFAULT NULL,
+  `name` varchar(1000) DEFAULT NULL,
+  `artist` varchar(3000) DEFAULT NULL,
+  `image` varchar(1000) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 ```
 
 6. Run application:

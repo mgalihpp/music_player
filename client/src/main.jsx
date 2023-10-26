@@ -25,8 +25,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
                   <aside className="w-72 p-0 pr-2">
                     <Navbar />
                   </aside>
-                  <main className="flex-1 rounded-md bg-white/5 overflow-x-auto relative">
-                    {/* <div className="gradient-aa absolute top-0 w-screen h-screen opacity-20"/> */}
+                  <main className="flex-1 rounded-t-md bg-white/5 overflow-x-auto relative">
                     <Routes>
                       <Route path="/" Component={App} />
                       <Route path="/upload" Component={UploadFile} />
@@ -38,7 +37,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
                     </Routes>
                   </main>
                 </div>
-                <footer className="bg-white/5 border-t border-zinc-700 p-0 flex items-center justify-between">
+                <footer className="bg-white/5 border-t border-zinc-700 p-0 flex items-center justify-between rounded-b-md">
                   <AudioPlayerComponent />
                 </footer>
               </div>

@@ -75,6 +75,7 @@ def insert_music_into_db(file_path, music_name, music_artist, music_image):
     cursor.execute(SQL_QUERY, VALUES)
     db.commit()
 
+
 @app.post("/upload")
 def upload_music():
     # metode untuk mendapatkan file dari form data
@@ -114,10 +115,10 @@ def get_all_music():
     for music in musics:
         music_info = {
             "id": music[0],
-            "path": music[1],
-            "name": music[2],
-            "artist": music[3],
-            "image": music[4],
+            "musicPath": music[1],
+            "musicName": music[2],
+            "musicArtist": music[3],
+            "musicImage": music[4],
         }
         music_list.append(music_info)
 
@@ -220,25 +221,30 @@ def get_playlist_music(playlist_id):
 
     return jsonify({"playlist": music_list})
 
-@app.route("/search", methods=["GET"])
+
+@app.get("/search")
 def search_music():
-    search_query = request.args.get("q")  # Get the search query from the URL query parameter "q"
+    search_query = request.args.get(
+        "q"
+    )  # mendapatkan pencarian query dari the URL query parameter "q"
 
     if not search_query:
         return jsonify({"message": "Please provide a search query."}), 400
 
     # Perform a search in the database based on the search_query
-    cursor.execute("SELECT * FROM musics WHERE name LIKE %s", ("%" + search_query + "%",))
+    cursor.execute(
+        "SELECT * FROM musics WHERE name LIKE %s", ("%" + search_query + "%",)
+    )
     search_results = cursor.fetchall()
 
     music_list = []
     for music in search_results:
         music_info = {
             "id": music[0],
-            "path": music[1],
-            "name": music[2],
-            "artist": music[3],
-            "image": music[4],
+            "musicPath": music[1],
+            "musicName": music[2],
+            "musicArtist": music[3],
+            "musicImage": music[4],
         }
         music_list.append(music_info)
 

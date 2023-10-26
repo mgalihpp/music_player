@@ -19,9 +19,9 @@ html {
 .gradient {
   background: linear-gradient(
     to bottom,
-    rgba(0, 195, 255, 0.1),
-    rgba(148, 0, 211, 0.1),
+    rgba(0, 225, 255, 0.1),
     rgba(0, 0, 255, 0.1),
+    rgba(208, 0, 255, 0.1),
     rgba(255, 0, 230, 0.1)
   );
   background-size: 400% 400%;
@@ -78,7 +78,7 @@ html {
   width: 2rem;
   height: 2rem;
   border-radius: 0.3rem;
-  gap: 1px;
+  gap: 0.5px;
   padding: 0.5rem;
   display: flex;
   justify-content: space-between;
@@ -142,7 +142,7 @@ html {
   font-family: inherit;
   width: 100%;
   padding: 10px 15px;
-  box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2);
+  /* box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2); */
 }
 .rhap_container:focus:not(:focus-visible) {
   outline: 0;

@@ -40,3 +40,4 @@ INSERT INTO `musics` (`id`,`path`,`name`,`artist`,`image`) VALUES (35,'static/fi
 INSERT INTO `musics` (`id`,`path`,`name`,`artist`,`image`) VALUES (36,'static/files\\y2mate.com - YKWIM.mp3','YKWIM','Yot Club','static/img\\ykwim.jpeg');
 INSERT INTO `musics` (`id`,`path`,`name`,`artist`,`image`) VALUES (37,'static/files\\Rizky Febian  Jangan Bawa Perasaan Bercanda Official Lyric Video.mp3','Bercanda','Rizkuy Febian','static/img\\Screenshot 2023-10-22 200522.png');
 INSERT INTO `musics` (`id`,`path`,`name`,`artist`,`image`) VALUES (38,'static/files\\Justin Bieber - Pray.mp3','Pray','Justin Bieber','static/img\\justinbieberpray.jpg');
+INSERT INTO `musics` (`id`,`path`,`name`,`artist`,`image`) VALUES (39,'static/files\\y2mate.com - Charlie Puth  Cheating on You Official Video.mp3', 'Cheating on You', 'Charlie Puth', 'static/img\\cheating-on-you.jpg');

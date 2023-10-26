@@ -1,7 +1,7 @@
 # PREVIEW
 
 <p align='center'>
-    <img src='./docs/preview4.png' alt='preview'>
+    <img src='./docs/preview5.png' alt='preview'>
 </p>
 
 ## Stack

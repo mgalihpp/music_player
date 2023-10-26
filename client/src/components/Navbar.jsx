@@ -1,5 +1,5 @@
 import { Home, Library, PlusSquare, Search, Plus } from "lucide-react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import PlaylistMusic from "./PlaylistMusic";
 
 const Navbar = () => {
@@ -27,14 +27,24 @@ const Navbar = () => {
   );
 };
 
+// `flex items-center text-base text-zinc-100 gap-4 font-bold rounded-md p-3.5 hover:bg-white/5`
+
 const navLink = (title, to, icon) => (
-  <Link
+  <NavLink
     title={title}
     to={to}
-    className="flex items-center text-base text-zinc-100 gap-4 font-bold rounded-md p-3.5 hover:bg-white/5"
+    className={({ isActive, isPending, isTransitioning }) =>
+      [
+        isPending ? "pending" : "",
+        isActive ? "bg-white/5 transition-all ease-in-out duration-300" : "",
+        isTransitioning ? "transitioning" : "",
+      ].join(
+        " flex items-center text-base text-zinc-100 gap-4 font-bold rounded-md p-3.5 hover:bg-white/5 "
+      )
+    }
   >
     {icon} {title}
-  </Link>
+  </NavLink>
 );
 
 const playlistHeader = (title) => (

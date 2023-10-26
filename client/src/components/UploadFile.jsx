@@ -48,6 +48,7 @@ const UploadFile = () => {
       setFileName("");
       setArtist("");
       setIsFetching(false);
+      setPreviewImage(null);
       setTimeout(() => {
         SetIsSubmit(false);
       }, 1000);

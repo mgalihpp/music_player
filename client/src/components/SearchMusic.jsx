@@ -83,7 +83,7 @@ const SearchMusic = () => {
   };
 
   return (
-    <div className="p-4">
+    <div className="px-6 py-4">
       <TopNavbar>
         <div className="flex items-center justify-center bg-white/5 rounded-full p-2 relative focus-within:ring-2 ring-white">
           <Search className="text-gray-500" />

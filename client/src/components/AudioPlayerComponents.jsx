@@ -1,13 +1,30 @@
-import { useContext } from "react";
+import { useEffect, useRef, useState } from "react";
 import AudioPlayer from "react-h5-audio-player";
-import { AudioContext } from "../Context/AudioContext";
+import { useAudioContext } from "../Context/AudioContext";
 import { Link } from "react-router-dom";
-// import "react-h5-audio-player/lib/styles.css";
-// import 'react-h5-audio-player/lib/styles.less' Use LESS
-// import 'react-h5-audio-player/src/styles.scss' Use SASS
+import { SkipBack, SkipForward } from "lucide-react";
 
 const AudioPlayerComponent = () => {
-  const { selectedAudio, setIsPause } = useContext(AudioContext);
+  const { selectedAudio, setIsPause, playNext, playPrevious } =
+    useAudioContext();
+  const audioRef = useRef(null);
+  const [isAudioReady, setIsAudioReady] = useState(false);
+
+  useEffect(() => {
+    if (selectedAudio) {
+      if (isAudioReady) {
+        audioRef.current.audio.current.currentTime = 0;
+        setIsPause(false);
+      }
+    }
+  }, [selectedAudio, setIsPause, isAudioReady]);
+
+  const handleAudioReady = () => {
+    setIsAudioReady(true);
+  };
+
+  const musicName = selectedAudio?.musicName || "-";
+  const musicArtist = selectedAudio?.musicArtist || "-";
 
   return (
     <div className="flex items-center gap-3 w-full p-6">
@@ -15,7 +32,7 @@ const AudioPlayerComponent = () => {
         <img
           src={
             selectedAudio
-              ? `http://localhost:5000/${selectedAudio.musicImage}`
+              ? `http://127.0.0.1:5000/${selectedAudio.musicImage}`
               : "/img/download.jpeg"
           }
           alt="cover"
@@ -30,29 +47,48 @@ const AudioPlayerComponent = () => {
           }}
         />
         <div className="flex flex-col">
-          <Link to={selectedAudio ? `/music${selectedAudio.musicName}` : ""}>
-            <strong className="font-normal hover:underline transition-all">
-              {selectedAudio ? selectedAudio.musicName : "Music"}
+          <Link to={selectedAudio ? `/music/${musicName}` : ""}>
+            <strong className="font-semibold hover:underline text-sm transition-all">
+              {musicName}
             </strong>
           </Link>
-          <span className="text-xs text-zinc-400">
-            {selectedAudio ? selectedAudio.musicArtist : "-"}
-          </span>
+          <span className="text-xs text-zinc-400">{musicArtist}</span>
         </div>
       </div>
-      <AudioPlayer
-        className="w-full"
-        autoPlay
-        onPlay={() => setIsPause(false)}
-        onPause={() => setIsPause(true)}
-        onEnded={() => setIsPause(true)}
-        src={
-          selectedAudio
-            ? `http://localhost:5000/${selectedAudio.musicPath}`
-            : ""
-        }
-        // other props here
-      />
+      <div className="w-full flex flex-row justify-center items-center gap-2">
+        <AudioPlayer
+          ref={audioRef}
+          className="w-full"
+          autoPlay={true}
+          onPlay={() => setIsPause(false)}
+          onPause={() => setIsPause(true)}
+          onEnded={playNext}
+          onLoadedData={handleAudioReady}
+          src={
+            selectedAudio
+              ? `http://127.0.0.1:5000/${selectedAudio.musicPath}`
+              : ""
+          }
+        />
+        <div className="flex flex-row items-center justify-center">
+          <button
+            onClick={playPrevious}
+            className="w-10 h-6 my-auto p-1"
+            aria-label="back"
+            title="Previous"
+          >
+            <SkipBack fill="white" />
+          </button>
+          <button
+            onClick={playNext}
+            className="w-10 h-6 my-auto p-1 "
+            aria-label="next"
+            title="Next"
+          >
+            <SkipForward fill="white" />
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

@@ -126,9 +126,9 @@ def get_all_music():
     response = make_response(jsonify({"musics": music_list}))
 
     # Set Cache-Control headers to prevent caching
-    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-    response.headers["Pragma"] = "no-cache"
-    response.headers["Expires"] = "0"
+    # response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    # response.headers["Pragma"] = "no-cache"
+    # response.headers["Expires"] = "0"
 
     return response, 200
 
@@ -149,108 +149,128 @@ def get_all_music():
 #         return "Song not found"
 
 
-@app.delete("/delete/<int:music_id>")
+@app.route("/delete/<int:music_id>", methods=["DELETE"])
 def delete_music(music_id):
-    # return print(music_id)
-    cursor.execute("DELETE FROM musics WHERE id = %s", (music_id,))
+    try:
+        cursor.execute("DELETE FROM musics WHERE id = %s", (music_id,))
+        db.commit()
+        return jsonify({"message": f"Music with ID {music_id} has been deleted"})
+    except Exception as e:
+        return (
+            jsonify(
+                {
+                    "message": f"Failed to delete music with ID {music_id}",
+                    "error": str(e),
+                }
+            ),
+            500,
+        )
 
-    db.commit()
 
-    return jsonify({"message": str(music_id) + " " + "has been deleted"})
-
-
-# membuat route untuk membuat playlist baru
 @app.route("/playlist/add", methods=["POST"])
 def add_playlist():
     if request.method == "POST":
-        name = request.form.get("playlist_name")
-        if name is not None:
-            cursor.execute("INSERT INTO playlists (name) VALUES (%s)", (name,))
-            db.commit()
-            return jsonify(
-                {"message": "Created Playlist Successfully", "Playlist": name}
+        try:
+            name = request.form.get("playlist_name")
+            if name is not None:
+                cursor.execute("INSERT INTO playlists (name) VALUES (%s)", (name,))
+                db.commit()
+                return jsonify(
+                    {"message": "Created Playlist Successfully", "Playlist": name}
+                )
+            else:
+                return jsonify({"message": "Missing 'playlist_name' in form data"}, 400)
+        except Exception as e:
+            return (
+                jsonify({"message": "Failed to create playlist", "error": str(e)}),
+                500,
             )
-        else:
-            return jsonify({"message": "Missing 'playlist_name' in form data"}, 400)
 
 
-# membuat route menambah music ke playlist
 @app.route("/playlist/addmusic/<int:music_id>/<int:playlist_id>", methods=["POST"])
 def add_music_to_playlist(music_id, playlist_id):
-    # music_id = request.form.get('music_id')
-    # playlist_id = request.form.get('playlist_id')
-    # # Insert the association into the music_playlist table
-    cursor.execute(
-        "INSERT INTO music_playlist (music_id, playlist_id) VALUES (%s, %s)",
-        (music_id, playlist_id),
-    )
-    db.commit()
-    return jsonify(
-        {
-            "message": "Adding music with ID "
-            + str(music_id)
-            + "to playlist with ID "
-            + str(playlist_id)
-        }
-    )
+    try:
+        cursor.execute(
+            "INSERT INTO music_playlist (music_id, playlist_id) VALUES (%s, %s)",
+            (music_id, playlist_id),
+        )
+        db.commit()
+        return jsonify(
+            {
+                "message": f"Adding music with ID {music_id} to playlist with ID {playlist_id}"
+            }
+        )
+    except Exception as e:
+        return (
+            jsonify({"message": "Failed to add music to playlist", "error": str(e)}),
+            500,
+        )
 
 
-# membuat route mendapatkan semua playlist dan music diplaylist
 @app.route("/playlist/music/<int:playlist_id>", methods=["GET"])
 def get_playlist_music(playlist_id):
-    query = """
-    SELECT m.name AS music_name, m.path, m.image, p.name AS playlist_name
-    FROM music_playlist AS mp
-    JOIN musics AS m ON mp.music_id = m.id
-    JOIN playlists AS p ON mp.playlist_id = p.id
-    WHERE mp.playlist_id = %s
-    """
+    try:
+        query = """
+        SELECT m.name AS music_name, m.path, m.image, p.name AS playlist_name
+        FROM music_playlist AS mp
+        JOIN musics AS m ON mp.music_id = m.id
+        JOIN playlists AS p ON mp.playlist_id = p.id
+        WHERE mp.playlist_id = %s
+        """
 
-    cursor.execute(query, (playlist_id,))
-    result = cursor.fetchall()
+        cursor.execute(query, (playlist_id,))
+        result = cursor.fetchall()
 
-    music_list = []
-    for row in result:
-        music_info = {
-            "music_name": row[0],  # Access the first column (music_name)
-            "path": row[1],  # Access the second column (path)
-            "image": row[2],  # Access the third column (image)
-            "playlist_name": row[3],  # Access the fourth column (playlist_name)
-        }
-        music_list.append(music_info)
+        music_list = []
+        for row in result:
+            music_info = {
+                "music_name": row[0],
+                "path": row[1],
+                "image": row[2],
+                "playlist_name": row[3],
+            }
+            music_list.append(music_info)
 
-    return jsonify({"playlist": music_list})
+        return jsonify({"playlist": music_list})
+    except Exception as e:
+        return (
+            jsonify({"message": "Failed to retrieve playlist music", "error": str(e)}),
+            500,
+        )
 
 
 @app.get("/search/music")
 def search_music():
-    search_query = request.args.get(
-        "n"
-    )  # mendapatkan pencarian query dari the URL query parameter "q"
+    search_query = request.args.get("n")
 
     if not search_query:
         return jsonify({"message": "Please provide a search query."}), 400
 
-    # Perform a search in the database based on the search_query
-    cursor.execute(
-        "SELECT * FROM musics WHERE name LIKE %s", ("%" + search_query + "%",)
-    )
-    search_results = cursor.fetchall()
+    try:
+        cursor.execute(
+            "SELECT * FROM musics WHERE name LIKE %s", ("%" + search_query + "%",)
+        )
+        search_results = cursor.fetchall()
 
-    music_list = []
-    for music in search_results:
-        music_info = {
-            "id": music[0],
-            "musicPath": music[1],
-            "musicName": music[2],
-            "musicArtist": music[3],
-            "musicImage": music[4],
-        }
-        music_list.append(music_info)
+        music_list = []
+        for music in search_results:
+            music_info = {
+                "id": music[0],
+                "musicPath": music[1],
+                "musicName": music[2],
+                "musicArtist": music[3],
+                "musicImage": music[4],
+            }
+            music_list.append(music_info)
 
-    response = make_response(jsonify({"results": music_list}))
+        response = make_response(jsonify({"results": music_list}))
+        return response, 201
+    except Exception as e:
+        return jsonify({"message": "Search failed", "error": str(e)}), 500
 
-    return response, 201
+
+if __name__ == "__main__":
+    app.run(debug=True)
 
 
 if __name__ == "__main__":

@@ -1,9 +1,15 @@
 const SkelMusicCard = () => {
   return (
-    <div aria-label="skeleton" className="bg-white/5 animate-pulse w-96 h-28 rounded flex items-center gap-4 overflow-hidden transition-all">
-      <div className="animate-pulse bg-white/20 w-20 h-20 ml-4 mr-2 p-0 rounded-sm flex items-center justify-center" />
-      <div className="animate-pulse bg-white/20 w-40 h-8 mr-auto rounded-lg flex items-center justify-center" />
-    </div>
+    <>
+      <div
+        aria-label="skeleton"
+        className="bg-white/5 animate-pulse w-[180px] h-[250px] flex items-center flex-col gap-2 justify-center rounded-md"
+      >
+        <div className="bg-white/10 w-[150px] h-[180px] rounded-md"></div>
+        <div className="bg-white/10 animate-pulse w-36 h-3 rounded-md"></div>
+        <div className="bg-white/10 animate-pulse w-36 h-3 rounded-md"></div>
+      </div>
+    </>
   );
 };
 

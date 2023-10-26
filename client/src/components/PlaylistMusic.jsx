@@ -10,7 +10,10 @@ const PlaylistMusic = ({ children }) => {
     >
       <div className="relative">
         <img src="/img/download.jpeg" className="rounded" />
-        <button className="absolute flex items-center justify-center bottom-2 transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 right-1 pl-3.5 p-2 rounded-full bg-green-500/80 text-black button-transition hover:scale-110 hover:bg-green-500">
+        <button
+          aria-label="Play"
+          className="absolute flex items-center justify-center bottom-2 transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 right-1 pl-3.5 p-2 rounded-full bg-green-500/80 text-black button-transition hover:scale-110 hover:bg-green-500"
+        >
           <Play fill="black" />
         </button>
       </div>

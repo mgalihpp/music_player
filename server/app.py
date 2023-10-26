@@ -10,9 +10,9 @@ app.secret_key = "secret123"
 CORS(
     app,
     resources={
-        r"/musics": {"origins": "http://127.0.0.1:5173", "methods": ["GET"]},
-        r"/search": {"origins": "http://127.0.0.1:5173", "methods": ["GET"]},
-        r"/upload": {"origins": "http://127.0.0.1:5173", "methods": ["POST"]},
+        r"/musics": {"origins": "*", "methods": ["GET"]},
+        r"/search/music": {"origins": "*", "methods": ["GET"]},
+        r"/upload": {"origins": "*", "methods": ["POST"]},
     },
 )
 
@@ -222,10 +222,10 @@ def get_playlist_music(playlist_id):
     return jsonify({"playlist": music_list})
 
 
-@app.get("/search")
+@app.get("/search/music")
 def search_music():
     search_query = request.args.get(
-        "q"
+        "n"
     )  # mendapatkan pencarian query dari the URL query parameter "q"
 
     if not search_query:

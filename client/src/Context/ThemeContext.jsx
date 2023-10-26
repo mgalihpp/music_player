@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { PropTypes } from "prop-types";
 
 export function useTheme() {
@@ -9,7 +9,6 @@ const ThemeContext = createContext();
 
 export function ThemeProvider({ children }) {
   const [currentTheme, setCurrentTheme] = useState("dark");
-  const [view, setView] = useState(false);
 
   const toggleTheme = () => {
     setCurrentTheme((prevTheme) =>
@@ -17,14 +16,12 @@ export function ThemeProvider({ children }) {
     );
   };
 
-  const toggleView = () => {
-    setView((prev) => !prev);
-  };
+  useEffect(() => {
+    document.documentElement.className = currentTheme;
+  }, [currentTheme]);
 
   return (
-    <ThemeContext.Provider
-      value={{ currentTheme, toggleTheme, view, toggleView }}
-    >
+    <ThemeContext.Provider value={{ currentTheme, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   );

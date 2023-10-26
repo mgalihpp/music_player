@@ -38,6 +38,7 @@ const AudioPlayerComponent = () => {
           alt="cover"
           width={56}
           height={56}
+          className="rounded-md"
           style={{
             objectFit: "cover",
             minHeight: "56px",

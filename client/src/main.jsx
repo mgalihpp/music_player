@@ -3,15 +3,15 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import App from "./App.jsx";
 import "./index.css";
-import UploadFile from "./components/UploadFile.jsx";
-import SingleMusicCard from "./components/SingleMusicCard.jsx";
 import Navbar from "./components/Navbar.jsx";
 import { AudioProvider } from "./Context/AudioContext.jsx";
 import AudioPlayerComponent from "./components/AudioPlayerComponents.jsx";
 import { MusicProvider } from "./Context/MusicContext.jsx";
 import { UploadProvider } from "./Context/UploadContext.jsx";
-import SearchMusic from "./components/SearchMusic.jsx";
 import { ThemeProvider } from "./Context/ThemeContext.jsx";
+import UploadFile from "./pages/UploadFile.jsx";
+import SearchMusic from "./pages/SearchMusic";
+import SingleMusicCard from "./components/SingleMusicCard";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>

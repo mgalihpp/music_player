@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { Music, Search } from "lucide-react";
-import TopNavbar from "./TopNavbar";
+import TopNavbar from "../components/TopNavbar";
 import { Link } from "react-router-dom";
 import { useMusicContext } from "../Context/MusicContext";
-import SkelMusicCard from "./Skeleton/SkelMusicCard";
-import MusicCard from "./MusicCard";
+import SkelMusicCard from "../components/Skeleton/SkelMusicCard";
+import MusicCard from "../components/MusicCard";
 
 const SearchMusic = () => {
   const { searchResults, searchMusic, isLoading, setIsLoading } =
@@ -67,7 +67,7 @@ const SearchMusic = () => {
     }
 
     if (searchResults?.length === 0) {
-      return <h1>No Music Found.</h1>;
+      return <h1 className="flex text-semibold text-xl whitespace-nowrap">No Music Found for {query}.</h1>;
     }
 
     return searchResults?.map((music, index) => (

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { SortAsc, SortDesc } from "lucide-react";
-import MusicCard from "./MusicCard";
-import SkelMusicCard from "./Skeleton/SkelMusicCard";
-import TopNavbar from "./TopNavbar";
-import { useMusicContext } from "../Context/MusicContext";
+import MusicCard from "../../components/MusicCard";
+import SkelMusicCard from "../../components/Skeleton/SkelMusicCard";
+import TopNavbar from "../../components/TopNavbar";
+import { useMusicContext } from "../../Context/MusicContext";
 
 const Main = () => {
   const { musicData, isLoading } = useMusicContext();

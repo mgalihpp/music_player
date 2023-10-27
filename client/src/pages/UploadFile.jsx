@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { useUploadContext } from "../Context/UploadContext";
-import TopNavbar from "./TopNavbar";
+import TopNavbar from "../components/TopNavbar";
 import { Play } from "lucide-react";
 
 const UploadFile = () => {

@@ -36,10 +36,12 @@ const navLink = (title, to, icon) => (
     className={({ isActive, isPending, isTransitioning }) =>
       [
         isPending ? "pending" : "",
-        isActive ? "bg-white/5 transition-all ease-in-out duration-300" : "",
+        isActive
+          ? "bg-white/5  transition-all ease-in-out duration-300"
+          : "",
         isTransitioning ? "transitioning" : "",
       ].join(
-        " flex items-center text-base text-zinc-100 gap-4 font-bold rounded-md p-3.5 hover:bg-white/5 "
+        " flex items-center text-base text-zinc-400 hover:text-zinc-100 gap-4 transition-all ease-in-out duration-300 font-bold rounded-md p-3.5 hover:bg-white/5 "
       )
     }
   >

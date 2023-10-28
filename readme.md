@@ -2,6 +2,7 @@
 
 <p align='center'>
     <img src='./docs/preview5.png' alt='preview'>
+    <img src='./docs/preview6.png' alt='preview'>
 </p>
 
 ## Stack

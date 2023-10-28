@@ -28,13 +28,13 @@ export function AudioProvider({ children }) {
     if (currentIndex !== -1 && currentIndex < musicData.length - 1) {
       const nextIndex = currentIndex + 1;
       const nextMusic = musicData[nextIndex];
-      setSelectedAudio({ ...nextMusic, isPause: false });
+      playAudio(nextMusic);
       setCurrentIndex(nextIndex);
     }
     if (currentIndex >= musicData.length - 1) {
       const nextIndex = 0;
       const resetMusic = musicData[nextIndex];
-      setSelectedAudio({ ...resetMusic, isPause: false });
+      playAudio(resetMusic);
       setCurrentIndex(nextIndex);
     }
   };
@@ -43,7 +43,7 @@ export function AudioProvider({ children }) {
     if (currentIndex > 0) {
       const previousIndex = currentIndex - 1;
       const previousMusic = musicData[previousIndex];
-      setSelectedAudio({ ...previousMusic, isPause: false });
+      playAudio(previousMusic);
       setCurrentIndex(previousIndex);
     }
   };

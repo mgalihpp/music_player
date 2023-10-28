@@ -9,7 +9,8 @@ const MusicCard = (props) => {
   const { musicName, musicImage, musicArtist } = props;
   const {
     selectedAudio,
-    setSelectedAudio,
+    playAudio,
+    pauseAudio,
     isPause,
     currentIndex,
     setCurrentIndex,
@@ -24,13 +25,13 @@ const MusicCard = (props) => {
 
   const handlePlayClick = () => {
     if (selectedAudio?.musicName === musicName) {
-      if (selectedAudio.isPause) {
-        setSelectedAudio({ ...selectedAudio, isPause: false });
+      if (isPause) {
+        playAudio(selectedAudio);
       } else {
-        setSelectedAudio({ ...selectedAudio, isPause: true });
+        pauseAudio();
       }
     } else {
-      setSelectedAudio({ ...props, isPause: false });
+      playAudio({ ...props });
       setCurrentIndex(
         musicData.findIndex((music) => music.musicName === musicName)
       );
@@ -52,6 +53,7 @@ const MusicCard = (props) => {
                 ? `http://127.0.0.1:5000/${musicImage}`
                 : "/img/download.jpeg"
             }
+            alt="cover"
             className="rounded-lg object-cover min-w-[150px] min-h-[150px] w-[150px] h-[150px]"
           />
           <div

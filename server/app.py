@@ -9,11 +9,6 @@ app = Flask(__name__)
 app.secret_key = "secret123"
 CORS(
     app,
-    resources={
-        r"/musics": {"origins": "*", "methods": ["GET"]},
-        r"/search/music": {"origins": "*", "methods": ["GET"]},
-        r"/upload": {"origins": "*", "methods": ["POST"]},
-    },
 )
 
 # koneksi ke database my sql
@@ -37,6 +32,7 @@ def index():
 # membuat route folder upload file mp3
 UPLOAD_FOLDER = "static/files"
 UPLOAD_IMG = "static/img"
+UPLOAD_PLAYLIST_IMG = "static/img/playlist"
 
 
 # membuat handler untuk upload file
@@ -66,6 +62,12 @@ def save_image_to_server(file, image_name):
     return image_path
 
 
+def save_playlist_image_to_server(file, image_name):
+    image_path = os.path.join(UPLOAD_PLAYLIST_IMG, image_name)
+    file.save(image_path)
+    return image_path
+
+
 def insert_music_into_db(file_path, music_name, music_artist, music_image):
     # TODO : memasukkan form data ke dalam database
     SQL_QUERY = "INSERT INTO musics (path, name, artist, image) VALUES(%s, %s, %s, %s)"
@@ -73,6 +75,17 @@ def insert_music_into_db(file_path, music_name, music_artist, music_image):
 
     # menjalankan sql
     cursor.execute(SQL_QUERY, VALUES)
+    db.commit()
+
+
+def music_id_exists_in_db(music_id):
+    cursor.execute("SELECT COUNT(*) FROM musics WHERE id = %s", (music_id,))
+    result = cursor.fetchone()
+    return result[0] > 0  # If the count is greater than 0, the music_id exists
+
+
+def delete_music_from_db(music_id):
+    cursor.execute("DELETE FROM musics WHERE id = %s", (music_id,))
     db.commit()
 
 
@@ -123,7 +136,7 @@ def get_all_music():
         music_list.append(music_info)
 
     # Create a JSON response
-    response = make_response(jsonify({"musics": music_list}))
+    response = jsonify({"musics": music_list})
 
     # Set Cache-Control headers to prevent caching
     # response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
@@ -149,12 +162,16 @@ def get_all_music():
 #         return "Song not found"
 
 
-@app.route("/delete/<int:music_id>", methods=["DELETE"])
+@app.delete("/delete/<int:music_id>")
 def delete_music(music_id):
     try:
-        cursor.execute("DELETE FROM musics WHERE id = %s", (music_id,))
-        db.commit()
-        return jsonify({"message": f"Music with ID {music_id} has been deleted"})
+        if music_id_exists_in_db(music_id):
+            delete_music_from_db(music_id)
+            return jsonify({"message": f"Music with ID {music_id} has been deleted"})
+        else:
+            return jsonify(
+                {"message": f"Music with ID {music_id} not found in the database"}, 404
+            )
     except Exception as e:
         return (
             jsonify(
@@ -167,27 +184,56 @@ def delete_music(music_id):
         )
 
 
-@app.route("/playlist/add", methods=["POST"])
+@app.post("/playlist/add")
 def add_playlist():
-    if request.method == "POST":
-        try:
-            name = request.form.get("playlist_name")
-            if name is not None:
-                cursor.execute("INSERT INTO playlists (name) VALUES (%s)", (name,))
-                db.commit()
-                return jsonify(
-                    {"message": "Created Playlist Successfully", "Playlist": name}
-                )
-            else:
-                return jsonify({"message": "Missing 'playlist_name' in form data"}, 400)
-        except Exception as e:
-            return (
-                jsonify({"message": "Failed to create playlist", "error": str(e)}),
-                500,
+    try:
+        playlist_name = request.form.get("playlist_name")
+        playlist_image = request.files.get("playlist_image")
+        if playlist_name and playlist_image is not None:
+            image_path = save_playlist_image_to_server(
+                playlist_image, playlist_image.filename
             )
+            cursor.execute(
+                "INSERT INTO playlists (name, image) VALUES (%s, %s)",
+                (playlist_name, image_path),
+            )
+            db.commit()
+            return jsonify(
+                {
+                    "message": "Created Playlist Successfully",
+                    "Playlist": playlist_name,
+                }
+            )
+        else:
+            return jsonify({"message": "Missing 'playlist_name' in form data"}, 400)
+    except Exception as e:
+        return (
+            jsonify({"message": "Failed to create playlist", "error": str(e)}),
+            500,
+        )
 
 
-@app.route("/playlist/addmusic/<int:music_id>/<int:playlist_id>", methods=["POST"])
+@app.get("/playlist")
+def get_all_playlist():
+    try:
+        cursor.execute("SELECT * FROM playlists")
+        playlists = cursor.fetchall()
+
+        playlist_list = []
+        for playlist in playlists:
+            playlist_info = {
+                "id": playlist[0],
+                "playlistName": playlist[1],
+                "playlistImage": playlist[2],
+            }
+            playlist_list.append(playlist_info)
+
+        return jsonify({"playlist": playlist_list}), 200
+    except mysql.connector.Error as e:
+        return jsonify({"message": "Failed to fetch playlist", "error": str(e)}, 400)
+
+
+@app.post("/playlist/addmusic/<int:music_id>/<int:playlist_id>")
 def add_music_to_playlist(music_id, playlist_id):
     try:
         cursor.execute(
@@ -195,19 +241,21 @@ def add_music_to_playlist(music_id, playlist_id):
             (music_id, playlist_id),
         )
         db.commit()
+
         return jsonify(
             {
-                "message": f"Adding music with ID {music_id} to playlist with ID {playlist_id}"
+                "message": f"Added music with ID {music_id} to playlist with ID {playlist_id}"
             }
         )
-    except Exception as e:
-        return (
-            jsonify({"message": "Failed to add music to playlist", "error": str(e)}),
+
+    except mysql.connector.Error as e:
+        return jsonify(
+            {"message": "Failed to add music to playlist", "error": str(e)},
             500,
         )
 
 
-@app.route("/playlist/music/<int:playlist_id>", methods=["GET"])
+@app.get("/playlist/music/<int:playlist_id>")
 def get_playlist_music(playlist_id):
     try:
         query = """
@@ -232,7 +280,7 @@ def get_playlist_music(playlist_id):
             music_list.append(music_info)
 
         return jsonify({"playlist": music_list})
-    except Exception as e:
+    except mysql.connector.Error as e:
         return (
             jsonify({"message": "Failed to retrieve playlist music", "error": str(e)}),
             500,
@@ -242,6 +290,8 @@ def get_playlist_music(playlist_id):
 @app.get("/search/music")
 def search_music():
     search_query = request.args.get("n")
+
+    # /search/music?n=janji setia
 
     if not search_query:
         return jsonify({"message": "Please provide a search query."}), 400
@@ -263,14 +313,10 @@ def search_music():
             }
             music_list.append(music_info)
 
-        response = make_response(jsonify({"results": music_list}))
+        response = jsonify({"results": music_list})
         return response, 201
-    except Exception as e:
+    except mysql.connector.Error as e:
         return jsonify({"message": "Search failed", "error": str(e)}), 500
-
-
-if __name__ == "__main__":
-    app.run(debug=True)
 
 
 if __name__ == "__main__":

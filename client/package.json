@@ -11,7 +11,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "color-thief-react": "^2.1.0",
     "lucide-react": "^0.288.0",
+    "node-vibrant": "^3.1.6",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

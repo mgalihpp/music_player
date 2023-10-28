@@ -22,7 +22,7 @@ const Navbar = () => {
         </div>
         <nav
           className="grid grid-cols-2 p-1 mx-auto overflow-invisible hover:overflow-y-auto"
-          style={{height: '390px', maxHeight: "390px", overflowX: "hidden" }}
+          style={{ maxHeight: "390px", overflowX: "hidden" }}
         >
           {playlistItems(playlistData, isPLoading)}
         </nav>

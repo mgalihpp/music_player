@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useTheme } from "../Context/ThemeContext";
+import { useTheme } from "../../Context/ThemeContext";
 import { Palette } from "lucide-react";
 import { PropTypes } from "prop-types";
 

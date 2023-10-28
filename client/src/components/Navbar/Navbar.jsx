@@ -1,8 +1,12 @@
 import { Home, Library, PlusSquare, Search, Plus } from "lucide-react";
-import { NavLink } from "react-router-dom";
-import PlaylistMusic from "./PlaylistMusic";
+import { Link, NavLink } from "react-router-dom";
+import PlaylistMusic from "../Playlist/PlaylistMusic";
+import { useMusicContext } from "../../Context/MusicContext";
+import SkelPlaylistCard from "../Skeleton/SkelPlaylistCard";
 
 const Navbar = () => {
+  const { playlistData, isPLoading } = useMusicContext();
+
   return (
     <>
       <nav className="space-y-1 rounded-md bg-white/5">
@@ -18,9 +22,9 @@ const Navbar = () => {
         </div>
         <nav
           className="grid grid-cols-2 p-1 mx-auto overflow-invisible hover:overflow-y-auto"
-          style={{ maxHeight: "390px", overflowX: "hidden" }}
+          style={{height: '390px', maxHeight: "390px", overflowX: "hidden" }}
         >
-          {playlistItems()}
+          {playlistItems(playlistData, isPLoading)}
         </nav>
       </div>
     </>
@@ -36,9 +40,7 @@ const navLink = (title, to, icon) => (
     className={({ isActive, isPending, isTransitioning }) =>
       [
         isPending ? "pending" : "",
-        isActive
-          ? "bg-white/5  transition-all ease-in-out duration-300"
-          : "",
+        isActive ? "bg-white/5  transition-all ease-in-out duration-300" : "",
         isTransitioning ? "transitioning" : "",
       ].join(
         " flex items-center text-base text-zinc-400 hover:text-zinc-100 gap-4 transition-all ease-in-out duration-300 font-bold rounded-md p-3.5 hover:bg-white/5 "
@@ -58,35 +60,31 @@ const playlistHeader = (title) => (
 
 const createPlaylistButton = () => (
   <div className="flex items-center justify-center">
-    <button
+    <Link
+      to="/playlist/create"
       aria-label="Create"
       className="rounded-full bg-white/5 group p-2"
       title="Create a Playlist?"
     >
       <Plus className="w-4 h-4 text-zinc-400 group-hover:text-white transition-all ease-in-out" />
-    </button>
+    </Link>
   </div>
 );
 
-const playlistItems = () => {
-  const playlists = [
-    "Favorite Musics",
-    "My Playlist",
-    "Favorite Musics",
-    "My Playlist",
-    "Favorite Musics",
-    "My Playlist",
-    "Favorite Musics",
-    "My Playlist",
-    "Favorite Musics",
-    "My Playlist",
-    "Favorite Musics",
-    "My Playlist",
-  ];
-
-  return playlists.map((playlist, index) => (
-    <PlaylistMusic key={index}>{playlist}</PlaylistMusic>
-  ));
+const playlistItems = (data, isLoading) => {
+  return (
+    <>
+      {isLoading
+        ? Array.from({ length: 6 }, (_, index) => (
+            <SkelPlaylistCard key={index} />
+          ))
+        : data.map((playlist, index) => (
+            <PlaylistMusic key={index} image={playlist.playlistImage}>
+              {playlist.playlistName}
+            </PlaylistMusic>
+          ))}
+    </>
+  );
 };
 
 export default Navbar;

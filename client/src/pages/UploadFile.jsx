@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { useUploadContext } from "../Context/UploadContext";
-import TopNavbar from "../components/TopNavbar";
+import TopNavbar from "../components/Navbar/TopNavbar";
 import { Play } from "lucide-react";
 
 const UploadFile = () => {
@@ -109,6 +109,8 @@ const UploadFile = () => {
                 name="music_name"
                 id="music_name"
                 placeholder="Music Name"
+                autoComplete="off"
+                autoFocus
                 onChange={(e) => setFileName(e.target.value)}
                 ref={fileNameRef}
                 required={true}
@@ -190,7 +192,7 @@ const UploadFile = () => {
               <h1 className="text-2xl font-semibold">Preview</h1>
               <div
                 className={`mt-6 cursor-pointer
-          flex items-center justify-center p-4 group min-w-[150px] min-h-[150px] w-[180px] h-[250px] flex-col text-base text-zinc-200 gap-3 font-semibold rounded-md bg-white/5 hover:bg-white/10 transition-all`}
+          flex items-center justify-center p-4 group min-w-[150px] min-h-[150px] w-[180px] flex-col text-base text-zinc-200 gap-3 font-semibold rounded-md bg-white/5 hover:bg-white/10 transition-all`}
               >
                 <div className="relative flex items-center justify-center">
                   <img

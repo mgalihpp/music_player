@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import DropdownMenu from "./DropDownMenu";
 import { PropTypes } from "prop-types";
 
-const TopNavbar = ({ children }) => {
+const TopNavbar = ({ children, className }) => {
   const navigate = useNavigate();
 
   const handleNavigation = (step) => {
@@ -11,7 +11,7 @@ const TopNavbar = ({ children }) => {
   };
 
   return (
-    <div className="flex items-center justify-between gap-4">
+    <div className={`flex items-center justify-between gap-4 ${className}`}>
       <div className="flex items-center gap-4">
         <button
           onClick={() => handleNavigation(-1)}
@@ -42,4 +42,5 @@ export default TopNavbar;
 
 TopNavbar.propTypes = {
   children: PropTypes.node,
+  className: PropTypes.string,
 };

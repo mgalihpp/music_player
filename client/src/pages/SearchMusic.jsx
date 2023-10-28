@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Music, Search } from "lucide-react";
-import TopNavbar from "../components/TopNavbar";
+import TopNavbar from "../components/Navbar/TopNavbar";
 import { Link } from "react-router-dom";
 import { useMusicContext } from "../Context/MusicContext";
 import SkelMusicCard from "../components/Skeleton/SkelMusicCard";

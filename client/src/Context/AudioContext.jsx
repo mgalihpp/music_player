@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useCallback, useContext, useState } from "react";
 import { PropTypes } from "prop-types";
 import { useMusicContext } from "./MusicContext";
 
@@ -12,9 +12,17 @@ export function AudioProvider({ children }) {
   const [selectedAudio, setSelectedAudio] = useState(null);
   const [isPause, setIsPause] = useState(true);
 
-  // Initialize currentIndex and musicData
   const [currentIndex, setCurrentIndex] = useState(-1);
-  const { musicData } = useMusicContext(); // Use musicData from useMusicContext
+  const { musicData } = useMusicContext();
+
+  const playAudio = useCallback((audio) => {
+    setSelectedAudio(audio);
+    setIsPause(false);
+  }, []);
+
+  const pauseAudio = useCallback(() => {
+    setIsPause(true);
+  }, []);
 
   const playNext = () => {
     if (currentIndex !== -1 && currentIndex < musicData.length - 1) {
@@ -52,6 +60,8 @@ export function AudioProvider({ children }) {
         playPrevious,
         currentIndex,
         setCurrentIndex,
+        playAudio,
+        pauseAudio,
       }}
     >
       {children}

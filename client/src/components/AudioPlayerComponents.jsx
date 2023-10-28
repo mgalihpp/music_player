@@ -5,19 +5,21 @@ import { Link } from "react-router-dom";
 import { SkipBack, SkipForward } from "lucide-react";
 
 const AudioPlayerComponent = () => {
-  const { selectedAudio, setIsPause, playNext, playPrevious } =
+  const { selectedAudio, setIsPause, isPause, playNext, playPrevious } =
     useAudioContext();
   const audioRef = useRef(null);
   const [isAudioReady, setIsAudioReady] = useState(false);
 
   useEffect(() => {
-    if (selectedAudio) {
+    if (selectedAudio && !isPause) {
       if (isAudioReady) {
-        audioRef.current.audio.current.currentTime = 0;
+        audioRef.current.audio.current.play();
         setIsPause(false);
       }
+    } else {
+      audioRef.current.audio.current.pause();
     }
-  }, [selectedAudio, setIsPause, isAudioReady]);
+  }, [selectedAudio, setIsPause, isPause, isAudioReady]);
 
   const handleAudioReady = () => {
     setIsAudioReady(true);

@@ -61,20 +61,20 @@ const Main = () => {
       <TopNavbar />
 
       <div className="flex flex-row items-center justify-between space-y-2 mt-6 mb-4">
-        <h1 className="text-4xl font-semibold">Let&apos;s Play a Music!</h1>
+        <h1 className="text-4xl font-semibold text-zinc-50">Let&apos;s Play a Music!</h1>
 
         <button
           onClick={toggleSortingOrder}
           title="Sort Music"
           aria-label="Sort music"
           disabled={isDisable}
-          className="bg-white/5 disabled:bg-transparent hover:bg-white/10 p-2.5 rounded-full flex items-center justify-center gap-2 font-semibold"
+          className="bg-white/5 text-zinc-100 disabled:bg-transparent hover:bg-white/10 p-2.5 rounded-full flex items-center justify-center gap-2 font-semibold"
         >
           Sort{" "}
           {sortOrder === "asc" ? (
-            <SortDesc className="h-5 w-5" />
+            <SortDesc className="h-5 w-5 text-zinc-200" />
           ) : (
-            <SortAsc className="h-5 w-5" />
+            <SortAsc className="h-5 w-5 text-zinc-200" />
           )}
         </button>
       </div>

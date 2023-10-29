@@ -2,7 +2,7 @@
 -- DATABASE : music_streaming
 -- TABLE : musics
 
-INSERT INTO `musics` (`id`,`path`,`name`,`artist`,`image`) VALUES (1,'static/files\\y2mate.com - I Wanna Be Yours.mp3','Wanna Be Yours','Artic Monkeys','static/img\\wannabeyours.png');
+INSERT INTO `musics` (`id`,`path`,`name`,`artist`,`image`) VALUES (1,'static/files\\y2mate.com - I Wanna Be Yours.mp3','I Wanna Be Yours','Artic Monkeys','static/img\\wannabeyours.png');
 INSERT INTO `musics` (`id`,`path`,`name`,`artist`,`image`) VALUES (2,'static/files\\y2mate.com - scott street but its the extended and slowed outro.mp3','Scott Street','Phoebe Bridgers','static/img\\scoott.jpg');
 INSERT INTO `musics` (`id`,`path`,`name`,`artist`,`image`) VALUES (3,'static/files\\y2mate.com - Ruth B  Dandelions Lyrics.mp3','Dandelions','Ruth B.','static/img\\dandelions.jpg');
 INSERT INTO `musics` (`id`,`path`,`name`,`artist`,`image`) VALUES (4,'static/files\\y2mate.com - Night Changes x Shayad slowedreverb Tiktok Version.mp3','Night Changes x Shayad','One Direction','static/img\\One_Direction_-_Night_Changes_Single_Cover.png');

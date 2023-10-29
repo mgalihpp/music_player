@@ -26,8 +26,6 @@ const SingleMusicCard = () => {
     setCurrentIndex,
   } = useAudioContext();
 
-  console.log(playlistData);
-
   useEffect(() => {
     if (selectedAudio?.musicName === musicName) {
       setCurrentIndex(currentIndex);

@@ -4,6 +4,7 @@ from flask_mysqldb import MySQL
 import os
 from itsdangerous import URLSafeTimedSerializer
 import mysql.connector
+from mutagen.mp3 import MP3
 
 app = Flask(__name__)
 app.secret_key = "secret123"
@@ -259,7 +260,7 @@ def add_music_to_playlist(music_id, playlist_id):
 def get_playlist_music(playlist_id):
     try:
         query = """
-        SELECT m.name AS music_name, m.path, m.image, p.name AS playlist_name
+        SELECT m.name AS music_name, m.path, m.image, m.artist,p.name AS playlist_name, p.image
         FROM music_playlist AS mp
         JOIN musics AS m ON mp.music_id = m.id
         JOIN playlists AS p ON mp.playlist_id = p.id
@@ -272,12 +273,27 @@ def get_playlist_music(playlist_id):
         music_list = []
         for row in result:
             music_info = {
-                "music_name": row[0],
-                "path": row[1],
-                "image": row[2],
-                "playlist_name": row[3],
+                "musicName": row[0],
+                "musicPath": row[1],
+                "musicImage": row[2],
+                "musicArtist": row[3],
+                "playlistName": row[4],
+                "playlistImage": row[5],
             }
             music_list.append(music_info)
+
+        for music_info in music_list:
+            music_path = music_info["musicPath"]
+            audio = MP3(music_path)
+            # Get the duration in seconds
+            duration_in_seconds = audio.info.length
+            # Calculate minutes and seconds
+            minutes = int(duration_in_seconds // 60)
+            seconds = int(duration_in_seconds % 60)
+            # Format as a string
+            formatted_duration = f"{minutes:02}:{seconds:02}"
+            # Add the formatted duration to the music_info dictionary
+            music_info["duration"] = formatted_duration
 
         return jsonify({"playlist": music_list})
     except mysql.connector.Error as e:

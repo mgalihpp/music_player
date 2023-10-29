@@ -18,6 +18,7 @@ html {
 }
 
 .gradient {
+  /* Your custom styles here */
   background: linear-gradient(
     to bottom,
     rgba(0, 225, 255, 0.1),
@@ -300,6 +301,7 @@ html {
 
 .rhap_play-pause-button {
   font-size: 40px;
+  color: rgb(226 232 240);
   width: 40px;
   height: 40px;
 }
@@ -309,6 +311,7 @@ html {
   flex: 1 0 auto;
   justify-content: flex-end;
   align-items: center;
+  color: rgb(226 232 240);
 }
 
 .rhap_volume-button {
@@ -326,6 +329,7 @@ html {
   flex: 0 1 100px;
   user-select: none;
   -webkit-user-select: none;
+  color: rgb(226 232 240);
 }
 
 .rhap_volume-bar-area {

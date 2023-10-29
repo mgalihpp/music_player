@@ -329,7 +329,6 @@ html {
   flex: 0 1 100px;
   user-select: none;
   -webkit-user-select: none;
-  color: rgb(226 232 240);
 }
 
 .rhap_volume-bar-area {

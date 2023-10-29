@@ -7,8 +7,4 @@ export default defineConfig({
   optimizeDeps: {
     include: ["color-thief-react"],
   },
-  server: {
-    host: "127.0.0.1",
-    port: 5173,
-  },
 });

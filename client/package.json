@@ -8,9 +8,10 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite build && vite preview"
   },
   "dependencies": {
+    "@radix-ui/themes": "^2.0.0",
     "color-thief-react": "^2.1.0",
     "lucide-react": "^0.288.0",
     "node-vibrant": "^3.1.6",

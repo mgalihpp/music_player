@@ -1,14 +1,22 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import TopNavbar from "./Navbar/TopNavbar";
-import { Heart, Loader2, MoreHorizontal, Pause, Play } from "lucide-react";
+import {
+  Heart,
+  Loader2,
+  MoreHorizontal,
+  Pause,
+  Play,
+  Plus,
+} from "lucide-react";
 import { useMusicContext } from "../Context/MusicContext";
 import { useAudioContext } from "../Context/AudioContext";
 import { useEffect } from "react";
 import Color from "color-thief-react";
+import { AlertDialog, Button, DropdownMenu, Flex } from "@radix-ui/themes";
 
 const SingleMusicCard = () => {
   const { musicName } = useParams();
-  const { musicData } = useMusicContext();
+  const { musicData, playlistData, isPLoading } = useMusicContext();
   const {
     selectedAudio,
     isPause,
@@ -17,7 +25,8 @@ const SingleMusicCard = () => {
     currentIndex,
     setCurrentIndex,
   } = useAudioContext();
-  // const decodeName = decodeURIComponent(musicName);
+
+  console.log(playlistData);
 
   useEffect(() => {
     if (selectedAudio?.musicName === musicName) {
@@ -103,11 +112,11 @@ const SingleMusicCard = () => {
                     />
                   </div>
                   <div className="flex flex-col items-start px-6 justify-end mt-auto mb-0 gap-2">
-                    <h4 className="font-semibold">Song</h4>
-                    <h1 className="text-7xl font-bold">
+                    <h4 className="font-semibold text-zinc-200">Song</h4>
+                    <h1 className="text-7xl font-bold text-zinc-50">
                       {selectedMusic.musicName}
                     </h1>
-                    <h4 className="font-normal text-sm">
+                    <h4 className="font-normal text-sm text-zinc-100">
                       {selectedMusic.musicArtist}
                     </h4>
                   </div>
@@ -132,18 +141,88 @@ const SingleMusicCard = () => {
                   </button>
                   <button
                     aria-label="love"
-                    title="Add to Playlist"
+                    title="Add to Liked Songs"
                     className="flex items-center justify-center p-4 text-zinc-400 hover:text-white transition-all ease-in-out duration-300  "
                   >
                     <Heart size={35} />
                   </button>
-                  <button
-                    aria-label="option"
-                    title="More Options"
-                    className="flex items-center justify-center p-4 text-zinc-400 hover:text-white transition-all ease-in-out duration-300  "
-                  >
-                    <MoreHorizontal size={35} />
-                  </button>
+                  <DropdownMenu.Root>
+                    <DropdownMenu.Trigger>
+                      <Button
+                        variant="none"
+                        color="gray"
+                        aria-label="option"
+                        title="More Options"
+                        className="flex items-center justify-center p-4 text-zinc-400 hover:text-white transition-all ease-in-out duration-300  "
+                      >
+                        <MoreHorizontal size={35} />
+                      </Button>
+                    </DropdownMenu.Trigger>
+                    <DropdownMenu.Content color="gray">
+                      <DropdownMenu.Item>Add to Liked Songs</DropdownMenu.Item>
+                      <DropdownMenu.Separator />
+                      <DropdownMenu.Sub>
+                        <DropdownMenu.SubTrigger>
+                          Add to Playlist
+                        </DropdownMenu.SubTrigger>
+                        <DropdownMenu.SubContent>
+                          <Link to="/playlist/create">
+                            <DropdownMenu.Item className="gap-2 justify-start">
+                              <Plus size={15} /> Create a Playlist
+                            </DropdownMenu.Item>
+                          </Link>
+                          <DropdownMenu.Separator />
+                          {isPLoading ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                          ) : playlistData?.length === 0 ? (
+                            <DropdownMenu.Item>
+                              No Playlist Found
+                            </DropdownMenu.Item>
+                          ) : (
+                            playlistData.map((playlist, index) => (
+                              <div key={index} className="mt-1">
+                                <AlertDialog.Root>
+                                  <AlertDialog.Trigger>
+                                    <Button variant="ghost" color="gray" className="w-full" aria-label="toggle">
+                                      {playlist.playlistName}
+                                    </Button>
+                                  </AlertDialog.Trigger>
+                                  <AlertDialog.Content
+                                    style={{ maxWidth: 450 }}
+                                  >
+                                    <AlertDialog.Title>
+                                      Add Songs to {playlist.playlistName}{" "}
+                                      ?
+                                    </AlertDialog.Title>
+                                    <AlertDialog.Description size="2">
+                                      Are you sure?
+                                    </AlertDialog.Description>
+
+                                    <Flex gap="3" mt="4" justify="end">
+                                      <AlertDialog.Cancel>
+                                        <Button variant="soft" color="gray">
+                                          Cancel
+                                        </Button>
+                                      </AlertDialog.Cancel>
+                                      <AlertDialog.Action>
+                                        <Button variant="solid" color="green">
+                                          Add Songs
+                                        </Button>
+                                      </AlertDialog.Action>
+                                    </Flex>
+                                  </AlertDialog.Content>
+                                </AlertDialog.Root>
+                              </div>
+                            ))
+                          )}
+                        </DropdownMenu.SubContent>
+                      </DropdownMenu.Sub>
+                      <DropdownMenu.Separator />
+                      <DropdownMenu.Item>Share</DropdownMenu.Item>
+                      <DropdownMenu.Item>Add to favorites</DropdownMenu.Item>
+                      <DropdownMenu.Separator />
+                    </DropdownMenu.Content>
+                  </DropdownMenu.Root>
                 </div>
                 <div className="px-6 py-3.5 flex flex-row items-center justify-start cursor-pointer bg-black/20 hover:bg-black/30 transition-all ease-in-out duration-300">
                   <div className="relative w-[80px] h-[80px]">

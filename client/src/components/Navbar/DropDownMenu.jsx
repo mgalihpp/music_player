@@ -63,7 +63,7 @@ const MenuButton = ({ title, onClick, label, icon }) => (
   <button
     title={title}
     onClick={onClick}
-    className="p-2.5 w-full flex items-center justify-center gap-2 rounded-sm bg-zinc-900 hover:bg-white/10"
+    className="p-2.5 w-full text-zinc-200 font-normal flex items-center justify-center gap-2 rounded-sm bg-zinc-900 hover:bg-white/10"
     aria-label="right"
   >
     {icon}

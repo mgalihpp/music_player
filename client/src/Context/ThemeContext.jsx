@@ -17,7 +17,8 @@ export function ThemeProvider({ children }) {
   };
 
   useEffect(() => {
-    document.documentElement.className = currentTheme;
+    document.body.className = currentTheme;
+    document.documentElement.className = "dark";
   }, [currentTheme]);
 
   return (

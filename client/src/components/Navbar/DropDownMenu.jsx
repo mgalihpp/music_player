@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useTheme } from "../../Context/ThemeContext";
-import { Palette } from "lucide-react";
+import { Palette, User2 } from "lucide-react";
 import { PropTypes } from "prop-types";
 
 const DropdownMenu = () => {
@@ -34,13 +34,12 @@ const DropdownMenu = () => {
       <button
         className="relative w-9 h-9 rounded-full hover:scale-105"
         aria-label="Toggle menu"
-        title="Messi"
+        title="Toggle"
         onClick={toggleMenu}
       >
-        <img
-          src="/messi.png"
+        <User2
           alt="profile"
-          className="object-cover rounded-full w-full h-full"
+          className="object-cover rounded-full w-full h-full bg-zinc-800 p-0.5"
         />
       </button>
       {isMenuOpen && (

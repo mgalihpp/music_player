@@ -7,6 +7,7 @@ import {
   Pause,
   Play,
   Plus,
+  User2,
 } from "lucide-react";
 import { useMusicContext } from "../Context/MusicContext";
 import { useAudioContext } from "../Context/AudioContext";
@@ -306,10 +307,9 @@ const SingleMusicCard = () => {
 
                 <div className="px-6 py-3.5 flex flex-row items-center justify-start cursor-pointer bg-black/20 hover:bg-black/30 transition-all ease-in-out duration-300">
                   <div className="relative w-[80px] h-[80px]">
-                    <img
-                      src="/messi.png"
+                    <User2
                       alt="profile"
-                      className="object-cover rounded-full"
+                      className="object-cover rounded-full p-1 w-full h-full bg-zinc-900"
                     />
                   </div>
                   <div className="flex flex-col items-start justify-start p-4 gap-1">

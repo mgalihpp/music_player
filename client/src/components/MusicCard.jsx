@@ -14,6 +14,7 @@ const MusicCard = (props) => {
     isPause,
     currentIndex,
     setCurrentIndex,
+    setData,
   } = useAudioContext();
   const { musicData } = useMusicContext();
 
@@ -32,6 +33,7 @@ const MusicCard = (props) => {
       }
     } else {
       playAudio({ ...props });
+      setData("default");
       setCurrentIndex(
         musicData.findIndex((music) => music.musicName === musicName)
       );

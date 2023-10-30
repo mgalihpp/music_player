@@ -182,6 +182,7 @@ const SingleMusicCard = () => {
                   <button
                     aria-label="love"
                     title="Add to Liked Songs"
+                    onClick={handleAddToLikedSongs}
                     className="flex items-center justify-center p-4 text-zinc-400 hover:text-white transition-all ease-in-out duration-300  "
                   >
                     <Heart size={35} />

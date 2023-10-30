@@ -3,3 +3,4 @@ flask-mysqldb
 mysql-connector-python
 flask_cors
 itsdangerous
+mutagen

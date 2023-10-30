@@ -206,7 +206,10 @@ def add_playlist():
                 }
             )
         else:
-            return jsonify({"message": "Missing 'playlist_name' in form data"}, 400)
+            return jsonify(
+                {"message": "Missing 'playlist_name' or 'playlist_image' in form data"},
+                400,
+            )
     except Exception as e:
         return (
             jsonify({"message": "Failed to create playlist", "error": str(e)}),

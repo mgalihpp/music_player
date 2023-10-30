@@ -10,9 +10,10 @@ import {
 } from "lucide-react";
 import { useMusicContext } from "../Context/MusicContext";
 import { useAudioContext } from "../Context/AudioContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Color from "color-thief-react";
 import { AlertDialog, Button, DropdownMenu, Flex } from "@radix-ui/themes";
+import * as Toast from "@radix-ui/react-toast";
 
 const SingleMusicCard = () => {
   const { musicName } = useParams();
@@ -24,7 +25,10 @@ const SingleMusicCard = () => {
     playAudio,
     currentIndex,
     setCurrentIndex,
+    setData,
   } = useAudioContext();
+  const [open, setOpen] = useState(false);
+  const [playlistName, setPlaylistName] = useState("Liked Songs");
 
   useEffect(() => {
     if (selectedAudio?.musicName === musicName) {
@@ -55,9 +59,47 @@ const SingleMusicCard = () => {
       }
     } else {
       playAudio({ ...selectedMusic });
+      setData("default");
       setCurrentIndex(
         musicData.findIndex((music) => music.musicName === musicName)
       );
+    }
+  };
+
+  const handleAddToPlaylist = async (e) => {
+    setOpen(true);
+    const music_id = e.currentTarget.dataset.musicId;
+    const playlist_id = e.currentTarget.dataset.playlistId;
+    setPlaylistName(e.currentTarget.dataset.playlistName);
+
+    try {
+      const res = await fetch(
+        `http://127.0.0.1:5000/playlist/addmusic/${music_id}/${playlist_id}`,
+        {
+          method: "POST",
+        }
+      );
+      return res;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleAddToLikedSongs = async () => {
+    setOpen(true);
+    const music_id = selectedMusic?.id;
+    const playlist_id = 1; //deafult playlist
+
+    try {
+      const res = await fetch(
+        `http://127.0.0.1:5000/playlist/addmusic/${music_id}/${playlist_id}`,
+        {
+          method: "POST",
+        }
+      );
+      return res;
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -157,7 +199,9 @@ const SingleMusicCard = () => {
                       </Button>
                     </DropdownMenu.Trigger>
                     <DropdownMenu.Content color="gray">
-                      <DropdownMenu.Item>Add to Liked Songs</DropdownMenu.Item>
+                      <DropdownMenu.Item onClick={handleAddToLikedSongs}>
+                        Add to Liked Songs
+                      </DropdownMenu.Item>
                       <DropdownMenu.Separator />
                       <DropdownMenu.Sub>
                         <DropdownMenu.SubTrigger>
@@ -181,16 +225,19 @@ const SingleMusicCard = () => {
                               <div key={index} className="mt-1">
                                 <AlertDialog.Root>
                                   <AlertDialog.Trigger>
-                                    <Button variant="ghost" color="gray" className="w-full" aria-label="toggle">
+                                    <button
+                                      color="gray"
+                                      className="w-full hover:bg-gray-500/90 text-sm font-normal py-1.5 rounded"
+                                      aria-label="toggle"
+                                    >
                                       {playlist.playlistName}
-                                    </Button>
+                                    </button>
                                   </AlertDialog.Trigger>
                                   <AlertDialog.Content
                                     style={{ maxWidth: 450 }}
                                   >
                                     <AlertDialog.Title>
-                                      Add Songs to {playlist.playlistName}{" "}
-                                      ?
+                                      Add Songs to {playlist.playlistName} ?
                                     </AlertDialog.Title>
                                     <AlertDialog.Description size="2">
                                       Are you sure?
@@ -198,14 +245,23 @@ const SingleMusicCard = () => {
 
                                     <Flex gap="3" mt="4" justify="end">
                                       <AlertDialog.Cancel>
-                                        <Button variant="soft" color="gray">
+                                        <button className="cursoir-pointer bg-gray-700 hover:bg-gray-700/90 text-sm text-zinc-100 flex items-center justify-center rounded-md px-2 py-2 outline-none focus:shadow-sm font-semibold">
                                           Cancel
-                                        </Button>
+                                        </button>
                                       </AlertDialog.Cancel>
                                       <AlertDialog.Action>
-                                        <Button variant="solid" color="green">
+                                        <button
+                                          className="cursoir-pointer bg-green-500 hover:bg-green-500/90 text-sm text-zinc-100 flex items-center justify-center rounded-md px-2 py-2 outline-none focus:shadow-sm font-semibold"
+                                          data-music-id={selectedMusic?.id} // Replace with the actual property containing music_id
+                                          data-playlist-id={playlist?.id}
+                                          data-playlist-name={
+                                            playlist?.playlistName
+                                          }
+                                          // className="bg-green-500 inline-flex items-center justify-center rounded font-medium text-[15px] px-[10px] outline-none focus:shadow-[0_0_0_2px] focus:shadow-black"
+                                          onClick={handleAddToPlaylist}
+                                        >
                                           Add Songs
-                                        </Button>
+                                        </button>
                                       </AlertDialog.Action>
                                     </Flex>
                                   </AlertDialog.Content>
@@ -222,6 +278,31 @@ const SingleMusicCard = () => {
                     </DropdownMenu.Content>
                   </DropdownMenu.Root>
                 </div>
+                <Toast.Provider swipeDirection="right">
+                  <Toast.Root
+                    className="bg-green-500 rounded-md shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] p-[15px] grid [grid-template-areas:_'title_action'_'description_action'] grid-cols-[auto_max-content] gap-x-[15px] items-center data-[state=open]:animate-slideIn data-[state=closed]:animate-hide data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=cancel]:translate-x-0 data-[swipe=cancel]:transition-[transform_200ms_ease-out] data-[swipe=end]:animate-swipeOut"
+                    open={open}
+                    onOpenChange={setOpen}
+                  >
+                    <Toast.Title className="[grid-area:_title] mb-[5px] font-medium text-slate12 text-[15px]">
+                      Added {selectedMusic.musicName} To {playlistName}!
+                    </Toast.Title>
+                    <Toast.Action
+                      className="[grid-area:_action]"
+                      asChild
+                      altText="Goto Playlist"
+                    >
+                      <Link
+                        to={`/playlist/${playlistName}`}
+                        className="inline-flex items-center justify-center rounded font-medium text-xs px-[10px] leading-[25px] h-[25px] bg-green2 text-green11 shadow-[inset_0_0_0_1px] shadow-green7 hover:shadow-[inset_0_0_0_1px] hover:shadow-green8 focus:shadow-[0_0_0_2px] focus:shadow-green8"
+                      >
+                        Go
+                      </Link>
+                    </Toast.Action>
+                  </Toast.Root>
+                  <Toast.Viewport className="[--viewport-padding:_25px] fixed bottom-0 right-0 flex flex-col p-[var(--viewport-padding)] gap-[10px] w-[390px] max-w-[100vw] m-0 list-none z-[2147483647] outline-none" />
+                </Toast.Provider>
+
                 <div className="px-6 py-3.5 flex flex-row items-center justify-start cursor-pointer bg-black/20 hover:bg-black/30 transition-all ease-in-out duration-300">
                   <div className="relative w-[80px] h-[80px]">
                     <img

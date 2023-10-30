@@ -18,6 +18,8 @@ const url = `http://127.0.0.1:5000`;
 export function MusicProvider({ children }) {
   const [musicData, setMusicData] = useState([]);
   const [playlistData, setPlaylistData] = useState([]);
+  const [musicPlaylistData, setMusicPlaylistData] = useState([]);
+  const [isMPLoading, setIsMPLoading] = useState(true);
   const [isPLoading, setIsPLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const { isFetching, setIsFetching, isPFetching, setIsPFetching } =
@@ -87,6 +89,25 @@ export function MusicProvider({ children }) {
     }
   }, []);
 
+  const getAllMusicAndPlaylist = async (playlist_id) => {
+    try {
+      const response = await fetch(`${url}/playlist/music/${playlist_id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Methods": "GET",
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setMusicPlaylistData(data.playlist);
+        setIsMPLoading(false);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     if (musicData.length === 0 && isLoading && !isFetching) {
       fetchData();
@@ -126,6 +147,11 @@ export function MusicProvider({ children }) {
         getPlaylist,
         playlistData,
         isPLoading,
+        getAllMusicAndPlaylist,
+        musicPlaylistData,
+        setMusicPlaylistData,
+        isMPLoading,
+        setIsMPLoading,
       }}
     >
       {children}

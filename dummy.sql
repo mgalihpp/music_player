@@ -50,3 +50,10 @@ INSERT INTO `musics` (`id`,`path`,`name`,`artist`,`image`) VALUES (45,'static/fi
 INSERT INTO `musics` (`id`,`path`,`name`,`artist`,`image`) VALUES (46,'static/files\\y2mate.com - Maroon 5  Girls Like You ft Cardi B Official Music Video.mp3', 'Girls Like You', 'Maroon 5 ft. Cardi B', 'static/img\\girls-like-you.jpeg');
 INSERT INTO `musics` (`id`,`path`,`name`,`artist`,`image`) VALUES (47,'static/files\\y2mate.com - Gym Class Heroes  Stereo Hearts Lyrics  Heart Stereo.mp3', 'Stereo Hearts', 'Gym Class Heroes', 'static/img\\stereo-hearts.jpeg');
 INSERT INTO `musics` (`id`,`path`,`name`,`artist`,`image`) VALUES (48,'static/files\\y2mate.com - Powfu  death bed coffee for your head Official Video ft beabadoobee.mp3', 'death bed', 'Powfu ft. beabadoobee', 'static/img\\Powfu-Death-Bed.png');
+
+
+-- COPY THIS DUMMY DATA
+-- DATABASE : music_streaming
+-- TABLE : playlist
+
+INSERT INTO `` (`id`,`name`,`image`) VALUES (1,'Liked Songs','static/img/playlist\\scoott.jpg');

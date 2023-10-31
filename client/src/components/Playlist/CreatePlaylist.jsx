@@ -126,7 +126,7 @@ const CreatePlaylist = () => {
                     autoFocus
                     autoComplete="off"
                     placeholder="Playlist Name"
-                    className="rounded-md p-2"
+                    className="rounded-md p-2 bg-zinc-900 focus:outline-none"
                   />
                 </div>
               </div>

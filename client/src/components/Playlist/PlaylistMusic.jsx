@@ -21,7 +21,7 @@ const PlaylistMusic = ({ children, image }) => {
           <Play fill="black" />
         </button>
       </div>
-      <p className="font-semibold whitespace-nowrap overflow-hidden overflow-ellipsis w-24">
+      <p className="font-semibold text-sm whitespace-nowrap overflow-hidden overflow-ellipsis w-24">
         {children}
       </p>
     </Link>

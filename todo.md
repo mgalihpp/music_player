@@ -13,6 +13,7 @@ Done:
 11. mengdesign ulang untuk tampilan,
 12. membuat next/prev music (jika bisa, soalnya agak rumit).
 13. membuat playlist,
+14. menambah music ke dalam playlist
+15. mambuat bagaimana cara looping music hanya diplaylist saja
 
 Next Progress:
-1. menambah music ke dalam playlist

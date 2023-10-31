@@ -82,6 +82,8 @@ const Playlist = () => {
     return <Loader2 className="w-4 h-4 animate-spin" />;
   }
 
+  const getFirstMusic = musicPlaylistData[0]?.musicName;
+
   const IMAGE_URL = `http://127.0.0.1:5000/${selectedPlaylist?.playlistImage}`;
 
   return (
@@ -138,6 +140,7 @@ const Playlist = () => {
                   <button
                     title="Play"
                     aria-label="Play"
+                    onClick={() => handlePlayClick(getFirstMusic)}
                     className={`flex items-center justify-center p-4 rounded-full bg-green-500/90 text-black button-transition hover:scale-110 hover:bg-green-500 hover:shadow-md`}
                   >
                     <Play fill="black" className="ml-1" />

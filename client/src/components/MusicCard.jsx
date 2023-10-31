@@ -44,8 +44,7 @@ const MusicCard = (props) => {
 
   return (
     <>
-      <Link
-        to={`/music/${musicName}`}
+      <div
         className={` cursor-pointer
           flex items-center justify-center p-4 group min-w-[150px] min-h-[150px] w-[180px] flex-col text-base text-zinc-200 gap-3 font-semibold rounded-md bg-white/5 hover:bg-white/10 transition-all`}
       >
@@ -95,7 +94,7 @@ const MusicCard = (props) => {
             {musicArtist}
           </p>
         </div>
-      </Link>
+      </div>
     </>
   );
 };

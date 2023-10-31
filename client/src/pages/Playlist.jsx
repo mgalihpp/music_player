@@ -129,7 +129,7 @@ const Playlist = () => {
                       {selectedPlaylist.playlistName}
                     </h1>
                     <h4 className="font-semibold text-sm text-zinc-100 flex items-center justify-start">
-                      {"Galih"} <Dot size={20} />{" "}
+                      {"user"} <Dot size={20} />{" "}
                       {musicPlaylistData.length + " " + "Songs"}
                     </h4>
                   </div>

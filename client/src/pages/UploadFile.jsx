@@ -51,7 +51,7 @@ const UploadFile = () => {
       setPreviewImage(null);
       setTimeout(() => {
         SetIsSubmit(false);
-      }, 1000);
+      }, 2000);
     }
   };
 

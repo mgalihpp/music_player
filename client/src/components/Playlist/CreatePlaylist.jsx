@@ -40,7 +40,7 @@ const CreatePlaylist = () => {
       setIsPFetching(false);
       setTimeout(() => {
         SetIsSubmit(false);
-      }, 1000);
+      }, 2000);
     }
   };
 
@@ -96,6 +96,8 @@ const CreatePlaylist = () => {
                         id="file-input"
                         className="hidden"
                         ref={playlistImageRef}
+                        required={true}
+                        accept=". jpeg, .jpg, .png, .svg"
                         onChange={handleImageChange}
                       />
                       {playlistImage && (
@@ -105,6 +107,11 @@ const CreatePlaylist = () => {
                         >
                           Remove File
                         </button>
+                      )}
+                      {!playlistImage && (
+                        <div className="text-red-600 text-sm font-semibold mt-2 text-center">
+                          Please select an image for your playlist.
+                        </div>
                       )}
                     </div>
                   </div>
@@ -126,10 +133,10 @@ const CreatePlaylist = () => {
               <div className="flex ml-auto">
                 <button
                   aria-label="submit"
-                  title="create"
+                  title="Create"
                   type="submit"
                   disabled={isSubmit}
-                  className="bg-white hover:bg-white/90 font-semibold text-black rounded-full p-3"
+                  className="bg-green-500 hover:bg-green-500/90 font-semibold text-black rounded-full px-5 py-2"
                 >
                   Submit
                 </button>

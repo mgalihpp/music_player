@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useMusicContext } from "../Context/MusicContext";
 import { useEffect, useState } from "react";
 import { Dot, Loader2, Pause, Play } from "lucide-react";
@@ -185,8 +185,10 @@ const Playlist = () => {
                             alt="cover"
                             className="object-cover w-10 h-10"
                           />
-                          <figcaption className="text-sm font-semibold">
-                            {music.musicName}
+                          <figcaption className="text-sm font-semibold hover:underline">
+                            <Link to={`/music/${music.musicName}`}>
+                              {music.musicName}
+                            </Link>
                           </figcaption>
                         </figure>
                       </div>

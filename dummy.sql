@@ -56,4 +56,4 @@ INSERT INTO `musics` (`id`,`path`,`name`,`artist`,`image`) VALUES (48,'static/fi
 -- DATABASE : music_streaming
 -- TABLE : playlist
 
-INSERT INTO `` (`id`,`name`,`image`) VALUES (1,'Liked Songs','static/img/playlist\\scoott.jpg');
+INSERT INTO `` (`id`,`name`,`image`) VALUES (1,'Liked Songs','static/img/playlist\\liked-song.jpeg');

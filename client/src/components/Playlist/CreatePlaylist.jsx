@@ -97,7 +97,7 @@ const CreatePlaylist = () => {
                         className="hidden"
                         ref={playlistImageRef}
                         required={true}
-                        accept=". jpeg, .jpg, .png, .svg"
+                        accept=".jpeg, .jpg, .png, .svg"
                         onChange={handleImageChange}
                       />
                       {playlistImage && (

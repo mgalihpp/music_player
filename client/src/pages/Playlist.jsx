@@ -5,6 +5,7 @@ import { Dot, Loader2, Pause, Play } from "lucide-react";
 import Color from "color-thief-react";
 import TopNavbar from "../components/Navbar/TopNavbar";
 import { useAudioContext } from "../Context/AudioContext";
+import host from "../utils";
 
 const Playlist = () => {
   const { playlistName } = useParams();
@@ -84,7 +85,7 @@ const Playlist = () => {
 
   const getFirstMusic = musicPlaylistData[0]?.musicName;
 
-  const IMAGE_URL = `http://127.0.0.1:5000/${selectedPlaylist?.playlistImage}`;
+  const IMAGE_URL = `${host}${selectedPlaylist?.playlistImage}`;
 
   return (
     <>
@@ -120,7 +121,7 @@ const Playlist = () => {
                 <div className="flex flex-row items-start  pt-10 pb-4 px-6">
                   <div className="relative">
                     <img
-                      src={`http://127.0.0.1:5000/${selectedPlaylist?.playlistImage}`}
+                      src={`${host}${selectedPlaylist?.playlistImage}`}
                       alt="cover"
                       className="object-cover min-w-[150px] rounded min-h-[150px] w-[250px] h-[250px] max-w-[250px] max-h-[250px]"
                     />
@@ -181,7 +182,7 @@ const Playlist = () => {
                         </button>
                         <figure className="flex flex-row items-center justify-center gap-4">
                           <img
-                            src={`http://127.0.0.1:5000/${music.musicImage}`}
+                            src={`${host}${music.musicImage}`}
                             alt="cover"
                             className="object-cover w-10 h-10"
                           />

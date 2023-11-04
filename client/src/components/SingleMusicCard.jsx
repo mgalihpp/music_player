@@ -15,6 +15,7 @@ import { useEffect, useState } from "react";
 import Color from "color-thief-react";
 import { AlertDialog, Button, DropdownMenu, Flex } from "@radix-ui/themes";
 import * as Toast from "@radix-ui/react-toast";
+import host from "../utils";
 
 const SingleMusicCard = () => {
   const { musicName } = useParams();
@@ -75,7 +76,7 @@ const SingleMusicCard = () => {
 
     try {
       const res = await fetch(
-        `http://127.0.0.1:5000/playlist/addmusic/${music_id}/${playlist_id}`,
+        `${host}playlist/addmusic/${music_id}/${playlist_id}`,
         {
           method: "POST",
         }
@@ -93,7 +94,7 @@ const SingleMusicCard = () => {
 
     try {
       const res = await fetch(
-        `http://127.0.0.1:5000/playlist/addmusic/${music_id}/${playlist_id}`,
+        `${host}playlist/addmusic/${music_id}/${playlist_id}`,
         {
           method: "POST",
         }
@@ -104,7 +105,7 @@ const SingleMusicCard = () => {
     }
   };
 
-  const IMAGE_URL = `http://127.0.0.1:5000/${selectedMusic?.musicImage}`;
+  const IMAGE_URL = `${host}${selectedMusic?.musicImage}`;
 
   return (
     <>
@@ -147,7 +148,7 @@ const SingleMusicCard = () => {
                 <div className="flex flex-row items-start  pt-20 pb-4 px-6">
                   <div className="relative">
                     <img
-                      src={`http://127.0.0.1:5000/${selectedMusic?.musicImage}`}
+                      src={`${host}${selectedMusic?.musicImage}`}
                       alt="cover"
                       className="object-cover min-w-[150px] rounded min-h-[150px] w-[250px] h-[250px] max-w-[250px] max-h-[250px]"
                     />

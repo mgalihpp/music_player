@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import TopNavbar from "../Navbar/TopNavbar";
 import { useUploadContext } from "../../Context/UploadContext";
+import host from "../../utils";
 
 const CreatePlaylist = () => {
   const [playlistImage, setPlaylistImage] = useState(null);
@@ -21,7 +22,7 @@ const CreatePlaylist = () => {
       const formData = new FormData();
       formData.append("playlist_name", playlistName);
       formData.append("playlist_image", playlistImage);
-      const res = await fetch("http://127.0.0.1:5000/playlist/add", {
+      const res = await fetch(`${host}playlist/add`, {
         method: "POST",
         headers: {
           "Access-Control-Allow-Methods": "POST",

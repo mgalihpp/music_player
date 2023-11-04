@@ -4,6 +4,7 @@ import { useAudioContext } from "../Context/AudioContext";
 import { Link } from "react-router-dom";
 import { PropTypes } from "prop-types";
 import { useMusicContext } from "../Context/MusicContext";
+import host from "../utils";
 
 const MusicCard = (props) => {
   const { musicName, musicImage, musicArtist } = props;
@@ -50,11 +51,7 @@ const MusicCard = (props) => {
       >
         <div className="relative flex items-center justify-center">
           <img
-            src={
-              musicImage
-                ? `http://127.0.0.1:5000/${musicImage}`
-                : "/img/download.jpeg"
-            }
+            src={musicImage ? `${host}${musicImage}` : "/img/download.jpeg"}
             alt="cover"
             className="rounded-lg object-cover min-w-[150px] min-h-[150px] w-[150px] h-[150px]"
           />

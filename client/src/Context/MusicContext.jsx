@@ -7,6 +7,7 @@ import {
 } from "react";
 import { PropTypes } from "prop-types";
 import { useUploadContext } from "./UploadContext";
+import host from "../utils";
 
 const MusicContext = createContext();
 
@@ -14,7 +15,7 @@ export function useMusicContext() {
   return useContext(MusicContext);
 }
 
-const url = `http://127.0.0.1:5000`;
+const url = `${host}`;
 export function MusicProvider({ children }) {
   const [musicData, setMusicData] = useState([]);
   const [playlistData, setPlaylistData] = useState([]);
@@ -28,7 +29,7 @@ export function MusicProvider({ children }) {
 
   const fetchData = useCallback(async () => {
     try {
-      const response = await fetch(`${url}/musics`, {
+      const response = await fetch(`${url}musics`, {
         method: "GET",
         headers: {
           "Access-Control-Allow-Headers": "Content-Type",

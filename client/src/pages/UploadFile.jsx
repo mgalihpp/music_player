@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { useUploadContext } from "../Context/UploadContext";
 import TopNavbar from "../components/Navbar/TopNavbar";
 import { Play } from "lucide-react";
+import host from "../utils";
 
 const UploadFile = () => {
   const [file, setFile] = useState(null);
@@ -28,7 +29,7 @@ const UploadFile = () => {
       formData.append("music_name", fileName);
       formData.append("music_artist", artist);
       formData.append("music_image", image);
-      const res = await fetch("http://127.0.0.1:5000/upload", {
+      const res = await fetch(`${host}upload`, {
         method: "POST",
         body: formData,
       });

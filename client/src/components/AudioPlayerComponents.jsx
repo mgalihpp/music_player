@@ -3,6 +3,7 @@ import AudioPlayer from "react-h5-audio-player";
 import { useAudioContext } from "../Context/AudioContext";
 import { Link } from "react-router-dom";
 import { SkipBack, SkipForward } from "lucide-react";
+import host from '../utils'
 
 const AudioPlayerComponent = () => {
   const { selectedAudio, setIsPause, isPause, playNext, playPrevious } =
@@ -34,7 +35,7 @@ const AudioPlayerComponent = () => {
         <img
           src={
             selectedAudio
-              ? `http://127.0.0.1:5000/${selectedAudio.musicImage}`
+              ? `${host}${selectedAudio.musicImage}`
               : "/img/download.jpeg"
           }
           alt="cover"
@@ -69,7 +70,7 @@ const AudioPlayerComponent = () => {
           onLoadedData={handleAudioReady}
           src={
             selectedAudio
-              ? `http://127.0.0.1:5000/${selectedAudio.musicPath}`
+              ? `${host}${selectedAudio.musicPath}`
               : ""
           }
         />

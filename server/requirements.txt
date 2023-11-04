@@ -2,7 +2,5 @@ flask==3.0.0
 Werkzeug==3.0.0
 pymongo
 flask_cors
-itsdangerous
 mutagen
 bson
-pytz

@@ -1,3 +1,3 @@
-const host = "http://127.0.0.1:5000/";
+const host = "https://music-player-jhih.vercel.app/";
 
 export default host;

@@ -21,7 +21,6 @@ const Main = () => {
     };
 
     if (musicData.length > 0 && sortedMusicData.length === 0) {
-      // Initialize sortedMusicData when component mounts in ascending order
       setSortedMusicData(sortMusicData());
     }
   }, [isLoading, musicData, sortOrder, sortedMusicData]);
@@ -61,7 +60,9 @@ const Main = () => {
       <TopNavbar />
 
       <div className="flex flex-row items-center justify-between space-y-2 mt-6 mb-4">
-        <h1 className="text-4xl font-semibold text-zinc-50">Let&apos;s Play a Music!</h1>
+        <h1 className="text-4xl font-semibold text-zinc-50">
+          Let&apos;s Play a Music!
+        </h1>
 
         <button
           onClick={toggleSortingOrder}

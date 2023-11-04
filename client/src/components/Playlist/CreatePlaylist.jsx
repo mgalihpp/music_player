@@ -41,7 +41,7 @@ const CreatePlaylist = () => {
       setIsPFetching(false);
       setTimeout(() => {
         SetIsSubmit(false);
-      }, 2000);
+      }, 2500);
     }
   };
 

@@ -23,7 +23,7 @@ const SearchMusic = () => {
     if (e.target.value.length >= 2) {
       const newTimeoutId = setTimeout(() => {
         searchMusic(e.target.value);
-      }, 1000); // Adjust the delay as needed
+      }, 1000);
 
       setTimeoutId(newTimeoutId);
     }

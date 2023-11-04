@@ -61,18 +61,14 @@ const Playlist = () => {
         pauseAudio();
       }
     } else {
-      // Find the selected music in the playlist
       const selectedMusic = musicPlaylistData.find(
         (music) => music.musicName === musicName
       );
 
       if (selectedMusic) {
-        // Play the selected music
         playAudio(selectedMusic);
-        // This is for set data is currently playing playlist or not
         setData("playlist");
 
-        // Update the current index
         setCurrentIndex(musicPlaylistData.indexOf(selectedMusic));
       }
       setSelectedMuisc(musicName);

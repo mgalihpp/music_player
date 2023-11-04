@@ -90,7 +90,7 @@ const SingleMusicCard = () => {
   const handleAddToLikedSongs = async () => {
     setOpen(true);
     const music_id = selectedMusic?._id;
-    const playlist_id = "65462eae321f2711ddb830b9"; //deafult playlist
+    const playlist_id = "65466b9ce7986159f671aad3";
 
     try {
       const res = await fetch(
@@ -119,16 +119,9 @@ const SingleMusicCard = () => {
           if (loading) {
             return <Loader2 className="w-4 h-4 animate-spin" />;
           } else {
-            {
-              /* const alpha = 0.7;
-            const rgbaColor = data
-              .replace("rgb", "rgba")
-              .replace(")", `, ${alpha})`); */
-            }
-            const topAlpha = 0.75; // 100% opacity at the top
-            const bottomAlpha = 0; // 70% opacity at the bottom
+            const topAlpha = 0.75;
+            const bottomAlpha = 0;
 
-            // Convert the color to RGBA format
             const topColor = data
               .replace("rgb", "rgba")
               .replace(")", `, ${topAlpha})`);
@@ -140,7 +133,7 @@ const SingleMusicCard = () => {
               <div
                 className="mx-auto"
                 style={{
-                  background: `linear-gradient(${topColor}, ${bottomColor})`, // Use the color obtained from Color, or default to white
+                  background: `linear-gradient(${topColor}, ${bottomColor})`,
                 }}
               >
                 <TopNavbar className="p-6" />
@@ -255,12 +248,11 @@ const SingleMusicCard = () => {
                                       <AlertDialog.Action>
                                         <button
                                           className="cursoir-pointer bg-green-500 hover:bg-green-500/90 text-sm text-zinc-100 flex items-center justify-center rounded-md px-2 py-2 outline-none focus:shadow-sm font-semibold"
-                                          data-music-id={selectedMusic?._id} // Replace with the actual property containing music_id
+                                          data-music-id={selectedMusic?._id}
                                           data-playlist-id={playlist?._id}
                                           data-playlist-name={
                                             playlist?.playlistName
                                           }
-                                          // className="bg-green-500 inline-flex items-center justify-center rounded font-medium text-[15px] px-[10px] outline-none focus:shadow-[0_0_0_2px] focus:shadow-black"
                                           onClick={handleAddToPlaylist}
                                         >
                                           Add Songs

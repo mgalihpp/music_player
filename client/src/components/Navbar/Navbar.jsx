@@ -31,8 +31,6 @@ const Navbar = () => {
   );
 };
 
-// `flex items-center text-base text-zinc-100 gap-4 font-bold rounded-md p-3.5 hover:bg-white/5`
-
 const navLink = (title, to, icon) => (
   <NavLink
     title={title}

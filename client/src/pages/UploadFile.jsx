@@ -30,9 +30,6 @@ const UploadFile = () => {
       formData.append("music_image", image);
       const res = await fetch("http://127.0.0.1:5000/upload", {
         method: "POST",
-        headers: {
-          "Access-Control-Allow-Methods": "POST",
-        },
         body: formData,
       });
       return res;

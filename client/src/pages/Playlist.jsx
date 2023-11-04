@@ -36,9 +36,9 @@ const Playlist = () => {
         (playlist) => playlist.playlistName === playlistName
       );
 
-      if (selectedPlaylist && selectedPlaylist.id !== currentPlaylistId) {
-        getAllMusicAndPlaylist(selectedPlaylist.id);
-        setCurrentPlaylistId(selectedPlaylist.id);
+      if (selectedPlaylist && selectedPlaylist._id !== currentPlaylistId) {
+        getAllMusicAndPlaylist(selectedPlaylist._id);
+        setCurrentPlaylistId(selectedPlaylist._id);
         setSelectedPlaylist(selectedPlaylist);
       }
     }
@@ -160,7 +160,7 @@ const Playlist = () => {
                   <hr className="border-b border-zinc-700 w-full mb-4" />
                   {musicPlaylistData.map((music, index) => (
                     <div
-                      key={index}
+                      key={music._id}
                       className="flex flex-row items-center justify-start hover:bg-white/5 gap-12 w-full px-4 py-2 rounded-md"
                     >
                       <div className="flex flex-row items-center justify-start gap-6 w-96 group">

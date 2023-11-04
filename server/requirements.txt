@@ -3,4 +3,3 @@ Werkzeug==3.0.0
 pymongo
 flask_cors
 mutagen
-bson

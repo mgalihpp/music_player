@@ -3,4 +3,5 @@ pymongo
 flask_cors
 itsdangerous
 mutagen
+bson
 pytz

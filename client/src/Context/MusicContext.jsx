@@ -50,7 +50,7 @@ export function MusicProvider({ children }) {
 
   async function searchMusic(query) {
     try {
-      const response = await fetch(`${url}/search/music?n=${query}`, {
+      const response = await fetch(`${url}search/music?n=${query}`, {
         method: "GET",
         headers: {
           "Access-Control-Allow-Headers": "Content-Type",
@@ -71,7 +71,7 @@ export function MusicProvider({ children }) {
 
   const getPlaylist = useCallback(async () => {
     try {
-      const response = await fetch(`${url}/playlist`, {
+      const response = await fetch(`${url}playlist`, {
         method: "GET",
         headers: {
           "Access-Control-Allow-Headers": "Content-Type",
@@ -92,7 +92,7 @@ export function MusicProvider({ children }) {
 
   const getAllMusicAndPlaylist = async (playlist_id) => {
     try {
-      const response = await fetch(`${url}/playlist/music/${playlist_id}`, {
+      const response = await fetch(`${url}playlist/music/${playlist_id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

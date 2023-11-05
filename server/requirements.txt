@@ -6,5 +6,5 @@ mutagen
 pyrebase
 firebase_admin
 firebase
-setuptools==5.8
-pycrypto
+setuptools==57.5.0
+pycryptodome

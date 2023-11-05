@@ -1,7 +1,6 @@
 import { Play } from "lucide-react";
 import { Link } from "react-router-dom";
 import { PropTypes } from "prop-types";
-import host from "../../utils";
 
 const PlaylistMusic = ({ children, image }) => {
   return (
@@ -11,7 +10,7 @@ const PlaylistMusic = ({ children, image }) => {
     >
       <div className="relative">
         <img
-          src={`${host}${image}`}
+          src={`${image}`}
           alt="cover"
           className="rounded object-cover min-w-[100px] min-h-[100px] max-w-[100px] max-h-[100px] w-[100px] h-[100px]"
         />

@@ -38,10 +38,10 @@ const CreatePlaylist = () => {
       setImageSrc("/img/download.jpeg");
       setPlaylistImage(null);
       setPlaylistName("");
-      setIsPFetching(false);
       setTimeout(() => {
+        setIsPFetching(false);
         SetIsSubmit(false);
-      }, 2500);
+      }, 3000);
     }
   };
 

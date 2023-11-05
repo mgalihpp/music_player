@@ -45,11 +45,11 @@ const UploadFile = () => {
       setImage(null);
       setFileName("");
       setArtist("");
-      setIsFetching(false);
       setPreviewImage(null);
       setTimeout(() => {
+        setIsFetching(false);
         SetIsSubmit(false);
-      }, 2500);
+      }, 3000);
     }
   };
 

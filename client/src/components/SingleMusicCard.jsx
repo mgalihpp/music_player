@@ -105,7 +105,7 @@ const SingleMusicCard = () => {
     }
   };
 
-  const IMAGE_URL = `${host}${selectedMusic?.musicImage}`;
+  const IMAGE_URL = `${selectedMusic?.musicImage}`;
 
   return (
     <>
@@ -141,7 +141,7 @@ const SingleMusicCard = () => {
                 <div className="flex flex-row items-start  pt-20 pb-4 px-6">
                   <div className="relative">
                     <img
-                      src={`${host}${selectedMusic?.musicImage}`}
+                      src={`${selectedMusic?.musicImage}`}
                       alt="cover"
                       className="object-cover min-w-[150px] rounded min-h-[150px] w-[250px] h-[250px] max-w-[250px] max-h-[250px]"
                     />

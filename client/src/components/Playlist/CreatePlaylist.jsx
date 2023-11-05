@@ -1,22 +1,25 @@
 import { useRef, useState } from "react";
 import TopNavbar from "../Navbar/TopNavbar";
 import { useUploadContext } from "../../Context/UploadContext";
+import LoadingBar from "react-top-loading-bar";
 import host from "../../utils";
 
 const CreatePlaylist = () => {
   const [playlistImage, setPlaylistImage] = useState(null);
   const [playlistName, setPlaylistName] = useState("");
   const [isSubmit, SetIsSubmit] = useState(false);
+  const [toast, setToast] = useState(false);
   const [imageSrc, setImageSrc] = useState("/img/download.jpeg");
   const { setIsPFetching } = useUploadContext();
 
   const playlistImageRef = useRef(null);
   const playlistNameRef = useRef(null);
+  const loadingRef = useRef(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     SetIsSubmit(true);
-    setIsPFetching(true);
+    loadingRef.current.continuousStart();
 
     try {
       const formData = new FormData();
@@ -29,6 +32,7 @@ const CreatePlaylist = () => {
         },
         body: formData,
       });
+      setIsPFetching(true);
       return res;
     } catch (error) {
       console.error(error);
@@ -38,10 +42,12 @@ const CreatePlaylist = () => {
       setImageSrc("/img/download.jpeg");
       setPlaylistImage(null);
       setPlaylistName("");
+      setToast(true);
+      loadingRef.current.complete();
       setTimeout(() => {
-        setIsPFetching(false);
         SetIsSubmit(false);
-      }, 3000);
+        setToast(false);
+      }, 5000);
     }
   };
 
@@ -144,10 +150,13 @@ const CreatePlaylist = () => {
               </div>
             </form>
           </div>
+          <div>
+            <LoadingBar color="#00a827" shadow={true} ref={loadingRef} />
+          </div>
           <div
             id="toast-success"
             className={`${
-              isSubmit ? "flex" : "hidden"
+              toast ? "flex" : "hidden"
             } absolute top-5 right-0 items-center w-full h-16 max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-white dark:bg-green-500
         `}
             role="alert"

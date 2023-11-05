@@ -120,7 +120,7 @@ export function MusicProvider({ children }) {
       setTimeout(() => {
         fetchData();
         setIsFetching(false);
-      }, 1000);
+      }, 5000);
     }
   }, [isFetching, setIsFetching, fetchData]);
 

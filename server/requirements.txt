@@ -1,10 +1,6 @@
-flask==3.0.0
-Werkzeug==3.0.0
-pymongo
+flask
+flask-mysqldb
+mysql-connector-python
 flask_cors
+itsdangerous
 mutagen
-pyrebase
-firebase_admin
-firebase
-setuptools==57.5.0
-pycryptodome

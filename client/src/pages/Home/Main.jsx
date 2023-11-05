@@ -4,12 +4,15 @@ import MusicCard from "../../components/MusicCard";
 import SkelMusicCard from "../../components/Skeleton/SkelMusicCard";
 import TopNavbar from "../../components/Navbar/TopNavbar";
 import { useMusicContext } from "../../Context/MusicContext";
+import LoadingBar from "react-top-loading-bar";
 
 const Main = () => {
   const { musicData, isLoading } = useMusicContext();
   const [sortOrder, setSortOrder] = useState("asc");
   const [sortedMusicData, setSortedMusicData] = useState([]);
   const [isDisable, setDisable] = useState(false);
+  const [progress, setprogress] = useState(0);
+  const [compLoad, setComLoad] = useState(true);
 
   useEffect(() => {
     const sortMusicData = () => {
@@ -19,6 +22,10 @@ const Main = () => {
           : b.musicName.localeCompare(a.musicName);
       });
     };
+    setprogress(100);
+    setTimeout(() => {
+      setComLoad(false);
+    }, 100);
 
     if (musicData.length > 0 && sortedMusicData.length === 0) {
       setSortedMusicData(sortMusicData());
@@ -57,55 +64,63 @@ const Main = () => {
 
   return (
     <>
-      <TopNavbar />
+      {compLoad ? (
+        <LoadingBar color="#00a827" shadow={true} progress={progress} />
+      ) : (
+        <>
+          <TopNavbar />
 
-      <div className="flex flex-row items-center justify-between space-y-2 mt-6 mb-4">
-        <h1 className="text-4xl font-semibold text-zinc-50">
-          Let&apos;s Play a Music!
-        </h1>
+          <div className="flex flex-row items-center justify-between space-y-2 mt-6 mb-4">
+            <h1 className="text-4xl font-semibold text-zinc-50">
+              Let&apos;s Play a Music!
+            </h1>
 
-        <button
-          onClick={toggleSortingOrder}
-          title="Sort Music"
-          aria-label="Sort music"
-          disabled={isDisable}
-          className="bg-white/5 text-zinc-100 disabled:bg-transparent hover:bg-white/10 p-2.5 rounded-full flex items-center justify-center gap-2 font-semibold"
-        >
-          Sort{" "}
-          {sortOrder === "asc" ? (
-            <SortDesc className="h-5 w-5 text-zinc-200" />
-          ) : (
-            <SortAsc className="h-5 w-5 text-zinc-200" />
-          )}
-        </button>
-      </div>
-
-      <div
-        className={`grid xl:ml-2 lg:ml-6 xl:grid-cols-5 2xl:grid-cols-6 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-4 mt-4
-        `}
-      >
-        {isLoading ? (
-          Array.from({ length: 12 }, (_, index) => (
-            <SkelMusicCard key={index} />
-          ))
-        ) : musicData.length === 0 ? (
-          <h1>No Musics Found</h1>
-        ) : (
-          sortedMusicData.map((music, index) => (
-            <div
-              key={index}
-              className={`music-card ${sortOrder === "asc" ? "asc" : "desc"}`}
+            <button
+              onClick={toggleSortingOrder}
+              title="Sort Music"
+              aria-label="Sort music"
+              disabled={isDisable}
+              className="bg-white/5 text-zinc-100 disabled:bg-transparent hover:bg-white/10 p-2.5 rounded-full flex items-center justify-center gap-2 font-semibold"
             >
-              <MusicCard
-                musicName={music.musicName}
-                musicPath={music.musicPath}
-                musicArtist={music.musicArtist}
-                musicImage={music.musicImage}
-              />
-            </div>
-          ))
-        )}
-      </div>
+              Sort{" "}
+              {sortOrder === "asc" ? (
+                <SortDesc className="h-5 w-5 text-zinc-200" />
+              ) : (
+                <SortAsc className="h-5 w-5 text-zinc-200" />
+              )}
+            </button>
+          </div>
+
+          <div
+            className={`grid xl:ml-2 lg:ml-6 xl:grid-cols-5 2xl:grid-cols-6 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-4 mt-4
+        `}
+          >
+            {isLoading ? (
+              Array.from({ length: 12 }, (_, index) => (
+                <SkelMusicCard key={index} />
+              ))
+            ) : musicData.length === 0 ? (
+              <h1>No Musics Found</h1>
+            ) : (
+              sortedMusicData.map((music, index) => (
+                <div
+                  key={index}
+                  className={`music-card ${
+                    sortOrder === "asc" ? "asc" : "desc"
+                  }`}
+                >
+                  <MusicCard
+                    musicName={music.musicName}
+                    musicPath={music.musicPath}
+                    musicArtist={music.musicArtist}
+                    musicImage={music.musicImage}
+                  />
+                </div>
+              ))
+            )}
+          </div>
+        </>
+      )}
     </>
   );
 };

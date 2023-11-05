@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { useUploadContext } from "../Context/UploadContext";
 import TopNavbar from "../components/Navbar/TopNavbar";
 import { Play } from "lucide-react";
+import LoadingBar from "react-top-loading-bar";
 import host from "../utils";
 
 const UploadFile = () => {
@@ -11,19 +12,22 @@ const UploadFile = () => {
   const [image, setImage] = useState(null);
   const { setIsFetching } = useUploadContext();
   const [isSubmit, SetIsSubmit] = useState(false);
+  const [toast, setToast] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
 
   const fileRef = useRef(null);
   const fileNameRef = useRef(null);
   const fileArtistRef = useRef(null);
   const fileImageRef = useRef(null);
+  const loadingRef = useRef(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     SetIsSubmit(true);
-    setIsFetching(true);
+    loadingRef.current.continuousStart();
 
     try {
+      setIsFetching(true);
       const formData = new FormData();
       formData.append("music_file", file);
       formData.append("music_name", fileName);
@@ -36,6 +40,7 @@ const UploadFile = () => {
       return res;
     } catch (error) {
       console.log(error);
+      setIsFetching(false)
     } finally {
       fileRef.current.value = "";
       fileNameRef.current.value = "";
@@ -46,10 +51,12 @@ const UploadFile = () => {
       setFileName("");
       setArtist("");
       setPreviewImage(null);
+      setToast(true);
+      loadingRef.current.complete();
       setTimeout(() => {
-        setIsFetching(false);
         SetIsSubmit(false);
-      }, 3000);
+        setToast(false);
+      }, 5000);
     }
   };
 
@@ -179,10 +186,14 @@ const UploadFile = () => {
             )}
           </div>
 
+          <div>
+            <LoadingBar color="#00a827" shadow={true} ref={loadingRef} />
+          </div>
+
           <div
             id="toast-success"
             className={`${
-              isSubmit ? "flex" : "hidden"
+              toast ? "flex" : "hidden"
             } absolute top-5 right-0 items-center w-full h-16 max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-white dark:bg-green-500
         `}
             role="alert"

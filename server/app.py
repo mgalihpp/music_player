@@ -10,6 +10,9 @@ import os
 from flask_cors import CORS
 from bson import ObjectId
 from mutagen.mp3 import MP3
+import pyrebase
+import firebase_admin
+from firebase_admin import credentials, storage
 
 app = Flask(__name__)
 CORS(app, origins="*")
@@ -18,6 +21,25 @@ client = MongoClient("mongodb+srv://mgpp:mgpp123@cluster0.vtkcthg.mongodb.net/")
 db = client["music_streaming"]
 music_collection = db["musics"]
 playlist_collection = db["playlists"]
+
+cred = credentials.Certificate("./serviceAccount.json")
+firebase_admin.initialize_app(cred)
+
+
+config = {
+    "apiKey": "AIzaSyBFLmyuxO4wf9s0Cd2Dcbq0Fs5G0ppuT6c",
+    "authDomain": "phrasal-alpha-372913.firebaseapp.com",
+    "projectId": "phrasal-alpha-372913",
+    "storageBucket": "phrasal-alpha-372913.appspot.com",
+    "messagingSenderId": "659218835319",
+    "appId": "1:659218835319:web:1a40d8db35cb11d1452372",
+    "measurementId": "G-TRNMW996YQ",
+    "serviceAccount": "./serviceAccount.json",
+    "databaseURL": "https://phrasal-alpha-372913-default-rtdb.asia-southeast1.firebasedatabase.app/",
+}
+
+firebase = pyrebase.initialize_app(config)
+storage = firebase.storage()
 
 
 @app.route("/")
@@ -65,15 +87,24 @@ def upload_music():
         # Secure the filename to prevent directory traversal
         filename = secure_filename(file.filename)
         imagefile = secure_filename(image.filename)
-        file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
-        image.save(os.path.join(app.config["UPLOAD_IMG"], imagefile))
+
+        # Upload the audio and image files to Firebase Storage
+        audio_data = file.read()
+        image_data = image.read()
+        # Upload audio and image data to Firebase Storage
+        storage.child("musics").child(filename).put(audio_data)
+        storage.child("images").child(imagefile).put(image_data)
+
+        # Generate the download URLs
+        audio_download_url = storage.child("musics").child(filename).get_url(None)
+        image_download_url = storage.child("images").child(imagefile).get_url(None)
 
         # Add the music data to the MongoDB collection
         music_data = {
             "musicName": music_name,
             "musicArtist": music_artist,
-            "musicPath": os.path.join(app.config["UPLOAD_FOLDER"], filename),
-            "musicImage": os.path.join(app.config["UPLOAD_IMG"], imagefile),
+            "musicPath": audio_download_url,
+            "musicImage": image_download_url,
         }
 
         # Insert music data into the MongoDB collection
@@ -97,12 +128,15 @@ def delete_music(music_id):
             music_path = music_document.get("musicPath")
 
             # If the image file path exists, delete the image file
-            if image_path and music_path:
-                if os.path.exists(image_path) or os.path.exists(music_path):
-                    os.remove(image_path)
-                    os.remove(music_path)
-                else:
-                    print(f"Image file not found: {image_path}")
+            # if image_path and music_path:
+            #     # Delete the files from Firebase Storage
+            #     storage_bucket = storage.bucket()
+            #     image_blob = storage_bucket.blob(image_path)
+            #     music_blob = storage_bucket.blob(music_path)
+
+            #     # Delete the files in Firebase Storage
+            #     image_blob.delete()
+            #     music_blob.delete()
 
             # Use the delete_one method to delete the music document
             result = music_collection.delete_one({"_id": music_id})
@@ -146,9 +180,12 @@ def add_playlist():
 
         if playlist_name:
             if playlist_image:
+                image_data = playlist_image.read()
                 imagefile = secure_filename(playlist_image.filename)
-                playlist_image.save(
-                    os.path.join(app.config["UPLOAD_PLAYLIST_IMG"], imagefile)
+                storage.child("images/playlist").child(imagefile).put(image_data)
+
+                image_download_url = (
+                    storage.child("images/playlist").child(imagefile).get_url(None)
                 )
             else:
                 # Provide a default image path if no image is uploaded
@@ -157,9 +194,7 @@ def add_playlist():
             # Create a playlist document to insert into MongoDB
             playlist_data = {
                 "playlistName": playlist_name,
-                "playlistImage": os.path.join(
-                    app.config["UPLOAD_PLAYLIST_IMG"], imagefile
-                ),
+                "playlistImage": image_download_url,
             }
 
             # Insert the playlist document into the MongoDB collection
@@ -366,4 +401,4 @@ def allowed_image(filename):
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)

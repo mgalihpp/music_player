@@ -3,3 +3,6 @@ Werkzeug==3.0.0
 pymongo
 flask_cors
 mutagen
+pyrebase
+firebase_admin
+firebase

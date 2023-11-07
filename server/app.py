@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, make_response
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 from flask_mysqldb import MySQL
 import os
@@ -49,11 +49,6 @@ def get_all_music():
 
     # Create a JSON response
     response = jsonify({"musics": music_list})
-
-    # Set Cache-Control headers to prevent caching
-    # response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-    # response.headers["Pragma"] = "no-cache"
-    # response.headers["Expires"] = "0"
 
     return response, 200
 
@@ -242,6 +237,41 @@ def get_playlist_music(playlist_id):
     except mysql.connector.Error as e:
         return (
             jsonify({"message": "Failed to retrieve playlist music", "error": str(e)}),
+            500,
+        )
+
+
+@app.get("/category/<int:year>")
+def get_category_music(year):
+    try:
+        query = """
+        SELECT c.id AS category_id, c.year, m.name AS music_name, m.path, m.image, m.artist
+        FROM category AS c
+        JOIN music_category AS mc ON c.id = mc.category_id
+        JOIN musics AS m ON mc.music_id = m.id
+        WHERE c.year = %s
+        """
+
+        cursor.execute(query, (year,))
+        result = cursor.fetchall()
+
+        music_list = []
+        for row in result:
+            music_info = {
+                "id": row[0],
+                "year": row[1],
+                "musicName": row[2],
+                "musicPath": row[3],
+                "musicImage": row[4],
+                "musicArtist": row[5],
+            }
+            music_list.append(music_info)
+
+        return jsonify({"cat": music_list})
+
+    except mysql.connector.Error as e:
+        return (
+            jsonify({"message": "Failed to retrieve category music", "error": str(e)}),
             500,
         )
 

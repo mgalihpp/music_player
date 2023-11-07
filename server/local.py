@@ -354,7 +354,7 @@ def get_playlist_music(playlist_id):
                 "playlistName": playlist_document.get("playlistName"),
                 "playlistImage": playlist_document.get("playlistImage"),
                 "_id": str(music_document.get("_id")),
-                "musicPath": str(music_document.get("musicPath")),
+                "musicPath": music_document.get("musicPath"),
                 "musicName": music_document.get("musicName"),
                 "musicImage": music_document.get("musicImage"),
                 "musicArtist": music_document.get("musicArtist"),

@@ -1,5 +1,6 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_file, make_response
 from flask_cors import CORS
+from werkzeug.utils import secure_filename
 from flask_mysqldb import MySQL
 import os
 from itsdangerous import URLSafeTimedSerializer
@@ -28,6 +29,54 @@ cursor = db.cursor()
 @app.get("/")
 def index():
     return jsonify({"message": "server ok"})
+
+
+@app.get("/stream_audio/<audio_filename>")
+def stream_audio(audio_filename):
+    audio_path = os.path.join(UPLOAD_FOLDER, audio_filename)
+
+    if os.path.exists(audio_path):
+        return send_file(
+            audio_path,
+            as_attachment=False,
+            mimetype="audio/mp3",
+        )
+    else:
+        return make_response(jsonify("File not found")), 404
+
+
+@app.get("/img/<image_filename>")
+def stream_image(image_filename):
+    image_path = os.path.join(UPLOAD_IMG, image_filename)
+
+    if os.path.exists(image_path):
+        return (
+            send_file(
+                image_path,
+                as_attachment=False,
+                mimetype="image/jpeg",
+            ),
+            200,
+        )
+    else:
+        return make_response(jsonify("File not found")), 404
+
+
+@app.get("/playlist/img/<image_filename>")
+def stream_playlist_image(image_filename):
+    image_path = os.path.join(UPLOAD_PLAYLIST_IMG, image_filename)
+
+    if os.path.exists(image_path):
+        return (
+            send_file(
+                image_path,
+                as_attachment=False,
+                mimetype="image/jpeg",
+            ),
+            200,
+        )
+    else:
+        return make_response(jsonify("File not found")), 404
 
 
 @app.get("/musics")
@@ -79,23 +128,27 @@ def upload_music():
 
     # mendatapatkan file,name dari form data
     music_file, music_name, music_artist, music_image = form_data
-    file_path = save_music_to_server(music_file, music_file.filename)
-    image_path = save_image_to_server(music_image, music_image.filename)
 
-    # metode untuk menyimpan form data ke dalam database
-    insert_music_into_db(file_path, music_name, music_artist, image_path)
+    if (
+        music_file
+        and allowed_file(music_file.filename)
+        and allowed_image(music_image.filename)
+    ):
+        # Secure the filename to prevent directory traversal
+        audio = secure_filename(music_file.filename)
+        image = secure_filename(music_image.filename)
 
-    return (
-        jsonify(
-            {
-                "message": "Music uploaded successfully",
-                "file_url": "/static/music/" + music_file.filename,
-                "file_name": music_name,
-                "image_url": "/static/img" + music_image.filename,
-            }
-        ),
-        201,
-    )
+        save_music_to_server(music_file, audio)
+        save_image_to_server(music_image, image)
+
+        # metode untuk menyimpan form data ke dalam database
+        insert_music_into_db(
+            music_file.filename, music_name, music_artist, music_image.filename
+        )
+
+        return (make_response(jsonify({"message": "Music uploaded successfully"})), 201)
+
+    return make_response(jsonify({"message": "invalid file format"})), 400
 
 
 @app.delete("/delete/<int:music_id>")
@@ -366,6 +419,22 @@ def music_id_exists_in_db(music_id):
 def delete_music_from_db(music_id):
     cursor.execute("DELETE FROM musics WHERE id = %s", (music_id,))
     db.commit()
+
+
+# Helper function to check if the file extension is allowed
+
+ALLOWED_EXTENSIONS = {"mp3"}
+ALLOWED_EXTENSIONS_IMG = {"png", "jpg", "jpeg", "svg"}
+
+
+def allowed_file(filename):
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+def allowed_image(filename):
+    return (
+        "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS_IMG
+    )
 
 
 if __name__ == "__main__":

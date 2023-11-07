@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, make_response, request, send_file
+from flask import Flask, jsonify, make_response, request, Response, send_file
 from werkzeug.utils import secure_filename
 from pymongo import MongoClient
 from flask_cors import CORS
@@ -40,18 +40,39 @@ def index():
     return "ok"
 
 
-@app.get("/stream_audio/<audio_filename>")
+@app.get('/stream_audio/<audio_filename>')
 def stream_audio(audio_filename):
     audio_path = os.path.join(UPLOAD_FOLDER, audio_filename)
 
     if os.path.exists(audio_path):
-        return send_file(
-            audio_path,
-            as_attachment=False,
-            mimetype="audio/mp3",
-        )
+        file_size = os.path.getsize(audio_path)
+        start = 0
+        end = file_size - 1
+
+        # Check if "Range" header is present in the request
+        if "Range" in request.headers:
+            range_header = request.headers.get("Range")
+            parts = range_header.replace("bytes=", "").split("-")
+            if len(parts) == 2:
+                start = int(parts[0])
+                end = int(parts[1]) if parts[1] else file_size - 1
+            elif parts[0]:
+                start = int(parts[0])
+
+        content_length = end - start + 1
+
+        with open(audio_path, "rb") as audio:
+            audio.seek(start)
+            data = audio.read(content_length)
+
+        response = make_response(data)
+        response.headers["Accept-Ranges"] = "bytes"
+        response.headers["Content-Range"] = f"bytes {start}-{end}/{file_size}"
+        response.headers["Content-Length"] = content_length
+        response.headers["Content-Type"] = "audio/mp3"
+        return response, 206  # Partial Content status code
     else:
-        return make_response(jsonify("File not found")), 404
+        return make_response(jsonify("File not found"), 404)
 
 
 @app.get("/img/<image_filename>")
@@ -64,6 +85,7 @@ def stream_image(image_filename):
                 image_path,
                 as_attachment=False,
                 mimetype="image/jpeg",
+                max_age=300
             ),
             200,
         )

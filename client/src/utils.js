@@ -1,4 +1,4 @@
-export const host = "http://127.0.0.1:5000/";
+export const host = "https://music-player-service.vercel.app/";
 
 export const category = [
   { link: "/", name: "All Musics", color: "bg-white/5" },

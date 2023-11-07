@@ -16,6 +16,7 @@ import SingleMusicCard from "./components/SingleMusicCard";
 import Playlist from "./pages/Playlist.jsx";
 import CreatePlaylist from "./components/Playlist/CreatePlaylist";
 import { Theme } from "@radix-ui/themes";
+import Category from "./pages/Category.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -47,6 +48,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
                           path="/playlist/:playlistName"
                           Component={Playlist}
                         />
+                        <Route path="/category/:year" Component={Category} />
                       </Routes>
                     </main>
                   </div>

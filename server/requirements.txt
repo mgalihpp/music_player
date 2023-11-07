@@ -1,6 +1,5 @@
 flask
-flask-mysqldb
-mysql-connector-python
+pymongo
 flask_cors
 itsdangerous
 mutagen

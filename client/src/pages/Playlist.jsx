@@ -40,9 +40,9 @@ const Playlist = () => {
         (playlist) => playlist.playlistName === playlistName
       );
 
-      if (selectedPlaylist && selectedPlaylist.id !== currentPlaylistId) {
-        getAllMusicAndPlaylist(selectedPlaylist.id);
-        setCurrentPlaylistId(selectedPlaylist.id);
+      if (selectedPlaylist && selectedPlaylist._id !== currentPlaylistId) {
+        getAllMusicAndPlaylist(selectedPlaylist._id);
+        setCurrentPlaylistId(selectedPlaylist._id);
         setSelectedPlaylist(selectedPlaylist);
         setprogress(100);
         setComLoad(false);

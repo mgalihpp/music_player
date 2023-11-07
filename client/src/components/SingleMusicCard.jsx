@@ -92,8 +92,8 @@ const SingleMusicCard = () => {
 
   const handleAddToLikedSongs = async () => {
     setOpen(true);
-    const music_id = selectedMusic?.id;
-    const playlist_id = "1";
+    const music_id = selectedMusic?._id;
+    const playlist_id = "654a4ec2bdb81a5aa1fadfe3";
 
     try {
       const res = await fetch(
@@ -258,8 +258,8 @@ const SingleMusicCard = () => {
                                         <AlertDialog.Action>
                                           <button
                                             className="cursoir-pointer bg-green-500 hover:bg-green-500/90 text-sm text-zinc-100 flex items-center justify-center rounded-md px-2 py-2 outline-none focus:shadow-sm font-semibold"
-                                            data-music-id={selectedMusic?.id}
-                                            data-playlist-id={playlist?.id}
+                                            data-music-id={selectedMusic?._id}
+                                            data-playlist-id={playlist?._id}
                                             data-playlist-name={
                                               playlist?.playlistName
                                             }

@@ -7,7 +7,7 @@ import {
 } from "react";
 import { PropTypes } from "prop-types";
 import { useUploadContext } from "./UploadContext";
-import host from "../utils";
+import { host } from "../utils";
 
 const MusicContext = createContext();
 

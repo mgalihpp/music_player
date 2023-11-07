@@ -16,7 +16,7 @@ import Color from "color-thief-react";
 import { AlertDialog, Button, DropdownMenu, Flex } from "@radix-ui/themes";
 import * as Toast from "@radix-ui/react-toast";
 import LoadingBar from "react-top-loading-bar";
-import host from "../utils";
+import { host } from "../utils";
 
 const SingleMusicCard = () => {
   const { musicName } = useParams();
@@ -38,7 +38,7 @@ const SingleMusicCard = () => {
   const selectedMusic = musicData?.find(
     (music) => music.musicName === musicName
   );
-  const IMAGE_URL = `${host + selectedMusic?.musicImage}`;
+  const IMAGE_URL = `${host + "img/" + selectedMusic?.musicImage}`;
 
   useEffect(() => {
     if (selectedAudio?.musicName === musicName) {
@@ -93,7 +93,7 @@ const SingleMusicCard = () => {
   const handleAddToLikedSongs = async () => {
     setOpen(true);
     const music_id = selectedMusic?.id;
-    const playlist_id = "65466b9ce7986159f671aad3";
+    const playlist_id = "1";
 
     try {
       const res = await fetch(

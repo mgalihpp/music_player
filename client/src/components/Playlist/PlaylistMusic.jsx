@@ -1,17 +1,17 @@
 import { Play } from "lucide-react";
 import { Link } from "react-router-dom";
 import { PropTypes } from "prop-types";
-import host from "../../utils";
+import { host } from "../../utils";
 
 const PlaylistMusic = ({ children, image }) => {
   return (
     <Link
       to={`/playlist/${children}`}
-      className="flex items-start justify-center group w-[120px] flex-col text-base text-zinc-200 gap-3 font-semibold rounded p-3 hover:bg-white/10 transition-all"
+      className="flex items-center justify-center group w-[120px] flex-col text-base text-zinc-200 gap-3 font-semibold rounded p-3 hover:bg-white/10 transition-all"
     >
       <div className="relative">
         <img
-          src={`${host + image}`}
+          src={`${host + "playlist/img/" + image}`}
           alt="cover"
           className="rounded object-cover min-w-[100px] min-h-[100px] max-w-[100px] max-h-[100px] w-[100px] h-[100px]"
         />

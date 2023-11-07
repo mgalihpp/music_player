@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import TopNavbar from "../Navbar/TopNavbar";
 import { useUploadContext } from "../../Context/UploadContext";
 import LoadingBar from "react-top-loading-bar";
-import host from "../../utils";
+import { host } from "../../utils";
 
 const CreatePlaylist = () => {
   const [playlistImage, setPlaylistImage] = useState(null);

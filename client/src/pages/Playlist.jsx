@@ -6,7 +6,7 @@ import Color from "color-thief-react";
 import LoadingBar from "react-top-loading-bar";
 import TopNavbar from "../components/Navbar/TopNavbar";
 import { useAudioContext } from "../Context/AudioContext";
-import host from "../utils";
+import { host } from "../utils";
 
 const Playlist = () => {
   const { playlistName } = useParams();
@@ -35,7 +35,7 @@ const Playlist = () => {
   }, [selectedAudio, musicName, currentIndex, setCurrentIndex]);
 
   useEffect(() => {
-    if (playlistData.length !== 0) {
+    if (playlistData && playlistData.length !== 0) {
       const selectedPlaylist = playlistData.find(
         (playlist) => playlist.playlistName === playlistName
       );
@@ -81,9 +81,13 @@ const Playlist = () => {
     }
   };
 
+  console.log(selectedPlaylist);
+
   const getFirstMusic = musicPlaylistData[0]?.musicName;
 
-  const IMAGE_URL = `${host + selectedPlaylist?.playlistImage}`;
+  const IMAGE_URL = `${
+    host + "playlist/img/" + selectedPlaylist?.playlistImage
+  }`;
 
   return (
     <>
@@ -124,7 +128,11 @@ const Playlist = () => {
                   <div className="flex flex-row items-start  pt-10 pb-4 px-6">
                     <div className="relative">
                       <img
-                        src={`${host + selectedPlaylist?.playlistImage}`}
+                        src={`${
+                          host +
+                          "playlist/img/" +
+                          selectedPlaylist?.playlistImage
+                        }`}
                         alt="cover"
                         className="object-cover min-w-[150px] rounded min-h-[150px] w-[250px] h-[250px] max-w-[250px] max-h-[250px]"
                       />
@@ -151,7 +159,7 @@ const Playlist = () => {
                     </button>
                   </div>
                   <div className="bg-black/20 flex flex-col items-center justify-normal px-8 py-4">
-                    <div className="flex flex-row items-center justify-start gap-12 w-full px-4 py-2 rounded-md">
+                    <div className="flex flex-row items-center justify-between gap-12 w-full px-4 py-2 rounded-md">
                       <div className="flex flex-row items-center justify-start gap-6 w-96">
                         <h1>#</h1>
                         <h1>Title</h1>
@@ -165,7 +173,7 @@ const Playlist = () => {
                     {musicPlaylistData.map((music, index) => (
                       <div
                         key={index}
-                        className="flex flex-row items-center justify-start hover:bg-white/5 gap-12 w-full px-4 py-2 rounded-md"
+                        className="flex flex-row items-center justify-between hover:bg-white/5 gap-12 w-full px-4 py-2 rounded-md"
                       >
                         <div className="flex flex-row items-center justify-start gap-6 w-96 group">
                           <div className="block group-hover:hidden w-4">
@@ -185,7 +193,7 @@ const Playlist = () => {
                           </button>
                           <figure className="flex flex-row items-center justify-center gap-4">
                             <img
-                              src={`${host + music.musicImage}`}
+                              src={`${host + "img/" + music.musicImage}`}
                               alt="cover"
                               className="object-cover w-10 h-10"
                             />

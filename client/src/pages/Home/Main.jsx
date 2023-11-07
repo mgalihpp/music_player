@@ -64,12 +64,11 @@ const Main = () => {
 
   return (
     <>
+      <TopNavbar />
       {compLoad ? (
         <LoadingBar color="#00a827" shadow={true} progress={progress} />
       ) : (
         <>
-          <TopNavbar />
-
           <div className="flex flex-row items-center justify-between space-y-2 mt-6 mb-4">
             <h1 className="text-4xl font-semibold text-zinc-50">
               Let&apos;s Play a Music!

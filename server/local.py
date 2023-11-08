@@ -40,7 +40,7 @@ def index():
     return "ok"
 
 
-@app.get('/stream_audio/<audio_filename>')
+@app.get("/stream_audio/<audio_filename>")
 def stream_audio(audio_filename):
     audio_path = os.path.join(UPLOAD_FOLDER, audio_filename)
 
@@ -82,10 +82,7 @@ def stream_image(image_filename):
     if os.path.exists(image_path):
         return (
             send_file(
-                image_path,
-                as_attachment=False,
-                mimetype="image/jpeg",
-                max_age=300
+                image_path, as_attachment=False, mimetype="image/jpeg", max_age=300
             ),
             200,
         )
@@ -128,54 +125,45 @@ def get_all_music():
     return make_response(jsonify({"musics": music_list})), 200
 
 
-# @app.post("/upload")
-# def upload_music():
-#     # Check if the POST request has the file part
-#     if "music_file" not in request.files:
-#         return make_response(jsonify({"error": "No file part"})), 400
+@app.post("/upload")
+def upload_music():
+    # Check if the POST request has the file part
+    if "music_file" not in request.files:
+        return make_response(jsonify({"error": "No file part"})), 400
 
-#     file = request.files["music_file"]
-#     image = request.files["music_image"]
-#     music_name = request.form.get("music_name")
-#     music_artist = request.form.get("music_artist")
+    file = request.files["music_file"]
+    image = request.files["music_image"]
+    music_name = request.form.get("music_name")
+    music_artist = request.form.get("music_artist")
 
-#     # Validate the uploaded file
-#     if file.filename == "":
-#         return make_response(jsonify({"error": "No selected file"})), 400
+    # Validate the uploaded file
+    if file.filename == "":
+        return make_response(jsonify({"error": "No selected file"})), 400
 
-#     if image.filename == "":
-#         return make_response(jsonify({"error": "No selected image"})), 400
+    if image.filename == "":
+        return make_response(jsonify({"error": "No selected image"})), 400
 
-#     if file and allowed_file(file.filename) and allowed_image(image.filename):
-#         # Secure the filename to prevent directory traversal
-#         filename = secure_filename(file.filename)
-#         imagefile = secure_filename(image.filename)
+    if file and allowed_file(file.filename) and allowed_image(image.filename):
+        # Secure the filename to prevent directory traversal
+        filename = secure_filename(file.filename)
+        imagefile = secure_filename(image.filename)
+        save_music_to_server(file, filename)
+        save_image_to_server(image, imagefile)
 
-#         # Upload the audio and image files to Firebase Storage
-#         audio_data = file.read()
-#         image_data = image.read()
-#         # Upload audio and image data to Firebase Storage
-#         storage.child("musics").child(filename).put(audio_data)
-#         storage.child("images").child(imagefile).put(image_data)
+        # Add the music data to the MongoDB collection
+        music_data = {
+            "musicName": music_name,
+            "musicArtist": music_artist,
+            "musicPath": filename,
+            "musicImage": imagefile,
+        }
 
-#         # Generate the download URLs
-#         audio_download_url = storage.child("musics").child(filename).get_url(None)
-#         image_download_url = storage.child("images").child(imagefile).get_url(None)
+        # Insert music data into the MongoDB collection
+        music_collection.insert_one(music_data)
 
-#         # Add the music data to the MongoDB collection
-#         music_data = {
-#             "musicName": music_name,
-#             "musicArtist": music_artist,
-#             "musicPath": audio_download_url,
-#             "musicImage": image_download_url,
-#         }
+        return make_response(jsonify({"message": "Music uploaded successfully"})), 201
 
-#         # Insert music data into the MongoDB collection
-#         music_collection.insert_one(music_data)
-
-#         return make_response(jsonify({"message": "Music uploaded successfully"})), 201
-
-#     return make_response(jsonify({"error": "Invalid file format"})), 401
+    return make_response(jsonify({"error": "Invalid file format"})), 401
 
 
 # @app.delete("/delete/<string:music_id>")
@@ -235,55 +223,50 @@ def get_all_music():
 #         )
 
 
-# @app.post("/playlist/add")
-# def add_playlist():
-#     try:
-#         playlist_name = request.form.get("playlist_name")
-#         playlist_image = request.files.get("playlist_image")
+@app.post("/playlist/add")
+def add_playlist():
+    try:
+        playlist_name = request.form.get("playlist_name")
+        playlist_image = request.files.get("playlist_image")
 
-#         if playlist_name:
-#             if playlist_image:
-#                 image_data = playlist_image.read()
-#                 imagefile = secure_filename(playlist_image.filename)
-#                 storage.child("images/playlist").child(imagefile).put(image_data)
+        if playlist_name:
+            if playlist_image:
+                imagefile = secure_filename(playlist_image.filename)
+                save_playlist_image_to_server(playlist_image, imagefile)
+            else:
+                # Provide a default image path if no image is uploaded
+                return make_response(jsonify({"no image selected"}))
 
-#                 image_download_url = (
-#                     storage.child("images/playlist").child(imagefile).get_url(None)
-#                 )
-#             else:
-#                 # Provide a default image path if no image is uploaded
-#                 return make_response(jsonify({"no image selected"}))
+            # Create a playlist document to insert into MongoDB
+            playlist_data = {
+                "playlistName": playlist_name,
+                "playlistImage": imagefile,
+            }
 
-#             # Create a playlist document to insert into MongoDB
-#             playlist_data = {
-#                 "playlistName": playlist_name,
-#                 "playlistImage": image_download_url,
-#             }
+            # Insert the playlist document into the MongoDB collection
+            playlist_collection.insert_one(playlist_data)
 
-#             # Insert the playlist document into the MongoDB collection
-#             playlist_collection.insert_one(playlist_data)
-
-#             return make_response(
-#                 jsonify(
-#                     {
-#                         "message": "Created Playlist Successfully",
-#                         "Playlist": playlist_name,
-#                     }
-#                 ),
-#                 204,
-#             )
-#         else:
-#             return make_response(
-#                 jsonify({"message": "Missing 'playlist_name' in form data"}),
-#                 400,
-#             )
-#     except Exception as e:
-#         return (
-#             make_response(
-#                 jsonify({"message": "Failed to create playlist", "error": str(e)})
-#             ),
-#             500,
-#         )
+            return make_response(
+                jsonify(
+                    {
+                        "message": "Created Playlist Successfully",
+                        "Playlist": playlist_name,
+                    }
+                ),
+                204,
+            )
+        else:
+            return make_response(
+                jsonify({"message": "Missing 'playlist_name' in form data"}),
+                400,
+            )
+    except Exception as e:
+        return (
+            make_response(
+                jsonify({"message": "Failed to create playlist", "error": str(e)})
+            ),
+            500,
+        )
 
 
 @app.post("/playlist/addmusic/<string:music_id>/<string:playlist_id>")
@@ -486,6 +469,23 @@ ALLOWED_EXTENSIONS_IMG = {"png", "jpg", "jpeg", "svg"}
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.config["UPLOAD_IMG"] = UPLOAD_IMG
 app.config["UPLOAD_PLAYLIST_IMG"] = UPLOAD_PLAYLIST_IMG
+
+
+def save_music_to_server(file, filename):
+    # metode untuk menyimpan file music ke folder "static/file" di dalam server
+    file_path = os.path.join(UPLOAD_FOLDER, filename)
+    file.save(file_path)
+
+
+def save_image_to_server(file, image_name):
+    # metode untuk menyimpan image ke folder "static/image" di dalam server
+    image_path = os.path.join(UPLOAD_IMG, image_name)
+    file.save(image_path)
+
+
+def save_playlist_image_to_server(file, image_name):
+    image_path = os.path.join(UPLOAD_PLAYLIST_IMG, image_name)
+    file.save(image_path)
 
 
 # Helper function to check if the file extension is allowed

@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
-import { SortAsc, SortDesc } from "lucide-react";
+import { Play, SortAsc, SortDesc } from "lucide-react";
 import MusicCard from "../../components/MusicCard";
 import SkelMusicCard from "../../components/Skeleton/SkelMusicCard";
 import TopNavbar from "../../components/Navbar/TopNavbar";
 import { useMusicContext } from "../../Context/MusicContext";
 import LoadingBar from "react-top-loading-bar";
+import { host } from "../../utils";
+import { Link } from "react-router-dom";
 
 const Main = () => {
-  const { musicData, isLoading } = useMusicContext();
+  const { musicData, isLoading, playlistData } = useMusicContext();
   const [sortOrder, setSortOrder] = useState("asc");
   const [sortedMusicData, setSortedMusicData] = useState([]);
   const [isDisable, setDisable] = useState(false);
@@ -70,7 +72,53 @@ const Main = () => {
       ) : (
         <>
           <div className="flex flex-row items-center justify-between space-y-2 mt-6 mb-4">
-            <h1 className="text-4xl font-semibold text-zinc-50">
+            <h1 className="text-3xl font-semibold text-zinc-50">
+              {getGreeting()}
+            </h1>
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            {playlistData.map((playlist) => (
+              <div
+                key={playlist._id}
+                className={`
+        bg-white/5 group rounded flex items-center gap-4 overflow-hidden hover:bg-white/20 transition-all
+        `}
+              >
+                <img
+                  title={playlist.playlistName}
+                  loading="lazy"
+                  src={`${host}playlist/img/${playlist.playlistImage}`}
+                  alt="cover"
+                  width={70}
+                  height={70}
+                  style={{
+                    minWidth: "70px",
+                    minHeight: "70px",
+                    objectFit: "cover",
+                    maxWidth: "70px",
+                    maxHeight: "70px",
+                  }}
+                />
+                <Link to={"/playlist/" + playlist.playlistName}>
+                  <strong className="hover:underline">
+                    {playlist.playlistName}
+                  </strong>
+                </Link>
+
+                <button
+                  title="Play Music?"
+                  // onClick={handlePlayClick}
+                  className={`items-center justify-center pl-4 p-3 rounded-full bg-green-500/80 hover:bg-green-500 text-black ml-auto mr-8 
+                 hidden hover:scale-110 transition-all shadow hover:shadow-lg group`}
+                >
+                  <Play fill="black" size={25} />
+                </button>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex flex-row items-center justify-between space-y-2 mt-6 mb-4">
+            <h1 className="text-3xl font-semibold text-zinc-50">
               Let&apos;s Play a Music!
             </h1>
 
@@ -91,7 +139,7 @@ const Main = () => {
           </div>
 
           <div
-            className={`grid xl:ml-2 lg:ml-6 xl:grid-cols-5 2xl:grid-cols-6 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-4 mt-4
+            className={`grid xl:grid-cols-5 2xl:grid-cols-6 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-4 mt-4
         `}
           >
             {isLoading ? (
@@ -123,5 +171,18 @@ const Main = () => {
     </>
   );
 };
+
+function getGreeting() {
+  const now = new Date();
+  const currentHour = now.getHours();
+
+  if (currentHour >= 6 && currentHour < 12) {
+    return "Good Morning!";
+  } else if (currentHour >= 12 && currentHour < 18) {
+    return "Good Afternoon!";
+  } else {
+    return "Good Night!";
+  }
+}
 
 export default Main;

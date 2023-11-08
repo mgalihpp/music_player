@@ -26,7 +26,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <AudioProvider>
             <BrowserRouter>
               <Theme>
-                <div className="h-screen flex p-2 flex-col overflow-hidden">
+                <div className="h-screen flex p-2 flex-col overflow-hidden w-screen">
                   <div className="flex flex-1 overflow-hidden">
                     <aside className="w-72 p-0 pr-2">
                       <Navbar />

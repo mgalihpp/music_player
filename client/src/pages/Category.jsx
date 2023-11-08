@@ -23,11 +23,11 @@ const Category = () => {
       const data = await res.json();
       setData(data.cat);
       setIsLoading(false);
-      setComLoad(false);
     };
     setprogress(100);
     setTimeout(() => {
       fetchData();
+      setComLoad(false);
     }, 200);
   }, [year]);
 

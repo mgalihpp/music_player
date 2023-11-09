@@ -112,7 +112,7 @@ const Playlist = () => {
   };
 
   const getFirstMusic =
-    musicPlaylistData?.musics && musicPlaylistData.musics.length >= 0
+    musicPlaylistData?.musics && musicPlaylistData.musics.length > 0
       ? musicPlaylistData.musics[0].musicName
       : "error";
 

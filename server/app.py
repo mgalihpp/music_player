@@ -15,7 +15,10 @@ CORS(
 
 # koneksi ke database my sql
 db = mysql.connector.connect(
-    host="localhost", user="root", password="galih451", database="music_streaming"
+    host="localhost",
+    user="root",
+    password="galih451",
+    database="music_streaming",
 )
 
 s = URLSafeTimedSerializer("secret123")
@@ -23,7 +26,7 @@ s = URLSafeTimedSerializer("secret123")
 mysql = MySQL(app)
 
 # membuat cursor untuk berinteraksi nanti dengan database
-cursor = db.cursor()
+cursor = db.cursor(buffered=True)
 
 
 @app.get("/")
@@ -33,7 +36,9 @@ def index():
 
 @app.get("/stream_audio/<audio_filename>")
 def stream_audio(audio_filename):
-    audio_path = os.path.join(UPLOAD_FOLDER, audio_filename)
+    audio_path = os.path.join(
+        app.root_path, app.config["UPLOAD_FOLDER"], audio_filename
+    )
 
     if os.path.exists(audio_path):
         return send_file(
@@ -47,7 +52,7 @@ def stream_audio(audio_filename):
 
 @app.get("/img/<image_filename>")
 def stream_image(image_filename):
-    image_path = os.path.join(UPLOAD_IMG, image_filename)
+    image_path = os.path.join(app.root_path, app.config["UPLOAD_IMG"], image_filename)
 
     if os.path.exists(image_path):
         return (
@@ -64,7 +69,9 @@ def stream_image(image_filename):
 
 @app.get("/playlist/img/<image_filename>")
 def stream_playlist_image(image_filename):
-    image_path = os.path.join(UPLOAD_PLAYLIST_IMG, image_filename)
+    image_path = os.path.join(
+        app.root_path, app.config["UPLOAD_PLAYLIST_IMG"], image_filename
+    )
 
     if os.path.exists(image_path):
         return (
@@ -142,9 +149,7 @@ def upload_music():
         save_image_to_server(music_image, image)
 
         # metode untuk menyimpan form data ke dalam database
-        insert_music_into_db(
-            music_file.filename, music_name, music_artist, music_image.filename
-        )
+        insert_music_into_db(audio, music_name, music_artist, image)
 
         return (make_response(jsonify({"message": "Music uploaded successfully"})), 201)
 
@@ -262,19 +267,25 @@ def get_playlist_music(playlist_id):
         result = cursor.fetchall()
 
         music_list = []
+        playlist_info = None  # Initialize playlist_info outside the loop
+
         for row in result:
+            if playlist_info is None:
+                # Extract playlist name and image only once
+                playlist_info = {"playlistName": row[4], "playlistImage": row[5]}
+
             music_info = {
                 "musicName": row[0],
                 "musicPath": row[1],
                 "musicImage": row[2],
                 "musicArtist": row[3],
-                "playlistName": row[4],
-                "playlistImage": row[5],
             }
             music_list.append(music_info)
 
         for music_info in music_list:
-            music_path = music_info["musicPath"]
+            music_path = os.path.join(
+                app.root_path, app.config["UPLOAD_FOLDER"], music_info["musicPath"]
+            )
             audio = MP3(music_path)
             # Get the duration in seconds
             duration_in_seconds = audio.info.length
@@ -286,7 +297,15 @@ def get_playlist_music(playlist_id):
             # Add the formatted duration to the music_info dictionary
             music_info["duration"] = formatted_duration
 
-        return jsonify({"playlist": music_list})
+            response_data = {
+                "playlist": {
+                    "playlistName": playlist_info["playlistName"],
+                    "playlistImage": playlist_info["playlistImage"],
+                    "musics": music_list,
+                }
+            }
+
+        return jsonify(response_data)
     except mysql.connector.Error as e:
         return (
             jsonify({"message": "Failed to retrieve playlist music", "error": str(e)}),
@@ -366,6 +385,10 @@ UPLOAD_FOLDER = "static/files"
 UPLOAD_IMG = "static/img"
 UPLOAD_PLAYLIST_IMG = "static/img/playlist"
 
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+app.config["UPLOAD_IMG"] = UPLOAD_IMG
+app.config["UPLOAD_PLAYLIST_IMG"] = UPLOAD_PLAYLIST_IMG
+
 
 # membuat handler untuk upload file
 def validate_form_data(request):
@@ -382,20 +405,22 @@ def validate_form_data(request):
 
 def save_music_to_server(file, filename):
     # metode untuk menyimpan file music ke folder "static/file" di dalam server
-    file_path = os.path.join(UPLOAD_FOLDER, filename)
+    file_path = os.path.join(app.root_path, app.config["UPLOAD_FOLDER"], filename)
     file.save(file_path)
     return file_path
 
 
 def save_image_to_server(file, image_name):
     # metode untuk menyimpan image ke folder "static/image" di dalam server
-    image_path = os.path.join(UPLOAD_IMG, image_name)
+    image_path = os.path.join(app.root_path, app.config["UPLOAD_IMG"], image_name)
     file.save(image_path)
     return image_path
 
 
 def save_playlist_image_to_server(file, image_name):
-    image_path = os.path.join(UPLOAD_PLAYLIST_IMG, image_name)
+    image_path = os.path.join(
+        app.root_path, app.config["UPLOAD_PLAYLIST_IMG"], image_name
+    )
     file.save(image_path)
     return image_path
 

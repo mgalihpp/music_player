@@ -15,25 +15,6 @@ music_collection = db["musics"]
 playlist_collection = db["playlists"]
 category_collection = db["category"]
 
-# cred = credentials.Certificate("./serviceAccount.json")
-# firebase_admin.initialize_app(cred)
-
-
-# config = {
-#     "apiKey": "AIzaSyBFLmyuxO4wf9s0Cd2Dcbq0Fs5G0ppuT6c",
-#     "authDomain": "phrasal-alpha-372913.firebaseapp.com",
-#     "projectId": "phrasal-alpha-372913",
-#     "storageBucket": "phrasal-alpha-372913.appspot.com",
-#     "messagingSenderId": "659218835319",
-#     "appId": "1:659218835319:web:1a40d8db35cb11d1452372",
-#     "measurementId": "G-TRNMW996YQ",
-#     "serviceAccount": "./serviceAccount.json",
-#     "databaseURL": "https://phrasal-alpha-372913-default-rtdb.asia-southeast1.firebasedatabase.app/",
-# }
-
-# firebase = pyrebase.initialize_app(config)
-# storage = firebase.storage()
-
 
 @app.route("/")
 def index():
@@ -42,7 +23,9 @@ def index():
 
 @app.get("/stream_audio/<audio_filename>")
 def stream_audio(audio_filename):
-    audio_path = os.path.join(UPLOAD_FOLDER, audio_filename)
+    audio_path = os.path.join(
+        app.root_path, app.config["UPLOAD_FOLDER"], audio_filename
+    )
 
     if os.path.exists(audio_path):
         file_size = os.path.getsize(audio_path)

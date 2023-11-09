@@ -78,48 +78,62 @@ const Main = () => {
             </h1>
           </div>
           <div className="grid grid-cols-3 gap-4">
-            {isPLoading
-              ? Array.from({ length: 3 }, (_, index) => (
-                  <SkelPlayCard key={index} />
-                ))
-              : playlistData.map((playlist) => (
-                  <div
-                    key={playlist._id}
-                    className={`
+            {isPLoading ? (
+              Array.from({ length: 3 }, (_, index) => (
+                <SkelPlayCard key={index} />
+              ))
+            ) : playlistData.length === 0 ? (
+              <div>
+                <h1>
+                  No Playlist Found.{" "}
+                  <Link
+                    className="underline underline-offset-2"
+                    to="/playlist/create"
+                  >
+                    Want to Create?
+                  </Link>
+                </h1>
+              </div>
+            ) : (
+              playlistData.map((playlist) => (
+                <div
+                  key={playlist.id}
+                  className={`
         bg-white/5 group rounded flex items-center gap-4 overflow-hidden hover:bg-white/20 transition-all
         `}
-                  >
-                    <img
-                      title={playlist.playlistName}
-                      loading="lazy"
-                      src={`${host}playlist/img/${playlist.playlistImage}`}
-                      alt="cover"
-                      width={70}
-                      height={70}
-                      style={{
-                        minWidth: "70px",
-                        minHeight: "70px",
-                        objectFit: "cover",
-                        maxWidth: "70px",
-                        maxHeight: "70px",
-                      }}
-                    />
-                    <Link to={"/playlist/" + playlist.playlistName}>
-                      <strong className="hover:underline">
-                        {playlist.playlistName}
-                      </strong>
-                    </Link>
+                >
+                  <img
+                    title={playlist.playlistName}
+                    loading="lazy"
+                    src={`${host}playlist/img/${playlist.playlistImage}`}
+                    alt="cover"
+                    width={70}
+                    height={70}
+                    style={{
+                      minWidth: "70px",
+                      minHeight: "70px",
+                      objectFit: "cover",
+                      maxWidth: "70px",
+                      maxHeight: "70px",
+                    }}
+                  />
+                  <Link to={"/playlist/" + playlist.playlistName}>
+                    <strong className="hover:underline">
+                      {playlist.playlistName}
+                    </strong>
+                  </Link>
 
-                    <button
-                      title="Play Music?"
-                      // onClick={handlePlayClick}
-                      className={`items-center justify-center pl-4 p-3 rounded-full bg-green-500/80 hover:bg-green-500 text-black ml-auto mr-8 
+                  <button
+                    title="Play Music?"
+                    // onClick={handlePlayClick}
+                    className={`items-center justify-center pl-4 p-3 rounded-full bg-green-500/80 hover:bg-green-500 text-black ml-auto mr-8 
                  hidden hover:scale-110 transition-all shadow hover:shadow-lg group`}
-                    >
-                      <Play fill="black" size={25} />
-                    </button>
-                  </div>
-                ))}
+                  >
+                    <Play fill="black" size={25} />
+                  </button>
+                </div>
+              ))
+            )}
           </div>
 
           <div className="flex flex-row items-center justify-between space-y-2 mt-6 mb-4">

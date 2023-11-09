@@ -1,4 +1,4 @@
-export const host = "https://music-player-service.vercel.app/";
+export const host = "https://mgpp.pythonanywhere.com/";
 
 export const category = [
   { link: "/", name: "All Musics", color: "bg-white/5" },
@@ -19,35 +19,27 @@ export const category = [
     re: "from-red-900/5",
   },
   {
-    link: "/category/1990",
-    name: "1990",
-    color: "bg-violet-500/90",
-    from: "from-violet-500",
-    to: "to-violet-900/5",
-    re: "from-violet-900/5",
+    link: "/category/sedih",
+    name: "Lagu Sedih",
+    color: "bg-cyan-500",
+    from: "from-cyan-500",
+    to: "to-cyan-900/5",
+    re: "from-cyan-900/5",
   },
   {
-    link: "/category/2000",
-    name: "2000",
+    link: "/category/senang",
+    name: "Lagu Senang",
     color: "bg-yellow-500",
     from: "from-yellow-500",
     to: "to-yellow-900/5",
     re: "from-yellow-900/5",
   },
   {
-    link: "/category/2010",
-    name: "2010",
-    color: "bg-blue-500",
-    from: "from-blue-500",
-    to: "to-blue-900/5",
-    re: "from-blue-900/5",
-  },
-  {
-    link: "/category/2020",
-    name: "2020",
-    color: "bg-teal-500",
-    from: "from-teal-500",
-    to: "to-teal-900/5",
-    re: "from-teal-900/5",
+    link: "/category/romantis",
+    name: "Lagu Romantis",
+    color: "bg-pink-500",
+    from: "from-pink-500",
+    to: "to-pink-900/5",
+    re: "from-pink-900/5",
   },
 ];

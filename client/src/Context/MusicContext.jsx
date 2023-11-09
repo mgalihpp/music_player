@@ -92,7 +92,7 @@ export function MusicProvider({ children }) {
 
   const getAllMusicAndPlaylist = async (playlist_id) => {
     try {
-      const response = await fetch(`${url}playlist/music/${playlist_id}`, {
+      const response = await fetch(`${url}playlist/${playlist_id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

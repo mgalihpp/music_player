@@ -41,15 +41,15 @@ export function AudioProvider({ children }) {
       }
     }
     if (data === "playlist") {
-      if (currentIndex !== -1 && currentIndex < musicPlaylistData.length - 1) {
+      if (currentIndex !== -1 && currentIndex < musicPlaylistData.musics.length - 1) {
         const nextIndex = currentIndex + 1;
-        const nextMusic = musicPlaylistData[nextIndex];
+        const nextMusic = musicPlaylistData.musics[nextIndex];
         playAudio(nextMusic);
         setCurrentIndex(nextIndex);
       }
-      if (currentIndex >= musicPlaylistData.length - 1) {
+      if (currentIndex >= musicPlaylistData.musics.length - 1) {
         const nextIndex = 0;
-        const resetMusic = musicPlaylistData[nextIndex];
+        const resetMusic = musicPlaylistData.musics[nextIndex];
         playAudio(resetMusic);
         setCurrentIndex(nextIndex);
       }
@@ -68,7 +68,7 @@ export function AudioProvider({ children }) {
     if (data === "playlist")
       if (currentIndex > 0) {
         const previousIndex = currentIndex - 1;
-        const previousMusic = musicPlaylistData[previousIndex];
+        const previousMusic = musicPlaylistData.musics[previousIndex];
         playAudio(previousMusic);
         setCurrentIndex(previousIndex);
       }

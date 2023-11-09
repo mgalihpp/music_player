@@ -13,6 +13,7 @@ const UploadFile = () => {
   const { setIsFetching } = useUploadContext();
   const [isSubmit, SetIsSubmit] = useState(false);
   const [toast, setToast] = useState(false);
+  const [eToast, setEToast] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
   const [progress, setprogress] = useState(0);
   const [compLoad, setComLoad] = useState(true);
@@ -36,7 +37,6 @@ const UploadFile = () => {
     loadingRef.current.continuousStart();
 
     try {
-      setIsFetching(true);
       const formData = new FormData();
       formData.append("music_file", file);
       formData.append("music_name", fileName);
@@ -46,9 +46,12 @@ const UploadFile = () => {
         method: "POST",
         body: formData,
       });
+      setIsFetching(true);
+      setToast(true);
       return res;
     } catch (error) {
       console.log(error);
+      setEToast(true);
       setIsFetching(false);
     } finally {
       fileRef.current.value = "";
@@ -60,7 +63,6 @@ const UploadFile = () => {
       setFileName("");
       setArtist("");
       setPreviewImage(null);
-      setToast(true);
       loadingRef.current.complete();
       setTimeout(() => {
         SetIsSubmit(false);
@@ -207,53 +209,107 @@ const UploadFile = () => {
               <LoadingBar color="#00a827" shadow={true} ref={loadingRef} />
             </div>
 
-            <div
-              id="toast-success"
-              className={`${
-                toast ? "flex" : "hidden"
-              } absolute top-5 right-0 items-center w-full h-16 max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-white dark:bg-green-500
+            {toast && (
+              <div
+                id="toast-success"
+                className={`flex absolute top-5 right-0 items-center w-full h-16 max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-white dark:bg-green-500
         `}
-              role="alert"
-            >
-              <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-white bg-transparent rounded-lg">
-                <svg
-                  className="w-5 h-5"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
-                </svg>
-                <span className="sr-only">Check icon</span>
-              </div>
-              <div className="ml-3 text-sm font-normal">
-                Music Uploaded Successfully
-              </div>
-              <button
-                type="button"
-                className="ml-auto -mx-1.5 -my-1.5 bg-white/20 text-white hover:text-black rounded-lg focus:ring-2 focus:ring-gray-300 p-1 hover:bg-white/50 inline-flex items-center justify-center h-7 w-7"
-                data-dismiss-target="#toast-success"
-                aria-label="Close"
+                role="alert"
               >
-                <span className="sr-only">Close</span>
-                <svg
-                  className="w-3 h-3"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 14 14"
+                <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-white bg-transparent rounded-lg">
+                  <svg
+                    className="w-5 h-5"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+                  </svg>
+                  <span className="sr-only">Check icon</span>
+                </div>
+                <div className="ml-3 text-sm font-normal">
+                  Music Uploaded Successfully
+                </div>
+                <button
+                  type="button"
+                  className="ml-auto -mx-1.5 -my-1.5 bg-white/20 text-white hover:text-black rounded-lg focus:ring-2 focus:ring-gray-300 p-1 hover:bg-white/50 inline-flex items-center justify-center h-7 w-7"
+                  data-dismiss-target="#toast-success"
+                  aria-label="Close"
                 >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-                  />
-                </svg>
-              </button>
-            </div>
+                  <span className="sr-only">Close</span>
+                  <svg
+                    className="w-3 h-3"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 14 14"
+                  >
+                    <path
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                    />
+                  </svg>
+                </button>
+              </div>
+            )}
+            {eToast && (
+              <div
+                id="toast-failed"
+                className={`flex
+                absolute top-5 right-0 items-center w-full h-16 max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-white dark:bg-red-500
+        `}
+                role="alert"
+              >
+                <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-white bg-transparent rounded-lg">
+                  <span className="sr-only">Close</span>
+                  <svg
+                    className="w-3 h-3"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 14 14"
+                  >
+                    <path
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                    />
+                  </svg>
+                </div>
+                <div className="ml-3 text-sm font-normal">
+                  Failed To Upload Music
+                </div>
+                <button
+                  type="button"
+                  className="ml-auto -mx-1.5 -my-1.5 bg-white/20 text-white hover:text-black rounded-lg focus:ring-2 focus:ring-gray-300 p-1 hover:bg-white/50 inline-flex items-center justify-center h-7 w-7"
+                  data-dismiss-target="#toast-failed"
+                  aria-label="Close"
+                >
+                  <span className="sr-only">Close</span>
+                  <svg
+                    className="w-3 h-3"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 14 14"
+                  >
+                    <path
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                    />
+                  </svg>
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>

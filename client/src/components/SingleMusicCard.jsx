@@ -90,23 +90,23 @@ const SingleMusicCard = () => {
     }
   };
 
-  const handleAddToLikedSongs = async () => {
-    setOpen(true);
-    const music_id = selectedMusic?._id;
-    const playlist_id = "654a4ec2bdb81a5aa1fadfe3";
+  // const handleAddToLikedSongs = async () => {
+  //   setOpen(true);
+  //   const music_id = selectedMusic?.id;
+  //   const playlist_id = "1";
 
-    try {
-      const res = await fetch(
-        `${host}playlist/addmusic/${music_id}/${playlist_id}`,
-        {
-          method: "POST",
-        }
-      );
-      return res;
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  //   try {
+  //     const res = await fetch(
+  //       `${host}playlist/addmusic/${music_id}/${playlist_id}`,
+  //       {
+  //         method: "POST",
+  //       }
+  //     );
+  //     return res;
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   return (
     <>
@@ -187,7 +187,7 @@ const SingleMusicCard = () => {
                     <button
                       aria-label="love"
                       title="Add to Liked Songs"
-                      onClick={handleAddToLikedSongs}
+                      // onClick={handleAddToLikedSongs}
                       className="flex items-center justify-center p-4 text-zinc-400 hover:text-white transition-all ease-in-out duration-300  "
                     >
                       <Heart size={35} />
@@ -205,7 +205,9 @@ const SingleMusicCard = () => {
                         </Button>
                       </DropdownMenu.Trigger>
                       <DropdownMenu.Content color="gray">
-                        <DropdownMenu.Item onClick={handleAddToLikedSongs}>
+                        <DropdownMenu.Item 
+                        // onClick={handleAddToLikedSongs}
+                        >
                           Add to Liked Songs
                         </DropdownMenu.Item>
                         <DropdownMenu.Separator />
@@ -258,8 +260,8 @@ const SingleMusicCard = () => {
                                         <AlertDialog.Action>
                                           <button
                                             className="cursoir-pointer bg-green-500 hover:bg-green-500/90 text-sm text-zinc-100 flex items-center justify-center rounded-md px-2 py-2 outline-none focus:shadow-sm font-semibold"
-                                            data-music-id={selectedMusic?._id}
-                                            data-playlist-id={playlist?._id}
+                                            data-music-id={selectedMusic?.id}
+                                            data-playlist-id={playlist?.id}
                                             data-playlist-name={
                                               playlist?.playlistName
                                             }

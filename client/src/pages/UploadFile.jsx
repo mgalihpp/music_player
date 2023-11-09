@@ -46,9 +46,14 @@ const UploadFile = () => {
         method: "POST",
         body: formData,
       });
-      setIsFetching(true);
-      setToast(true);
-      return res;
+      if (res.status === 201) {
+        setIsFetching(true);
+        setToast(true);
+        return res;
+      } else {
+        setEToast(true);
+        setIsFetching(false);
+      }
     } catch (error) {
       console.log(error);
       setEToast(true);
@@ -67,6 +72,7 @@ const UploadFile = () => {
       setTimeout(() => {
         SetIsSubmit(false);
         setToast(false);
+        setEToast(false);
       }, 5000);
     }
   };

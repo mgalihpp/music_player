@@ -1,9 +1,9 @@
 {
   "name": "music_player",
   "private": true,
-  "version": "2.0.0",
+  "version": "3.0.0",
   "type": "module",
-  "proxy": "https://music-player-jhih.vercel.app",
+  "proxy": "https://mgpp.pythonanywhere.com/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -13,6 +13,7 @@
   "dependencies": {
     "@radix-ui/react-toast": "^1.1.5",
     "@radix-ui/themes": "^2.0.0",
+    "@vercel/analytics": "^1.1.1",
     "color-thief-react": "^2.1.0",
     "lucide-react": "^0.288.0",
     "node-vibrant": "^3.1.6",

@@ -17,6 +17,7 @@ import Playlist from "./pages/Playlist.jsx";
 import CreatePlaylist from "./components/Playlist/CreatePlaylist";
 import { Theme } from "@radix-ui/themes";
 import Category from "./pages/Category.jsx";
+import { Analytics } from "@vercel/analytics/react";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -56,6 +57,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
                     <AudioPlayerComponent />
                   </footer>
                 </div>
+                <Analytics />
               </Theme>
             </BrowserRouter>
           </AudioProvider>

@@ -14,8 +14,6 @@ const CreatePlaylist = () => {
   const { setIsPFetching } = useUploadContext();
   const { userId } = useAuth();
 
-  console.log(userId);
-
   const playlistImageRef = useRef(null);
   const playlistNameRef = useRef(null);
   const loadingRef = useRef(null);

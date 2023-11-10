@@ -5,6 +5,9 @@ from flask_cors import CORS
 from bson import ObjectId
 from mutagen.mp3 import MP3
 import os
+from datetime import datetime, timedelta
+from PIL import Image
+from io import BytesIO
 
 app = Flask(__name__)
 CORS(app, origins="*")
@@ -58,34 +61,57 @@ def stream_audio(audio_filename):
         return make_response(jsonify("File not found"), 404)
 
 
-@app.get("/img/<image_filename>")
-def stream_image(image_filename):
-    image_path = os.path.join(UPLOAD_IMG, image_filename)
+@app.route("/img/<image_filename>")
+def stream_compressed_image(image_filename):
+    image_path = os.path.join(app.root_path, app.config["UPLOAD_IMG"], image_filename)
 
     if os.path.exists(image_path):
-        return (
-            send_file(
-                image_path, as_attachment=False, mimetype="image/jpeg", max_age=300
-            ),
-            200,
+        # Open the original image
+        original_image = Image.open(image_path)
+
+        # Create an in-memory buffer to save the compressed image
+        compressed_image_buffer = BytesIO()
+
+        # Compress the image with the desired quality (JPEG) or optimize (PNG)
+        if original_image.format == "PNG":
+            original_image.save(compressed_image_buffer, format="PNG", optimize=True)
+        else:
+            original_image.save(compressed_image_buffer, format="JPEG", quality=50)
+
+        # Set the buffer position to the beginning
+        compressed_image_buffer.seek(0)
+
+        # Stream the compressed image
+        return send_file(
+            compressed_image_buffer,
+            as_attachment=False,
+            mimetype=f"image/{original_image.format.lower()}",
         )
     else:
-        return make_response(jsonify("File not found")), 404
+        return make_response(jsonify("File not found"), 404)
 
 
 @app.get("/playlist/img/<image_filename>")
 def stream_playlist_image(image_filename):
-    image_path = os.path.join(UPLOAD_PLAYLIST_IMG, image_filename)
+    image_path = os.path.join(
+        app.root_path, app.config["UPLOAD_PLAYLIST_IMG"], image_filename
+    )
 
     if os.path.exists(image_path):
-        return (
+        response = make_response(
             send_file(
                 image_path,
                 as_attachment=False,
                 mimetype="image/jpeg",
-            ),
-            200,
+            )
         )
+        # Set cache headers
+        response.headers["Cache-Control"] = "public, max-age=300"  # Cache for 5 minutes
+        response.headers["Expires"] = (datetime.now() + timedelta(minutes=5)).strftime(
+            "%a, %d %b %Y %H:%M:%S GMT"
+        )
+
+        return response
     else:
         return make_response(jsonify("File not found")), 404
 
@@ -445,6 +471,7 @@ def search_music():
 UPLOAD_FOLDER = "static/files"
 UPLOAD_IMG = "static/img"
 UPLOAD_PLAYLIST_IMG = "static/img/playlist"
+TEMP_IMG = "static/img/temp"
 ALLOWED_EXTENSIONS = {"mp3"}
 ALLOWED_EXTENSIONS_IMG = {"png", "jpg", "jpeg", "svg"}
 
@@ -452,6 +479,7 @@ ALLOWED_EXTENSIONS_IMG = {"png", "jpg", "jpeg", "svg"}
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.config["UPLOAD_IMG"] = UPLOAD_IMG
 app.config["UPLOAD_PLAYLIST_IMG"] = UPLOAD_PLAYLIST_IMG
+app.config["TEMP_IMG"] = TEMP_IMG
 
 
 def save_music_to_server(file, filename):

@@ -82,8 +82,9 @@ const SearchMusic = () => {
 
     if (searchResults?.length === 0) {
       return (
-        <h1 className="flex text-semibold text-xl whitespace-nowrap">
+        <h1 className="flex gap-2 text-semibold text-xl whitespace-nowrap">
           No Music Found for {query}.
+          <Link to='/upload' className="italic underline">Add Music</Link> ?
         </h1>
       );
     }

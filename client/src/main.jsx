@@ -34,7 +34,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
                     </aside>
                     <main className="flex-1 rounded-t-md bg-white/5 overflow-x-auto relative">
                       <Routes>
-                        <Route path="/" Component={App} />
+                        <Route exact path="/" Component={App} />
                         <Route path="/upload" Component={UploadFile} />
                         <Route
                           path="/music/:musicName"

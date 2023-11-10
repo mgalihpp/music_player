@@ -57,7 +57,7 @@ const MusicCard = (props) => {
                 : "/img/download.jpeg"
             }
             alt="cover"
-            className="rounded-lg object-cover min-w-[150px] min-h-[150px] w-[150px] h-[150px]"
+            className="rounded-lg object-cover min-w-[150px] min-h-[150px] w-[150px] h-[150px] max-w-[150px] max-h-[150px]"
           />
           <div
             className={`playing-ui ${

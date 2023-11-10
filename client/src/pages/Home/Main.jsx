@@ -80,7 +80,9 @@ const Main = () => {
           <div className="grid grid-cols-3 gap-4">
             {isPLoading ? (
               Array.from({ length: 3 }, (_, index) => (
-                <SkelPlayCard key={index} />
+                <div key={index}>
+                  <SkelPlayCard />
+                </div>
               ))
             ) : playlistData.length === 0 ? (
               <div>

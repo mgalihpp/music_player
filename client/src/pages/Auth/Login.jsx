@@ -20,6 +20,9 @@ const Login = () => {
       formdata.append("password", password);
       const res = await fetch(`${host}auth/${auth}`, {
         method: "POST",
+        headers: {
+          "Access-Control-Allow-Methods": "POST",
+        },
         body: formdata,
       });
       if (res.ok) {

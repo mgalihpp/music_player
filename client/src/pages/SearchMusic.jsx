@@ -62,7 +62,7 @@ const SearchMusic = () => {
                 <div
                   className={`w-[180px] ${cat.color} h-[180px] rounded-md p-4`}
                 >
-                  <strong className="text-xl">{cat.name}</strong>
+                  <strong className="text-xl">{cat.label}</strong>
                   <div className="absolute bottom-0 right-0">
                     <Music size={75} rotate={90} />
                   </div>
@@ -84,7 +84,10 @@ const SearchMusic = () => {
       return (
         <h1 className="flex gap-2 text-semibold text-xl whitespace-nowrap">
           No Music Found for {query}.
-          <Link to='/upload' className="italic underline">Add Music</Link> ?
+          <Link to="/upload" className="italic underline">
+            Add Music
+          </Link>{" "}
+          ?
         </h1>
       );
     }

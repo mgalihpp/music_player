@@ -13,6 +13,8 @@ const Category = () => {
   const [compLoad, setComLoad] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
 
+  console.log(name);
+
   const selectedCat = category.find((cat) => cat.name === name);
 
   useEffect(() => {
@@ -34,17 +36,17 @@ const Category = () => {
   return (
     <>
       <div
-        className={`mx-auto bg-gradient-to-b ${selectedCat.from} ${selectedCat.to}  px-6 pt-6 pb-14  `}
+        className={`mx-auto bg-gradient-to-b ${selectedCat?.from} ${selectedCat?.to}  px-6 pt-6 pb-14  `}
       >
         <TopNavbar />
         <div className="flex flex-row items-center justify-between mt-12">
           <h1 className="text-7xl font-semibold text-zinc-50">
-            Music Category {name}!
+            Music Category {selectedCat?.label}!
           </h1>
         </div>
       </div>
       <div
-        className={`grid bg-gradient-to-b ${selectedCat.re} ${selectedCat.to} h-full xl:grid-cols-5 2xl:grid-cols-6 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-4 py-12 px-4
+        className={`grid bg-gradient-to-b ${selectedCat?.re} ${selectedCat?.to} h-full xl:grid-cols-5 2xl:grid-cols-6 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-4 py-12 px-4
         `}
       >
         {compLoad ? (

@@ -66,7 +66,7 @@ const Main = () => {
   };
 
   return (
-    <>
+    <div className="p-6 mx-auto">
       <TopNavbar />
       {compLoad ? (
         <LoadingBar color="#00a827" shadow={true} progress={progress} />
@@ -189,7 +189,7 @@ const Main = () => {
           </div>
         </>
       )}
-    </>
+    </div>
   );
 };
 

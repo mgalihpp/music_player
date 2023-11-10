@@ -8,6 +8,7 @@ import {
 import { PropTypes } from "prop-types";
 import { useUploadContext } from "./UploadContext";
 import { host } from "../utils";
+import { useAuth } from "./AuthContext";
 
 const MusicContext = createContext();
 
@@ -26,6 +27,7 @@ export function MusicProvider({ children }) {
   const { isFetching, setIsFetching, isPFetching, setIsPFetching } =
     useUploadContext();
   const [searchResults, setSearchResults] = useState([]);
+  const { user, userId } = useAuth();
 
   const fetchData = useCallback(async () => {
     try {
@@ -71,13 +73,16 @@ export function MusicProvider({ children }) {
 
   const getPlaylist = useCallback(async () => {
     try {
-      const response = await fetch(`${url}playlist`, {
-        method: "GET",
-        headers: {
-          "Access-Control-Allow-Headers": "Content-Type",
-          "Access-Control-Allow-Methods": "GET",
-        },
-      });
+      const response = await fetch(
+        `${url}playlist?JGAREsaeyudvg6rdxlmkopfesdzJVNrKGDIOSK=${userId}`,
+        {
+          method: "GET",
+          headers: {
+            "Access-Control-Allow-Headers": "Content-Type",
+            "Access-Control-Allow-Methods": "GET",
+          },
+        }
+      );
       if (response.ok) {
         const data = await response.json();
         setPlaylistData(data.playlist);
@@ -88,17 +93,20 @@ export function MusicProvider({ children }) {
     } catch (error) {
       console.error(error);
     }
-  }, []);
+  }, [userId]);
 
   const getAllMusicAndPlaylist = async (playlist_id) => {
     try {
-      const response = await fetch(`${url}playlist/${playlist_id}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Methods": "GET",
-        },
-      });
+      const response = await fetch(
+        `${url}playlist/music?GOSSondaAKovmVkjrodankkiwS=${playlist_id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Methods": "GET",
+          },
+        }
+      );
       if (response.ok) {
         const data = await response.json();
         setMusicPlaylistData(data.playlist);
@@ -110,31 +118,31 @@ export function MusicProvider({ children }) {
   };
 
   useEffect(() => {
-    if (musicData.length === 0 && isLoading && !isFetching) {
+    if (musicData.length === 0 && isLoading && !isFetching && user) {
       fetchData();
     }
-  }, [musicData, fetchData, isFetching, isLoading]);
+  }, [musicData, fetchData, isFetching, isLoading, user]);
 
   useEffect(() => {
-    if (isFetching) {
+    if (isFetching && user) {
       setTimeout(() => {
         fetchData();
         setIsFetching(false);
       }, 5000);
     }
-  }, [isFetching, setIsFetching, fetchData]);
+  }, [isFetching, setIsFetching, fetchData, user]);
 
   useEffect(() => {
-    if (musicData.length !== 0 && isPLoading) {
+    if (musicData.length !== 0 && isPLoading && user) {
       getPlaylist();
     }
-    if (isPFetching) {
+    if (isPFetching && user) {
       setTimeout(() => {
         getPlaylist();
         setIsPFetching(false);
       }, 1000);
     }
-  }, [musicData, isPLoading, isPFetching, setIsPFetching, getPlaylist]);
+  }, [musicData, isPLoading, isPFetching, setIsPFetching, getPlaylist, user]);
 
   return (
     <MusicContext.Provider

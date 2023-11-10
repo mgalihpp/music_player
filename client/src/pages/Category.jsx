@@ -7,17 +7,17 @@ import LoadingBar from "react-top-loading-bar";
 import SkelMusicCard from "../components/Skeleton/SkelMusicCard";
 
 const Category = () => {
-  const { year } = useParams();
+  const { name } = useParams();
   const [data, setData] = useState([]);
   const [progress, setprogress] = useState(20);
   const [compLoad, setComLoad] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
 
-  const selectedCat = category.find((cat) => cat.name === year);
+  const selectedCat = category.find((cat) => cat.name === name);
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch(`${host}category/${year}`, {
+      const res = await fetch(`${host}category/${name}`, {
         method: "GET",
       });
       const data = await res.json();
@@ -29,7 +29,7 @@ const Category = () => {
       fetchData();
       setComLoad(false);
     }, 200);
-  }, [year]);
+  }, [name]);
 
   return (
     <>
@@ -39,7 +39,7 @@ const Category = () => {
         <TopNavbar />
         <div className="flex flex-row items-center justify-between mt-12">
           <h1 className="text-7xl font-semibold text-zinc-50">
-            Music tahun {year}!
+            Music Category {name}!
           </h1>
         </div>
       </div>

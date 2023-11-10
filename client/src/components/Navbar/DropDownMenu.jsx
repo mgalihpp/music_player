@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { useTheme } from "../../Context/ThemeContext";
-import { Palette, User2 } from "lucide-react";
+import { LogOut, Palette, User2 } from "lucide-react";
 import { PropTypes } from "prop-types";
+import { useAuth } from "../../Context/AuthContext";
 
 const DropdownMenu = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const ref = useRef(null);
   const { toggleTheme } = useTheme();
+  const { setUser } = useAuth();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -50,6 +52,18 @@ const DropdownMenu = () => {
               onClick={toggleTheme}
               label="Switch"
               icon={<Palette className="w-5 h-5" />}
+            />
+          </div>
+          <div>
+            <MenuButton
+              title="Logout"
+              onClick={() => {
+                setUser(false);
+                localStorage.clear("user_id");
+                window.location.reload();
+              }}
+              label="Logout"
+              icon={<LogOut className="w-5 h-5" />}
             />
           </div>
         </div>

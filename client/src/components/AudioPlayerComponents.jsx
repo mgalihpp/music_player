@@ -22,8 +22,6 @@ const AudioPlayerComponent = () => {
     }
   }, [selectedAudio, setIsPause, isPause, isAudioReady]);
 
-  console.log(selectedAudio);
-
   const handleAudioReady = () => {
     setIsAudioReady(true);
   };

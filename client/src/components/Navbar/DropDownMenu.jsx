@@ -60,6 +60,7 @@ const DropdownMenu = () => {
               onClick={() => {
                 setUser(false);
                 localStorage.clear("user_id");
+                localStorage.clear("current_path");
                 window.location.reload();
               }}
               label="Logout"

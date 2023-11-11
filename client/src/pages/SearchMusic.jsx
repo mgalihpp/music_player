@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 import { useMusicContext } from "../Context/MusicContext";
 import SkelMusicCard from "../components/Skeleton/SkelMusicCard";
 import MusicCard from "../components/MusicCard";
-import LoadingBar from "react-top-loading-bar";
 import { category } from "../utils";
 
 const SearchMusic = () => {
@@ -13,8 +12,6 @@ const SearchMusic = () => {
     useMusicContext();
   const [query, setQuery] = useState("");
   const [timeoutId, setTimeoutId] = useState(null);
-  const [progress, setprogress] = useState(0);
-  const [compLoad, setComLoad] = useState(true);
 
   const handleInputChange = (e) => {
     setQuery(e.target.value);
@@ -39,10 +36,6 @@ const SearchMusic = () => {
         setIsLoading(false);
       }
     }, 3000);
-    setprogress(100);
-    setTimeout(() => {
-      setComLoad(false);
-    }, 100);
     return () => {
       clearTimeout(timeout);
     };
@@ -124,26 +117,20 @@ const SearchMusic = () => {
             </div>
           </div>
         </TopNavbar>
-        {compLoad ? (
-          <LoadingBar color="#00a827" shadow={true} progress={progress} />
-        ) : (
-          <>
-            <div className="flex items-start space-y-2 mt-6 mb-4">
-              <h1 className="text-4xl font-semibold">
-                {query.length === 0 || (query.length > 0 && query.length < 2)
-                  ? "Browse"
-                  : "Results"}
-              </h1>
-            </div>
-            <div
-              className={`grid xl:ml-2 lg:ml-6 
+        <div className="flex items-start space-y-2 mt-6 mb-4">
+          <h1 className="text-4xl font-semibold">
+            {query.length === 0 || (query.length > 0 && query.length < 2)
+              ? "Browse"
+              : "Results"}
+          </h1>
+        </div>
+        <div
+          className={`grid xl:ml-2 lg:ml-6 
             xl:grid-cols-5 2xl:grid-cols-6 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-4 mt-4
         `}
-            >
-              {renderMusicCards()}
-            </div>
-          </>
-        )}
+        >
+          {renderMusicCards()}
+        </div>
       </div>
     </>
   );

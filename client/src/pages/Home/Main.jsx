@@ -1,21 +1,21 @@
-import { useEffect, useState } from "react";
-import { Play, SortAsc, SortDesc } from "lucide-react";
-import MusicCard from "../../components/MusicCard";
+import { Suspense, lazy, useEffect, useState } from "react";
+import { SortAsc, SortDesc } from "lucide-react";
 import SkelMusicCard from "../../components/Skeleton/SkelMusicCard";
 import TopNavbar from "../../components/Navbar/TopNavbar";
 import { useMusicContext } from "../../Context/MusicContext";
-import LoadingBar from "react-top-loading-bar";
-import { host } from "../../utils";
 import { Link } from "react-router-dom";
 import SkelPlayCard from "./../../components/Skeleton/SkelPlayCard";
+import Loading from "../../components/Loading";
+const MusicCard = lazy(() => import("../../components/MusicCard"));
+const MainPlaylist = lazy(() =>
+  import("../../components/Playlist/MainPlaylist")
+);
 
 const Main = () => {
   const { musicData, isLoading, playlistData, isPLoading } = useMusicContext();
   const [sortOrder, setSortOrder] = useState("asc");
   const [sortedMusicData, setSortedMusicData] = useState([]);
   const [isDisable, setDisable] = useState(false);
-  const [progress, setprogress] = useState(0);
-  const [compLoad, setComLoad] = useState(true);
 
   useEffect(() => {
     const sortMusicData = () => {
@@ -25,11 +25,6 @@ const Main = () => {
           : b.musicName.localeCompare(a.musicName);
       });
     };
-    setprogress(100);
-    setTimeout(() => {
-      setComLoad(false);
-    }, 100);
-
     if (musicData.length > 0 && sortedMusicData.length === 0) {
       setSortedMusicData(sortMusicData());
     }
@@ -68,127 +63,92 @@ const Main = () => {
   return (
     <div className="p-6 mx-auto">
       <TopNavbar />
-      {compLoad ? (
-        <LoadingBar color="#00a827" shadow={true} progress={progress} />
-      ) : (
-        <>
-          <div className="flex flex-row items-center justify-between space-y-2 mt-6 mb-4">
-            <h1 className="text-3xl font-semibold text-zinc-50">
-              {getGreeting()}
-            </h1>
-          </div>
-          <div className="grid grid-cols-3 gap-4">
-            {isPLoading ? (
-              Array.from({ length: 3 }, (_, index) => (
-                <div key={index}>
-                  <SkelPlayCard />
-                </div>
-              ))
-            ) : playlistData.length === 0 ? (
-              <div>
-                <h1>
-                  No Playlist Found.{" "}
-                  <Link
-                    className="underline underline-offset-2"
-                    to="/playlist/create"
-                  >
-                    Want to Create?
-                  </Link>
-                </h1>
+      <div className="flex flex-row items-center justify-between space-y-2 mt-6 mb-4">
+        <h1 className="text-3xl font-semibold text-zinc-50">{getGreeting()}</h1>
+      </div>
+      <Suspense fallback={<Loading />}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {isPLoading ? (
+            Array.from({ length: 3 }, (_, index) => (
+              <div key={index}>
+                <SkelPlayCard />
               </div>
-            ) : (
-              playlistData.map((playlist) => (
-                <div
-                  key={playlist.id}
-                  className={`
-        bg-white/5 group rounded flex items-center gap-4 overflow-hidden hover:bg-white/20 transition-all
-        `}
+            ))
+          ) : playlistData.length === 0 ? (
+            <div>
+              <h1>
+                No Playlist Found.{" "}
+                <Link
+                  className="underline underline-offset-2"
+                  to="/playlist/create"
                 >
-                  <img
-                    title={playlist.playlistName}
-                    loading="lazy"
-                    src={`${host}playlist/img/${playlist.playlistImage}`}
-                    alt="cover"
-                    width={70}
-                    height={70}
-                    style={{
-                      minWidth: "70px",
-                      minHeight: "70px",
-                      objectFit: "cover",
-                      maxWidth: "70px",
-                      maxHeight: "70px",
-                    }}
-                  />
-                  <Link to={"/playlist/" + playlist.playlistName}>
-                    <strong className="hover:underline">
-                      {playlist.playlistName}
-                    </strong>
-                  </Link>
+                  Want to Create?
+                </Link>
+              </h1>
+            </div>
+          ) : (
+            playlistData.map((playlist) => (
+              <MainPlaylist
+                key={playlist.id}
+                name={playlist.playlistName}
+                image={playlist.playlistImage}
+              />
+            ))
+          )}
+        </div>
+      </Suspense>
 
-                  <button
-                    title="Play Music?"
-                    // onClick={handlePlayClick}
-                    className={`items-center justify-center pl-4 p-3 rounded-full bg-green-500/80 hover:bg-green-500 text-black ml-auto mr-8 
-                 hidden hover:scale-110 transition-all shadow hover:shadow-lg group`}
-                  >
-                    <Play fill="black" size={25} />
-                  </button>
-                </div>
-              ))
-            )}
-          </div>
+      <div className="flex flex-row items-center justify-between space-y-2 mt-6 mb-4">
+        <h1 className="text-3xl font-semibold text-zinc-50">
+          Let&apos;s Play a Music!
+        </h1>
 
-          <div className="flex flex-row items-center justify-between space-y-2 mt-6 mb-4">
-            <h1 className="text-3xl font-semibold text-zinc-50">
-              Let&apos;s Play a Music!
-            </h1>
+        <button
+          onClick={toggleSortingOrder}
+          title="Sort Music"
+          aria-label="Sort music"
+          disabled={isDisable}
+          className="bg-white/5 text-zinc-100 disabled:bg-transparent hover:bg-white/10 p-2.5 rounded-full flex items-center justify-center gap-2 font-semibold"
+        >
+          Sort{" "}
+          {sortOrder === "asc" ? (
+            <SortDesc className="h-5 w-5 text-zinc-200" />
+          ) : (
+            <SortAsc className="h-5 w-5 text-zinc-200" />
+          )}
+        </button>
+      </div>
 
-            <button
-              onClick={toggleSortingOrder}
-              title="Sort Music"
-              aria-label="Sort music"
-              disabled={isDisable}
-              className="bg-white/5 text-zinc-100 disabled:bg-transparent hover:bg-white/10 p-2.5 rounded-full flex items-center justify-center gap-2 font-semibold"
-            >
-              Sort{" "}
-              {sortOrder === "asc" ? (
-                <SortDesc className="h-5 w-5 text-zinc-200" />
-              ) : (
-                <SortAsc className="h-5 w-5 text-zinc-200" />
-              )}
-            </button>
-          </div>
-
-          <div
-            className={`grid xl:grid-cols-5 2xl:grid-cols-6 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-4 mt-4
+      <Suspense fallback={<Loading />}>
+        <div
+          className={`grid xl:grid-cols-5 2xl:grid-cols-6 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-4 mt-4
         `}
-          >
-            {isLoading ? (
-              Array.from({ length: 12 }, (_, index) => (
-                <SkelMusicCard key={index} />
-              ))
-            ) : musicData.length === 0 ? (
-              <h1>No Musics Found</h1>
-            ) : (
-              sortedMusicData.map((music, index) => (
-                <div
-                  key={index}
-                  className={`music-card ${
-                    sortOrder === "asc" ? "asc" : "desc"
-                  }`}
-                >
-                  <MusicCard
-                    musicName={music.musicName}
-                    musicPath={music.musicPath}
-                    musicArtist={music.musicArtist}
-                    musicImage={music.musicImage}
-                  />
-                </div>
-              ))
-            )}
-          </div>
-        </>
-      )}
+        >
+          {isLoading ? (
+            Array.from({ length: 6 }, (_, index) => (
+              <div key={index}>
+                <SkelMusicCard />
+              </div>
+            ))
+          ) : musicData.length === 0 ? (
+            <h1>No Musics Found</h1>
+          ) : (
+            sortedMusicData.map((music, index) => (
+              <div
+                key={index}
+                className={`music-card ${sortOrder === "asc" ? "asc" : "desc"}`}
+              >
+                <MusicCard
+                  musicName={music.musicName}
+                  musicPath={music.musicPath}
+                  musicArtist={music.musicArtist}
+                  musicImage={music.musicImage}
+                />
+              </div>
+            ))
+          )}
+        </div>
+      </Suspense>
     </div>
   );
 };

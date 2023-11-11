@@ -1,8 +1,10 @@
+import { Suspense, lazy } from "react";
 import { Home, Library, Search, Plus, PlusSquare } from "lucide-react";
 import { Link, NavLink } from "react-router-dom";
-import PlaylistMusic from "../Playlist/PlaylistMusic";
+const PlaylistMusic = lazy(() => import("../Playlist/PlaylistMusic"));
 import { useMusicContext } from "../../Context/MusicContext";
 import SkelPlaylistCard from "../Skeleton/SkelPlaylistCard";
+import Loading from "../Loading";
 
 const Navbar = () => {
   const { playlistData, isPLoading } = useMusicContext();
@@ -20,12 +22,8 @@ const Navbar = () => {
           {playlistHeader("Your Playlist")}
           {createPlaylistButton()}
         </div>
-        <nav
-          className="grid grid-cols-2 p-1 mx-auto overflow-invisible hover:overflow-y-auto"
-          style={{ maxHeight: "390px", overflowX: "hidden" }}
-        >
-          {playlistItems(playlistData, isPLoading)}
-        </nav>
+
+        {playlistItems(playlistData, isPLoading)}
       </div>
     </>
   );
@@ -71,17 +69,22 @@ const createPlaylistButton = () => (
 
 const playlistItems = (data, isLoading) => {
   return (
-    <>
-      {isLoading
-        ? Array.from({ length: 6 }, (_, index) => (
-            <SkelPlaylistCard key={index} />
-          ))
-        : data.map((playlist, index) => (
-            <PlaylistMusic key={index} image={playlist.playlistImage}>
-              {playlist.playlistName}
-            </PlaylistMusic>
-          ))}
-    </>
+    <Suspense fallback={<Loading />}>
+      <nav
+        className="grid grid-cols-2 p-1 mx-auto overflow-invisible hover:overflow-y-auto"
+        style={{ maxHeight: "390px", overflowX: "hidden" }}
+      >
+        {isLoading
+          ? Array.from({ length: 6 }, (_, index) => (
+              <SkelPlaylistCard key={index} />
+            ))
+          : data.map((playlist, index) => (
+              <PlaylistMusic key={index} image={playlist.playlistImage}>
+                {playlist.playlistName}
+              </PlaylistMusic>
+            ))}
+      </nav>
+    </Suspense>
   );
 };
 

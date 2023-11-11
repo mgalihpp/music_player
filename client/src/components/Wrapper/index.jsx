@@ -1,5 +1,6 @@
 import { Suspense, lazy } from "react";
 import LoadingBar from "react-top-loading-bar";
+import Loading from "../Loading";
 
 const Login = lazy(() => import("../../pages/Auth/Login"));
 const Main = lazy(() => import("../../pages/Home/Main"));
@@ -99,9 +100,7 @@ export const AudioPlayerComponentWrapper = () => {
 };
 export const NavbarWrapper = () => {
   return (
-    <Suspense
-      fallback={<LoadingBar color="#00a827" shadow={true} progress={100} />}
-    >
+    <Suspense fallback={<Loading />}>
       <Navbar />
     </Suspense>
   );

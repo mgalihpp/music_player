@@ -10,11 +10,17 @@ import { host } from "../utils";
 import { AlertDialog, Button, DropdownMenu, Flex } from "@radix-ui/themes";
 import * as Toast from "@radix-ui/react-toast";
 import { useUploadContext } from "../Context/UploadContext";
+import Loading from "./../components/Loading";
 
 const Playlist = () => {
   const { playlistName } = useParams();
-  const { getAllMusicAndPlaylist, musicPlaylistData, playlistData } =
-    useMusicContext();
+  const {
+    getAllMusicAndPlaylist,
+    musicPlaylistData,
+    playlistData,
+    isMPLoading,
+    setIsMPLoading,
+  } = useMusicContext();
   const { setIsPFetching } = useUploadContext();
   const [currentPlaylistId, setCurrentPlaylistId] = useState(null);
   const [selectedPlaylist, setSelectedPlaylist] = useState(null);
@@ -51,6 +57,7 @@ const Playlist = () => {
         getAllMusicAndPlaylist(selectedPlaylist.id);
         setCurrentPlaylistId(selectedPlaylist.id);
         setSelectedPlaylist(selectedPlaylist);
+        setIsMPLoading(true);
         setprogress(100);
         setComLoad(false);
       }
@@ -61,6 +68,7 @@ const Playlist = () => {
     currentPlaylistId,
     getAllMusicAndPlaylist,
     musicPlaylistData,
+    setIsMPLoading,
   ]);
 
   const handlePlayClick = (musicName) => {
@@ -279,50 +287,54 @@ const Playlist = () => {
                       </div>
                     </div>
                     <hr className="border-b border-zinc-700 w-full mb-4" />
-                    {musicPlaylistData?.musics?.map((music, index) => (
-                      <div
-                        key={index}
-                        className="flex flex-row items-center justify-between hover:bg-white/5 gap-12 w-full px-4 py-2 rounded-md"
-                      >
-                        <div className="flex flex-row items-center justify-start gap-6 w-96 group">
-                          <div className="block group-hover:hidden w-4">
-                            {index + 1}
+                    {isMPLoading ? (
+                      <Loading />
+                    ) : (
+                      musicPlaylistData?.musics?.map((music, index) => (
+                        <div
+                          key={index}
+                          className="flex flex-row items-center justify-between hover:bg-white/5 gap-12 w-full px-4 py-2 rounded-md"
+                        >
+                          <div className="flex flex-row items-center justify-start gap-6 w-96 group">
+                            <div className="block group-hover:hidden w-4">
+                              {index + 1}
+                            </div>
+                            <button
+                              onClick={() => handlePlayClick(music.musicName)}
+                              className="hidden group-hover:block w-4"
+                            >
+                              {selectedMusic === music.musicName &&
+                              selectedAudio &&
+                              !isPause ? (
+                                <Pause fill="white" color="white" size={15} />
+                              ) : (
+                                <Play fill="white" color="white" size={15} />
+                              )}
+                            </button>
+                            <figure className="flex flex-row items-center justify-center gap-4">
+                              <img
+                                src={`${host + "img/" + music.musicImage}`}
+                                alt="cover"
+                                className="object-cover w-10 h-10"
+                              />
+                              <figcaption className="text-sm font-semibold hover:underline">
+                                <Link to={`/music/${music.musicName}`}>
+                                  {music.musicName}
+                                </Link>
+                              </figcaption>
+                            </figure>
                           </div>
-                          <button
-                            onClick={() => handlePlayClick(music.musicName)}
-                            className="hidden group-hover:block w-4"
-                          >
-                            {selectedMusic === music.musicName &&
-                            selectedAudio &&
-                            !isPause ? (
-                              <Pause fill="white" color="white" size={15} />
-                            ) : (
-                              <Play fill="white" color="white" size={15} />
-                            )}
-                          </button>
-                          <figure className="flex flex-row items-center justify-center gap-4">
-                            <img
-                              src={`${host + "img/" + music.musicImage}`}
-                              alt="cover"
-                              className="object-cover w-10 h-10"
-                            />
-                            <figcaption className="text-sm font-semibold hover:underline">
-                              <Link to={`/music/${music.musicName}`}>
-                                {music.musicName}
-                              </Link>
-                            </figcaption>
-                          </figure>
+                          <div className="flex flex-row items-center justify-between w-96">
+                            <p className="text-sm font-semibold">
+                              {music.musicArtist}
+                            </p>
+                            <p className="text-sm font-semibold text-center">
+                              {music.duration}
+                            </p>
+                          </div>
                         </div>
-                        <div className="flex flex-row items-center justify-between w-96">
-                          <p className="text-sm font-semibold">
-                            {music.musicArtist}
-                          </p>
-                          <p className="text-sm font-semibold text-center">
-                            {music.duration}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
+                      ))
+                    )}
                   </div>
                 </div>
               );

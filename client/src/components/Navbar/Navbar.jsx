@@ -1,9 +1,9 @@
 import { Suspense, lazy } from "react";
 import { Home, Library, Search, Plus, PlusSquare } from "lucide-react";
 import { Link, NavLink } from "react-router-dom";
-const PlaylistMusic = lazy(() => import("../Playlist/PlaylistMusic"));
 import { useMusicContext } from "../../Context/MusicContext";
-import SkelPlaylistCard from "../Skeleton/SkelPlaylistCard";
+const PlaylistMusic = lazy(() => import("../Playlist/PlaylistMusic"));
+const SkelPlaylistCard = lazy(() => import("../Skeleton/SkelPlaylistCard"));
 import Loading from "../Loading";
 
 const Navbar = () => {

@@ -1,11 +1,15 @@
 import { Suspense, lazy, useEffect, useState } from "react";
 import { SortAsc, SortDesc } from "lucide-react";
-import SkelMusicCard from "../../components/Skeleton/SkelMusicCard";
 import TopNavbar from "../../components/Navbar/TopNavbar";
 import { useMusicContext } from "../../Context/MusicContext";
 import { Link } from "react-router-dom";
-import SkelPlayCard from "./../../components/Skeleton/SkelPlayCard";
 import Loading from "../../components/Loading";
+const SkelMusicCard = lazy(() =>
+  import("../../components/Skeleton/SkelMusicCard")
+);
+const SkelPlayCard = lazy(() =>
+  import("./../../components/Skeleton/SkelPlayCard")
+);
 const MusicCard = lazy(() => import("../../components/MusicCard"));
 const MainPlaylist = lazy(() =>
   import("../../components/Playlist/MainPlaylist")

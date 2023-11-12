@@ -48,6 +48,13 @@ const Login = () => {
         }, 3000);
         return "erorr";
       }
+      if (!res.ok && auth === "login") {
+        setUserTaken(true);
+        setTimeout(() => {
+          setUserTaken(false);
+        }, 3000);
+        return "invalid";
+      }
     } catch (error) {
       console.error(error);
     } finally {
@@ -89,10 +96,10 @@ const Login = () => {
               </h1>
             </div>
           </div>
-          <div className="flex flex-col items-center justify-center mx-auto space-y-2">
+          <div className="flex flex-col w-[50%] h-full items-center justify-center mx-auto space-y-2">
             <form
               onSubmit={handleAuth}
-              className="flex w-[50%] flex-col items-center justify-center gap-4 p-4"
+              className="flex  flex-col items-center justify-center gap-4 p-4"
             >
               <h1 className="text-4xl font-bold">
                 {auth === "login" ? "Login" : "Register"}
@@ -118,8 +125,15 @@ const Login = () => {
                 ref={pwdRef}
                 required
               />
-              {userTaken && (
+              {userTaken && auth === "register" ? (
                 <p className="text-red-500 text-xs">Username taken.</p>
+              ) : (
+                userTaken &&
+                auth === "login" && (
+                  <p className="text-red-500 text-xs">
+                    Invalid Username or Password.
+                  </p>
+                )
               )}
               <button
                 type="submit"

@@ -8,6 +8,7 @@ const Login = () => {
   const { setUser, setUserId } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [userTaken, setUserTaken] = useState(false);
   const [progress, setProgress] = useState(0);
 
   const userRef = useRef();
@@ -40,7 +41,11 @@ const Login = () => {
         // Return a success response
         return { success: true, data };
       }
-      if (!res.ok) {
+      if (!res.ok && auth === "register") {
+        setUserTaken(true);
+        setTimeout(() => {
+          setUserTaken(false);
+        }, 3000);
         return "erorr";
       }
     } catch (error) {
@@ -58,7 +63,26 @@ const Login = () => {
       <div className="flex flex-row justify-center items-center h-screen w-screen mx-auto">
         <div className="flex flex-row items-center w-[800px] h-[500px] bg-zinc-900 rounded-md ">
           <div className="w-[50%] flex flex-col items-center justify-evenly border-r h-full border-zinc-700">
-            <img src="/vite.svg" alt="logo" width={150} height={150} />
+            <div className="relative w-[250px] h-[250px] flex items-center justify-center">
+              <img
+                src="/vite.svg"
+                alt="logo"
+                width={180}
+                height={180}
+                className="max-w-full max-h-full object-cover"
+                style={{
+                  position: "relative",
+                  zIndex: "2", // Set a higher z-index for the image
+                }}
+              />
+              <div
+                className="absolute inset-0 bg-gradient-to-br from-cyan-600 to-purple-600 p-32 rounded-full"
+                style={{
+                  filter: "blur(40px)", // Adjust the blur value as needed
+                  zIndex: "1", // Set a lower z-index for the gradient background
+                }}
+              ></div>
+            </div>
             <div className="flex items-center justify-center flex-col gap-1">
               <h1 className="text-4xl font-semibold bg-gradient-to-r from-cyan-500 to-violet-500 bg-clip-text text-transparent">
                 Music Player
@@ -68,13 +92,13 @@ const Login = () => {
           <div className="flex flex-col items-center justify-center mx-auto space-y-2">
             <form
               onSubmit={handleAuth}
-              className="flex w-[50%] flex-col items-center justify-center gap-6 p-4"
+              className="flex w-[50%] flex-col items-center justify-center gap-4 p-4"
             >
               <h1 className="text-4xl font-bold">
                 {auth === "login" ? "Login" : "Register"}
               </h1>
               <input
-                className="p-2 w-64 rounded-md"
+                className={`p-2 w-64 rounded-md`}
                 placeholder="user@email.email"
                 type="text"
                 name="username"
@@ -94,6 +118,9 @@ const Login = () => {
                 ref={pwdRef}
                 required
               />
+              {userTaken && (
+                <p className="text-red-500 text-xs">Username taken.</p>
+              )}
               <button
                 type="submit"
                 className="bg-green-500 hover:bg-green-500/90 w-28 py-1.5 font-bold rounded-md text-black"

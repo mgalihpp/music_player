@@ -12,7 +12,7 @@ const UploadFile = () => {
   const [image, setImage] = useState(null);
   const { setIsFetching } = useUploadContext();
   const [isSubmit, SetIsSubmit] = useState(false);
-  const [toast, setToast] = useState(true);
+  const [toast, setToast] = useState(false);
   const [eToast, setEToast] = useState(false  );
   const [previewImage, setPreviewImage] = useState(null);
 

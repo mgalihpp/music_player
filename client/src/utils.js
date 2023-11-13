@@ -21,9 +21,9 @@ export const category = [
     re: "from-red-900/5",
   },
   {
-    link: "/category/sedih",
-    name: "sedih",
-    label: "Lagu Sedih",
+    link: "/category/galau",
+    name: "galau",
+    label: "Lagu galau",
     color: "bg-cyan-500",
     from: "from-cyan-500",
     to: "to-cyan-900/5",

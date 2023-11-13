@@ -9,14 +9,14 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [userTaken, setUserTaken] = useState(false);
-  const [progress, setProgress] = useState(0);
 
   const userRef = useRef();
   const pwdRef = useRef();
+  const loadingRef = useRef();
 
   const handleAuth = async (e) => {
     e.preventDefault();
-    setProgress(100);
+    loadingRef.current.continuousStart();
 
     try {
       const formdata = new FormData();
@@ -39,21 +39,23 @@ const Login = () => {
         setUserId(user_id);
         setUser(true);
         // Return a success response
+
+        loadingRef.current.complete();
         return { success: true, data };
       }
       if (!res.ok && auth === "register") {
         setUserTaken(true);
         setTimeout(() => {
           setUserTaken(false);
-        }, 3000);
-        return "erorr";
+        }, 5000);
+        return loadingRef.current.complete();
       }
       if (!res.ok && auth === "login") {
         setUserTaken(true);
         setTimeout(() => {
           setUserTaken(false);
-        }, 3000);
-        return "invalid";
+        }, 5000);
+        return loadingRef.current.complete();
       }
     } catch (error) {
       console.error(error);
@@ -65,7 +67,7 @@ const Login = () => {
 
   return (
     <>
-      <LoadingBar color="#00a827" shadow={true} progress={progress} />
+      <LoadingBar color="#00a827" shadow={true} ref={loadingRef} />
 
       <div className="flex flex-row justify-center items-center h-screen w-screen mx-auto">
         <div className="flex flex-row items-center w-[800px] h-[500px] bg-zinc-900 rounded-md ">

@@ -23,7 +23,7 @@ export const category = [
   {
     link: "/category/galau",
     name: "Galau",
-    label: "Lagu Galau",
+    label: "Galau",
     color: "bg-cyan-500",
     from: "from-cyan-500",
     to: "to-cyan-900/5",

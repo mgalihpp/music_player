@@ -39,9 +39,9 @@ export const category = [
     re: "from-yellow-900/5",
   },
   {
-    link: "/category/romantis",
-    name: "romantis",
-    label: "Lagu Romantis",
+    link: "/category/cinta",
+    name: "cinta",
+    label: "Lagu cinta",
     color: "bg-pink-500",
     from: "from-pink-500",
     to: "to-pink-900/5",

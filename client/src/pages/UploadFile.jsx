@@ -13,7 +13,7 @@ const UploadFile = () => {
   const { setIsFetching } = useUploadContext();
   const [isSubmit, SetIsSubmit] = useState(false);
   const [toast, setToast] = useState(false);
-  const [eToast, setEToast] = useState(false  );
+  const [eToast, setEToast] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
 
   const fileRef = useRef(null);
@@ -253,9 +253,7 @@ const UploadFile = () => {
               role="alert"
             >
               <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-white bg-transparent rounded-lg">
-                <span className="sr-only">
-                  Close
-                </span>
+                <span className="sr-only">Close</span>
                 <svg
                   className="w-3 h-3"
                   aria-hidden="true"

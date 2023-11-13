@@ -31,7 +31,7 @@ const AudioPlayerComponent = () => {
 
   return (
     <div className="flex items-center gap-3 w-full p-6">
-      <div className="w-72 flex items-center gap-2">
+      <div className="w-72 items-center gap-2 sm:flex hidden">
         <img
           src={
             selectedAudio
@@ -74,7 +74,7 @@ const AudioPlayerComponent = () => {
               : ""
           }
         />
-        <div className="flex flex-row items-center justify-center">
+        <div className="flex-row items-center justify-center sm:flex hidden">
           <button
             onClick={playPrevious}
             className="w-10 h-6 my-auto p-1"

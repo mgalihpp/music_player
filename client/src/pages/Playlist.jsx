@@ -163,7 +163,7 @@ const Playlist = () => {
                 >
                   <TopNavbar className="p-6" />
 
-                  <div className="flex flex-row items-start  pt-10 pb-4 px-6">
+                  <div className="flex flex-col sm:flex-row items-start  pt-10 pb-4 px-6">
                     <div className="relative">
                       <img
                         src={`${
@@ -175,12 +175,12 @@ const Playlist = () => {
                         className="object-cover min-w-[150px] rounded min-h-[150px] w-[250px] h-[250px] max-w-[250px] max-h-[250px]"
                       />
                     </div>
-                    <div className="flex flex-col items-start px-6 justify-end mt-auto mb-0 gap-2">
-                      <h4 className="font-semibold text-zinc-200">Playlist</h4>
-                      <h1 className="text-7xl font-bold text-zinc-50">
+                    <div className="flex flex-col items-start px-6 justify-end mt-4 sm:mt-auto mb-0 gap-2">
+                      <h4 className="font-semibold text-xs sm:text-sm text-zinc-200">Playlist</h4>
+                      <h1 className="text-xl sm:text-7xl font-bold text-zinc-50">
                         {selectedPlaylist.playlistName}
                       </h1>
-                      <h4 className="font-semibold text-sm text-zinc-100 flex items-center justify-start">
+                      <h4 className="font-semibold text-xs sm:text-sm text-zinc-100 flex items-center justify-start">
                         {"user"} <Dot size={20} />{" "}
                         {musicPlaylistData?.musics?.length + " " + "Songs"}
                       </h4>
@@ -281,7 +281,7 @@ const Playlist = () => {
                         <h1>#</h1>
                         <h1>Title</h1>
                       </div>
-                      <div className="flex flex-row items-center justify-between w-96">
+                      <div className="flex flex-row items-center justify-between w-96 gap-2 sm:gap-0">
                         <h1>Artist</h1>
                         <h1>Duration</h1>
                       </div>
@@ -293,7 +293,7 @@ const Playlist = () => {
                       musicPlaylistData?.musics?.map((music, index) => (
                         <div
                           key={index}
-                          className="flex flex-row items-center justify-between hover:bg-white/5 gap-12 w-full px-4 py-2 rounded-md"
+                          className="flex flex-row items-center justify-between hover:bg-white/5 gap-12 w-full px-0 sm:px-4 py-2 rounded-md"
                         >
                           <div className="flex flex-row items-center justify-start gap-6 w-96 group">
                             <div className="block group-hover:hidden w-4">
@@ -317,18 +317,18 @@ const Playlist = () => {
                                 alt="cover"
                                 className="object-cover w-10 h-10"
                               />
-                              <figcaption className="text-sm font-semibold hover:underline">
+                              <figcaption className="sm:block hidden text-sm font-semibold hover:underline">
                                 <Link to={`/music/${music.musicName}`}>
                                   {music.musicName}
                                 </Link>
                               </figcaption>
                             </figure>
                           </div>
-                          <div className="flex flex-row items-center justify-between w-96">
-                            <p className="text-sm font-semibold">
+                          <div className="flex flex-row items-center justify-between w-96 gap-2 sm:gap-0">
+                            <p className="text-xs sm:text-sm font-semibold">
                               {music.musicArtist}
                             </p>
-                            <p className="text-sm font-semibold text-center">
+                            <p className="text-xs sm:text-sm font-semibold text-center">
                               {music.duration}
                             </p>
                           </div>

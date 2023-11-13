@@ -11,13 +11,13 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="space-y-1 rounded-md bg-white/5">
+      <nav className={`space-y-1 rounded-md bg-white/5`}>
         {navLink("Home", "/", <Home className="w-7 h-7" />)}
         {navLink("Search", "/search", <Search className="w-7 h-7" />)}
         {navLink("Upload", "/upload", <PlusSquare className="w-7 h-7" />)}
       </nav>
 
-      <div className="p-1 rounded-t-md bg-white/5 mt-2">
+      <div className={`p-1 rounded-t-md bg-white/5 mt-2 `}>
         <div className="flex items-center justify-between text-zinc-400 gap-2 mb-5 ml-1 px-4 py-1">
           {playlistHeader("Your Playlist")}
           {createPlaylistButton()}

@@ -101,7 +101,7 @@ const SearchMusic = () => {
     <>
       <div className="px-6 py-4">
         <TopNavbar>
-          <div className="flex items-center justify-center bg-white/5 rounded-full p-2 relative focus-within:ring-2 ring-white">
+          <div className="hidden sm:flex items-center justify-center bg-white/5 rounded-full p-2 relative focus-within:ring-2 ring-white">
             <Search className="text-gray-500" />
             <div className="relative w-72">
               <input
@@ -117,6 +117,21 @@ const SearchMusic = () => {
             </div>
           </div>
         </TopNavbar>
+        <div className="flex sm:hidden mt-2 items-center justify-center bg-white/5 rounded-full p-2 relative focus-within:ring-2 ring-white">
+          <Search className="text-gray-500" />
+          <div className="relative w-72">
+            <input
+              type="searchmb"
+              name="searchmb"
+              id="searchmb"
+              autoComplete="off"
+              autoFocus
+              placeholder="Search for music"
+              className="p-2 bg-transparent rounded-full w-full focus:outline-none"
+              onKeyUp={handleInputChange}
+            />
+          </div>
+        </div>
         <div className="flex items-start space-y-2 mt-6 mb-4">
           <h1 className="text-4xl font-semibold">
             {query.length === 0 || (query.length > 0 && query.length < 2)

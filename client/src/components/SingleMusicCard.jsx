@@ -148,7 +148,7 @@ const SingleMusicCard = () => {
                 >
                   <TopNavbar className="p-6" />
 
-                  <div className="flex flex-row items-start  pt-20 pb-4 px-6">
+                  <div className="flex flex-col sm:flex-row items-start  pt-20 pb-4 px-6">
                     <div className="relative">
                       <img
                         src={`${IMAGE_URL}`}
@@ -156,12 +156,12 @@ const SingleMusicCard = () => {
                         className="object-cover min-w-[150px] rounded min-h-[150px] w-[250px] h-[250px] max-w-[250px] max-h-[250px]"
                       />
                     </div>
-                    <div className="flex flex-col items-start px-6 justify-end mt-auto mb-0 gap-2">
-                      <h4 className="font-semibold text-zinc-200">Song</h4>
-                      <h1 className="text-7xl font-bold text-zinc-50">
+                    <div className="flex flex-col items-start px-6 justify-end mt-4 sm:mt-auto mb-0 gap-2">
+                      <h4 className="font-semibold text-xs sm:text-sm text-zinc-200">Song</h4>
+                      <h1 className="text-xl sm:text-7xl font-bold text-zinc-50">
                         {selectedMusic.musicName}
                       </h1>
-                      <h4 className="font-normal text-sm text-zinc-100">
+                      <h4 className="font-normal text-xs sm:text-sm text-zinc-100">
                         {selectedMusic.musicArtist}
                       </h4>
                     </div>

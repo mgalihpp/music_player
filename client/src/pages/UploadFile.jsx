@@ -12,8 +12,8 @@ const UploadFile = () => {
   const [image, setImage] = useState(null);
   const { setIsFetching } = useUploadContext();
   const [isSubmit, SetIsSubmit] = useState(false);
-  const [toast, setToast] = useState(false);
-  const [eToast, setEToast] = useState(false);
+  const [toast, setToast] = useState(true);
+  const [eToast, setEToast] = useState(false  );
   const [previewImage, setPreviewImage] = useState(null);
 
   const fileRef = useRef(null);
@@ -200,7 +200,7 @@ const UploadFile = () => {
           {toast && (
             <div
               id="toast-success"
-              className={`flex absolute top-5 right-0 items-center w-full h-16 max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-white dark:bg-green-500
+              className={`flex absolute top-5 right-0 items-center w-full h-16 max-w-xs p-4 mb-4 text-white rounded-lg shadow bg-green-500
         `}
               role="alert"
             >
@@ -248,12 +248,14 @@ const UploadFile = () => {
             <div
               id="toast-failed"
               className={`flex
-                absolute top-5 right-0 items-center w-full h-16 max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-white dark:bg-red-500
+                absolute top-5 right-0 items-center w-full h-16 max-w-xs p-4 mb-4 text-white bg-red-500 rounded-lg shadow 
         `}
               role="alert"
             >
               <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-white bg-transparent rounded-lg">
-                <span className="sr-only">Close</span>
+                <span className="sr-only">
+                  Close
+                </span>
                 <svg
                   className="w-3 h-3"
                   aria-hidden="true"

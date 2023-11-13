@@ -160,7 +160,7 @@ const CreatePlaylist = () => {
             id="toast-success"
             className={`${
               toast ? "flex" : "hidden"
-            } absolute top-5 right-0 items-center w-full h-16 max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-white dark:bg-green-500
+            } absolute top-5 right-0 items-center w-full h-16 max-w-xs p-4 mb-4 rounded-lg shadow text-white bg-green-500
         `}
             role="alert"
           >

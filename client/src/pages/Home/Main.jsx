@@ -68,7 +68,7 @@ const Main = () => {
     <div className="p-6 mx-auto">
       <TopNavbar />
       <div className="flex flex-row items-center justify-between space-y-2 mt-6 mb-4">
-        <h1 className="text-3xl font-semibold text-zinc-50">{getGreeting()}</h1>
+        <h1 className="text-md md:text-3xl font-semibold text-zinc-50">{getGreeting()}</h1>
       </div>
       <Suspense fallback={<Loading />}>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -103,7 +103,7 @@ const Main = () => {
       </Suspense>
 
       <div className="flex flex-row items-center justify-between space-y-2 mt-6 mb-4">
-        <h1 className="text-3xl font-semibold text-zinc-50">
+        <h1 className="text-md md:text-3xl font-semibold text-zinc-50">
           Let&apos;s Play a Music!
         </h1>
 
@@ -112,20 +112,20 @@ const Main = () => {
           title="Sort Music"
           aria-label="Sort music"
           disabled={isDisable}
-          className="bg-white/5 text-zinc-100 disabled:bg-transparent hover:bg-white/10 p-2.5 rounded-full flex items-center justify-center gap-2 font-semibold"
+          className="bg-white/5 text-zinc-100 disabled:bg-transparent hover:bg-white/10 p-1.5 text-xs  sm:text-md sm:p-2.5 rounded-full flex items-center justify-center gap-2 font-semibold"
         >
           Sort{" "}
           {sortOrder === "asc" ? (
-            <SortDesc className="h-5 w-5 text-zinc-200" />
+            <SortDesc className="h-3 w-3 sm:h-5 sm:w-5 text-zinc-200" />
           ) : (
-            <SortAsc className="h-5 w-5 text-zinc-200" />
+            <SortAsc className="h-3 w-3 sm:h-5 sm:w-5 text-zinc-200" />
           )}
         </button>
       </div>
 
       <Suspense fallback={<Loading />}>
         <div
-          className={`grid xl:grid-cols-5 2xl:grid-cols-6 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-4 mt-4
+          className={`flex flex-col items-center justify-center sm:grid xl:grid-cols-5 2xl:grid-cols-6 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-4 mt-4
         `}
         >
           {isLoading ? (

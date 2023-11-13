@@ -2,6 +2,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import DropdownMenu from "./DropDownMenu";
 import { PropTypes } from "prop-types";
+import MobileNavbar from "./MobileNavbar";
 
 const TopNavbar = ({ children, className }) => {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ const TopNavbar = ({ children, className }) => {
   return (
     <div className={`flex items-center justify-between gap-4 ${className}`}>
       <div className="flex items-center gap-4">
+        <MobileNavbar/>
         <button
           onClick={() => handleNavigation(-1)}
           title="Go Back"

@@ -13,8 +13,6 @@ const Category = () => {
   const [compLoad, setComLoad] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
 
-  console.log(name);
-
   const selectedCat = category.find((cat) => cat.name === name);
 
   useEffect(() => {

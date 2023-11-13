@@ -14,7 +14,7 @@ import {
 const AuthenticatedLayout = () => (
   <div className="h-screen flex p-2 flex-col overflow-hidden w-screen">
     <div className="flex flex-1 overflow-hidden">
-      <aside className="w-72 p-0 pr-2">
+      <aside className="w-72 p-0 pr-2 sm:block hidden">
         <NavbarWrapper />
       </aside>
       <main className="flex-1 rounded-t-md bg-white/5 overflow-x-auto relative">

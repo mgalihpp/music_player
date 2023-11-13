@@ -69,9 +69,9 @@ const Login = () => {
     <>
       <LoadingBar color="#00a827" shadow={true} ref={loadingRef} />
 
-      <div className="flex flex-row justify-center items-center h-screen w-screen mx-auto">
+      <div className="flex flex-row sm:p-0 p-2 justify-center items-center h-screen w-screen mx-auto">
         <div className="flex flex-row items-center w-[800px] h-[500px] bg-zinc-900 rounded-md ">
-          <div className="w-[50%] flex flex-col items-center justify-evenly border-r h-full border-zinc-700">
+          <div className="w-[50%] hidden sm:flex flex-col items-center justify-evenly border-r h-full border-zinc-700">
             <div className="relative w-[250px] h-[250px] flex items-center justify-center">
               <img
                 src="/vite.svg"

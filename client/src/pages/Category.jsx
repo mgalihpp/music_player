@@ -39,7 +39,7 @@ const Category = () => {
         <TopNavbar />
         <div className="flex flex-row items-center justify-between mt-12">
           <h1 className="text-7xl font-semibold text-zinc-50">
-            Music Category {selectedCat?.label}!
+            Category {selectedCat?.label}!
           </h1>
         </div>
       </div>

@@ -41,7 +41,10 @@ export function AudioProvider({ children }) {
       }
     }
     if (data === "playlist") {
-      if (currentIndex !== -1 && currentIndex < musicPlaylistData.musics.length - 1) {
+      if (
+        currentIndex !== -1 &&
+        currentIndex < musicPlaylistData.musics.length - 1
+      ) {
         const nextIndex = currentIndex + 1;
         const nextMusic = musicPlaylistData.musics[nextIndex];
         playAudio(nextMusic);
@@ -74,6 +77,14 @@ export function AudioProvider({ children }) {
       }
   };
 
+  const playShuffle = () => {
+    const randomIndex = Math.floor(Math.random() * musicData?.length - 1);
+    const shuffleIndex = randomIndex;
+    const shuffleMusic = musicData[shuffleIndex];
+    setCurrentIndex(shuffleIndex);
+    playAudio(shuffleMusic);
+  };
+  
   return (
     <AudioContext.Provider
       value={{
@@ -84,6 +95,7 @@ export function AudioProvider({ children }) {
         musicData,
         playNext,
         playPrevious,
+        playShuffle,
         currentIndex,
         setCurrentIndex,
         playAudio,

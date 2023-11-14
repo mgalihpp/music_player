@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import AudioPlayer from "react-h5-audio-player";
 import { useAudioContext } from "../Context/AudioContext";
+import { Shuffle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { host } from "../utils";
 
 const AudioPlayerComponent = () => {
-  const { selectedAudio, setIsPause, isPause, playNext, playPrevious } =
+  const { selectedAudio, setIsPause, isPause, playNext, playPrevious, playShuffle } =
     useAudioContext();
   const audioRef = useRef(null);
   const [isAudioReady, setIsAudioReady] = useState(false);
@@ -76,6 +77,13 @@ const AudioPlayerComponent = () => {
           onClickNext={playNext}
           onClickPrevious={playPrevious}
         />
+        <div>
+          <button
+          aria-label="shuffle"
+          onClick={playShuffle}>
+            <Shuffle className="sm:w-6 sm:h-6 w-4 h-4"/>
+          </button>
+        </div>
       </div>
     </div>
   );

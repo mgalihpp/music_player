@@ -53,11 +53,19 @@ const SearchMusic = () => {
             >
               <div className="relative flex items-center justify-center">
                 <div
-                  className={`w-[180px] ${cat.color} h-[180px] rounded-md p-4`}
+                  className={`w-[180px] ${cat.color} h-[180px] rounded-md p-4 relative overflow-hidden`}
                 >
                   <strong className="text-xl">{cat.label}</strong>
-                  <div className="absolute bottom-0 right-0">
-                    <Music size={75} rotate={90} />
+                  <div className="absolute inset-0 translate-x-[53%] translate-y-20">
+                    {cat.images !== "" ? (
+                      <img
+                        src={cat.images}
+                        alt="cover"
+                        className="rotate-[15deg] w-24 h-24 object-cover"
+                      />
+                    ) : (
+                      <Music size={75} rotate={90} />
+                    )}
                   </div>
                 </div>
               </div>

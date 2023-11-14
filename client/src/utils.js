@@ -1,4 +1,5 @@
 export const host = "https://mgpp.pythonanywhere.com/";
+export const api = "https://mgpp.pythonanywhere.com/api/v1/";
 
 export const category = [
   {

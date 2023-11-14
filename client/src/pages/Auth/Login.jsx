@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { host } from "./../../utils";
+import { api } from "./../../utils";
 import { useAuth } from "../../Context/AuthContext";
 import LoadingBar from "react-top-loading-bar";
 
@@ -22,7 +22,7 @@ const Login = () => {
       const formdata = new FormData();
       formdata.append("username", username);
       formdata.append("password", password);
-      const res = await fetch(`${host}auth/${auth}`, {
+      const res = await fetch(`${api}auth/${auth}`, {
         method: "POST",
         headers: {
           "Access-Control-Allow-Methods": "POST",

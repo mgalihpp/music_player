@@ -3,7 +3,7 @@ import { useUploadContext } from "../Context/UploadContext";
 import TopNavbar from "../components/Navbar/TopNavbar";
 import { Play } from "lucide-react";
 import LoadingBar from "react-top-loading-bar";
-import { host } from "../utils";
+import { api } from "../utils";
 
 const UploadFile = () => {
   const [file, setFile] = useState(null);
@@ -33,7 +33,7 @@ const UploadFile = () => {
       formData.append("music_name", fileName);
       formData.append("music_artist", artist);
       formData.append("music_image", image);
-      const res = await fetch(`${host}upload`, {
+      const res = await fetch(`${api}upload`, {
         method: "POST",
         body: formData,
       });

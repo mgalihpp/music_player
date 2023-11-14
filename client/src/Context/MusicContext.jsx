@@ -7,7 +7,7 @@ import {
 } from "react";
 import { PropTypes } from "prop-types";
 import { useUploadContext } from "./UploadContext";
-import { host } from "../utils";
+import { api } from "../utils";
 import { useAuth } from "./AuthContext";
 
 const MusicContext = createContext();
@@ -16,7 +16,7 @@ export function useMusicContext() {
   return useContext(MusicContext);
 }
 
-const url = `${host}`;
+const url = `${api}`;
 export function MusicProvider({ children }) {
   const [musicData, setMusicData] = useState([]);
   const [playlistData, setPlaylistData] = useState([]);

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { host, category } from "./../utils";
+import { api, category } from "./../utils";
 import MusicCard from "./../components/MusicCard";
 import TopNavbar from "./../components/Navbar/TopNavbar";
 import LoadingBar from "react-top-loading-bar";
@@ -17,7 +17,7 @@ const Category = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch(`${host}category/${name}`, {
+      const res = await fetch(`${api}category/${name}`, {
         method: "GET",
       });
       const data = await res.json();

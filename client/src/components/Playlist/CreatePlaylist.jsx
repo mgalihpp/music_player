@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import TopNavbar from "../Navbar/TopNavbar";
 import { useUploadContext } from "../../Context/UploadContext";
 import LoadingBar from "react-top-loading-bar";
-import { host } from "../../utils";
+import { api } from "../../utils";
 import { useAuth } from "../../Context/AuthContext";
 
 const CreatePlaylist = () => {
@@ -28,7 +28,7 @@ const CreatePlaylist = () => {
       formData.append("playlist_name", playlistName);
       formData.append("playlist_image", playlistImage);
       formData.append("user_id", userId);
-      const res = await fetch(`${host}playlist/add`, {
+      const res = await fetch(`${api}playlist/add`, {
         method: "POST",
         headers: {
           "Access-Control-Allow-Methods": "POST",

@@ -16,7 +16,7 @@ import Color from "color-thief-react";
 import { AlertDialog, Button, DropdownMenu, Flex } from "@radix-ui/themes";
 import * as Toast from "@radix-ui/react-toast";
 import LoadingBar from "react-top-loading-bar";
-import { host } from "../utils";
+import { host, api } from "../utils";
 
 const SingleMusicCard = () => {
   const { musicName } = useParams();
@@ -79,7 +79,7 @@ const SingleMusicCard = () => {
 
     try {
       const res = await fetch(
-        `${host}playlist/addmusic/${music_id}/${playlist_id}`,
+        `${api}playlist/addmusic/${music_id}/${playlist_id}`,
         {
           method: "POST",
         }

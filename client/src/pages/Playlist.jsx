@@ -6,7 +6,7 @@ import Color from "color-thief-react";
 import LoadingBar from "react-top-loading-bar";
 import TopNavbar from "../components/Navbar/TopNavbar";
 import { useAudioContext } from "../Context/AudioContext";
-import { host } from "../utils";
+import { host, api } from "../utils";
 import { AlertDialog, Button, DropdownMenu, Flex } from "@radix-ui/themes";
 import * as Toast from "@radix-ui/react-toast";
 import { useUploadContext } from "../Context/UploadContext";
@@ -100,7 +100,7 @@ const Playlist = () => {
     setOpen(true);
     setOpenDialog(false);
     try {
-      const res = await fetch(`${host}playlist/${currentPlaylistId}`, {
+      const res = await fetch(`${api}playlist/${currentPlaylistId}`, {
         method: "DELETE",
       });
       return res;
@@ -176,7 +176,9 @@ const Playlist = () => {
                       />
                     </div>
                     <div className="flex flex-col items-start px-6 justify-end mt-4 sm:mt-auto mb-0 gap-2">
-                      <h4 className="font-semibold text-xs sm:text-sm text-zinc-200">Playlist</h4>
+                      <h4 className="font-semibold text-xs sm:text-sm text-zinc-200">
+                        Playlist
+                      </h4>
                       <h1 className="text-xl sm:text-7xl font-bold text-zinc-50">
                         {selectedPlaylist.playlistName}
                       </h1>

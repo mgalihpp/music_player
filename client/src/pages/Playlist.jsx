@@ -127,6 +127,20 @@ const Playlist = () => {
     host + "playlist/img/" + selectedPlaylist?.playlistImage
   }`;
 
+  if (!playlistName || !selectedPlaylist) {
+    return (
+      <div className="flex flex-col items-center justify-center h-[100%] p-6 gap-2">
+        <h1 className="text-2xl text-center">Playlist Not Found</h1>
+        <Link
+          to="/"
+          className="p-2 bg-black/50 rounded-md hover:bg-black transition-all hover:scale-105 duration-300 "
+        >
+          Go Home
+        </Link>
+      </div>
+    );
+  }
+
   return (
     <>
       {compLoad ? (

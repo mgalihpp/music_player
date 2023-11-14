@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import AudioPlayer from "react-h5-audio-player";
 import { useAudioContext } from "../Context/AudioContext";
 import { Link } from "react-router-dom";
-import { SkipBack, SkipForward } from "lucide-react";
 import { host } from "../utils";
 
 const AudioPlayerComponent = () => {
@@ -73,25 +72,10 @@ const AudioPlayerComponent = () => {
               ? `${host + "stream_audio/" + selectedAudio.musicPath}`
               : ""
           }
+          showSkipControls
+          onClickNext={playNext}
+          onClickPrevious={playPrevious}
         />
-        <div className="flex-row items-center justify-center sm:flex hidden">
-          <button
-            onClick={playPrevious}
-            className="w-10 h-6 my-auto p-1"
-            aria-label="back"
-            title="Previous"
-          >
-            <SkipBack fill="white" />
-          </button>
-          <button
-            onClick={playNext}
-            className="w-10 h-6 my-auto p-1 "
-            aria-label="next"
-            title="Next"
-          >
-            <SkipForward fill="white" />
-          </button>
-        </div>
       </div>
     </div>
   );

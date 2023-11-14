@@ -125,7 +125,7 @@ const Main = () => {
 
       <Suspense fallback={<Loading />}>
         <div
-          className={`flex flex-col items-center justify-center sm:grid xl:grid-cols-5 2xl:grid-cols-6 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-4 mt-4
+          className={`flex flex-row flex-wrap items-start justify-center sm:grid xl:grid-cols-5 2xl:grid-cols-6 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-4 mt-4
         `}
         >
           {isLoading ? (

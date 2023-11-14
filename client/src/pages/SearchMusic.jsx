@@ -49,22 +49,22 @@ const SearchMusic = () => {
             <Link
               key={cat.link}
               to={cat.link}
-              className="flex items-center justify-center cursor-pointer w-[180px] flex-col text-base text-zinc-200 gap-3 rounded-md font-semibold bg-white/5 hover:bg-white/5 transition-all"
+              className="flex items-center justify-center cursor-pointer w-[130px] sm:w-[180px] flex-col text-base text-zinc-200 gap-3 rounded-md font-semibold bg-white/5 hover:bg-white/5 transition-all"
             >
               <div className="relative flex items-center justify-center">
                 <div
-                  className={`w-[180px] ${cat.color} h-[180px] rounded-md p-4 relative overflow-hidden`}
+                  className={`w-[130px] sm:w-[180px] ${cat.color} h-[130px] sm:h-[180px] rounded-md p-4 relative overflow-hidden`}
                 >
                   <strong className="text-xl">{cat.label}</strong>
-                  <div className="absolute inset-0 translate-x-[53%] translate-y-20">
+                  <div className="absolute inset-0 translate-x-[53%] translate-y-[4.5rem] sm:translate-y-20">
                     {cat.images !== "" ? (
                       <img
                         src={cat.images}
                         alt="cover"
-                        className="rotate-[15deg] w-24 h-24 object-cover"
+                        className="rotate-[15deg] w-16 h-16 sm:w-24 sm:h-24 object-cover"
                       />
                     ) : (
-                      <Music size={75} rotate={90} />
+                      <Music className="rotate-[15deg] w-[50px] h-[50px] sm:w-[80px] sm:h-[100px]"/>
                     )}
                   </div>
                 </div>
@@ -148,7 +148,7 @@ const SearchMusic = () => {
           </h1>
         </div>
         <div
-          className={`grid xl:ml-2 lg:ml-6 
+          className={`flex items-start justify-center flex-row flex-wrap sm:grid xl:ml-2 lg:ml-6 
             xl:grid-cols-5 2xl:grid-cols-6 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-4 mt-4
         `}
         >

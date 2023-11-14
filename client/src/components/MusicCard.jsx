@@ -47,7 +47,7 @@ const MusicCard = (props) => {
     <>
       <div
         className={` cursor-pointer
-          flex items-center justify-center p-4 group min-w-[150px] min-h-[150px] w-[180px] flex-col text-base text-zinc-200 gap-3 font-semibold rounded-md bg-white/5 hover:bg-white/10 transition-all`}
+          flex items-center justify-center p-4 group min-w-[135px] min-h-[135px] w-[135px] sm:w-[180px] flex-col text-base text-zinc-200 gap-3 font-semibold rounded-md bg-white/5 hover:bg-white/10 transition-all`}
       >
         <div className="relative flex items-center justify-center">
           <img
@@ -57,7 +57,7 @@ const MusicCard = (props) => {
                 : "/img/download.jpeg"
             }
             alt="cover"
-            className="rounded-lg object-cover min-w-[150px] min-h-[150px] w-[150px] h-[150px] max-w-[150px] max-h-[150px]"
+            className="rounded-lg object-cover w-[105px] h-[105px] min-h-[105px] min-w-[105px] max-w-[105px] max-h-[105px] sm:min-w-[150px] sm:min-h-[150px]  sm:w-[150px] sm:h-[150px] sm:max-w-[150px] sm:max-h-[150px]"
           />
           <div
             className={`playing-ui ${
@@ -85,13 +85,13 @@ const MusicCard = (props) => {
             <Play fill="black" className="ml-1" />
           </button>
         </div>
-        <div className="flex flex-col items-start">
+        <div className="flex flex-col items-start sm:p-0">
           <Link to={"/music/" + musicName}>
-            <p className="font-semibold hover:underline text-sm whitespace-nowrap overflow-hidden overflow-ellipsis w-32">
+            <p className="font-semibold px-2 sm:px-0 hover:underline text-[10px] sm:text-sm whitespace-nowrap overflow-hidden overflow-ellipsis w-32">
               <strong title={musicName}>{musicName}</strong>
             </p>
           </Link>
-          <p className="font-normal text-xs text-zinc-400 whitespace-nowrap overflow-hidden overflow-ellipsis w-32">
+          <p className="font-normal px-2 sm:px-0 text-xs text-zinc-400 whitespace-nowrap overflow-hidden overflow-ellipsis w-32">
             {musicArtist}
           </p>
         </div>

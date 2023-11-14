@@ -1,6 +1,6 @@
-import { Home, Menu, PlusSquare, Search } from "lucide-react";
+import { Home, Library, Menu, Plus, PlusSquare, Search } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 const MobileNavbar = () => {
   const [open, setOpen] = useState(false);
@@ -49,12 +49,12 @@ const MobileNavbar = () => {
   }, [open]);
 
   return (
-    <div className="block sm:hidden">
+    <div className="block sm:hidden z-[999]">
       <button onClick={toggleMenu}>
         <Menu />
       </button>
 
-      <div
+      <nav
         ref={ref}
         className={`${
           open ? "left-0" : "left-[-200%]"
@@ -64,7 +64,13 @@ const MobileNavbar = () => {
         {navLink("Home", "/", <Home className="w-7 h-7" />)}
         {navLink("Search", "/search", <Search className="w-7 h-7" />)}
         {navLink("Upload", "/upload", <PlusSquare className="w-7 h-7" />)}
-      </div>
+        <div className={`p-1 rounded-t-md bg-black mt-2 `}>
+          <div className="flex items-center justify-between text-zinc-400 gap-2 mb-5 ml-1 px-4 py-1">
+            {playlistHeader("Create Playlist")}
+            {createPlaylistButton()}
+          </div>
+        </div>
+      </nav>
     </div>
   );
 };
@@ -85,6 +91,26 @@ const navLink = (title, to, icon) => (
   >
     {icon} {title}
   </NavLink>
+);
+
+const playlistHeader = (title) => (
+  <div className="flex items-center justify-center gap-2">
+    <Library className="w-7 h-7" />
+    <h1 className="text-lg font-bold">{title}</h1>
+  </div>
+);
+
+const createPlaylistButton = () => (
+  <div className="flex items-center justify-center">
+    <Link
+      to="/playlist/create"
+      aria-label="Create"
+      className="rounded-full bg-white/5 group p-2"
+      title="Create a Playlist?"
+    >
+      <Plus className="w-4 h-4 text-zinc-400 group-hover:text-white transition-all ease-in-out" />
+    </Link>
+  </div>
 );
 
 export default MobileNavbar;

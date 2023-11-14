@@ -45,7 +45,7 @@ const DropdownMenu = () => {
         />
       </button>
       {isMenuOpen && (
-        <div className="origin-top-right absolute right-0 mt-2 w-36 rounded-md shadow-lg bg-zinc-900 ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <div className="origin-top-right absolute right-0 mt-2 w-36 rounded-md shadow-lg bg-zinc-900 ring-1 ring-black ring-opacity-5 focus:outline-none z-[998]">
           <div className="p-0.5 flex flex-col items-end">
             <MenuButton
               title="Switch Theme to Gradient or Dark"

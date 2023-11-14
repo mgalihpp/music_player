@@ -29,7 +29,7 @@ const AudioPlayerComponent = () => {
   const musicArtist = selectedAudio?.musicArtist || "-";
 
   return (
-    <div className="flex items-center gap-3 w-full p-6">
+    <div className="flex items-center gap-3 w-full p-2 sm:p-6">
       <div className="w-72 items-center gap-2 sm:flex hidden">
         <img
           src={

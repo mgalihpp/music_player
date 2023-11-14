@@ -81,9 +81,9 @@ const UploadFile = () => {
     <>
       <div className="p-6">
         <TopNavbar />
-        <div className="flex flex-row justify-center items-center">
+        <div className="flex flex-row justify-center items-center sm:mt-0 mt-2">
           <div
-            className={`flex justify-center h-[500px] mx-auto ${
+            className={`flex sm:flex-row flex-col justify-center h-auto sm:h-[500px] mx-auto ${
               previewImage ? "w-auto" : "w-[500px]"
             }  rounded-xl items-center bg-white/5 text-white`}
           >

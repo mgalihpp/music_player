@@ -78,7 +78,7 @@ export function AudioProvider({ children }) {
   };
 
   const playShuffle = () => {
-    const randomIndex = Math.floor(Math.random() * musicData?.length - 1);
+    const randomIndex = Math.floor(Math.random() * musicData?.length);
     const shuffleIndex = randomIndex;
     const shuffleMusic = musicData[shuffleIndex];
     setCurrentIndex(shuffleIndex);

@@ -110,7 +110,7 @@ const Login = () => {
                 className={`p-2 w-64 rounded-md`}
                 placeholder="username"
                 type="text"
-                name="username"
+                name="Enter Username"
                 id="username"
                 onChange={(e) => setUsername(e.target.value)}
                 ref={userRef}

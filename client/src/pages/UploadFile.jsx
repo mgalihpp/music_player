@@ -271,7 +271,7 @@ const UploadFile = () => {
                 </svg>
               </div>
               <div className="ml-3 text-sm font-normal">
-                Failed To Upload Music
+                Failed To Upload Music. <br/> Invalid File Format
               </div>
               <button
                 type="button"

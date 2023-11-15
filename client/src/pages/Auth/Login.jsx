@@ -108,7 +108,7 @@ const Login = () => {
               </h1>
               <input
                 className={`p-2 w-64 rounded-md`}
-                placeholder="user@email.email"
+                placeholder="username"
                 type="text"
                 name="username"
                 id="username"

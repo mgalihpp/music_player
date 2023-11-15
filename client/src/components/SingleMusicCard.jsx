@@ -117,7 +117,6 @@ const SingleMusicCard = () => {
           src={`${IMAGE_URL}`}
           crossOrigin=""
           format="rgbString"
-          quality={10}
         >
           {({ data, loading, error }) => {
             if (loading) {

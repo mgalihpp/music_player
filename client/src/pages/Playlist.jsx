@@ -150,7 +150,6 @@ const Playlist = () => {
           src={IMAGE_URL}
           crossOrigin="anonymous"
           format="rgbString"
-          quality={10}
         >
           {({ data, loading }) => {
             if (loading) {

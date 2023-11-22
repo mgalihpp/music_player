@@ -1,384 +1,29 @@
-from flask import Flask, jsonify, request, send_file, make_response
+from flask import Flask, jsonify, request, make_response, send_file, Blueprint
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
-from flask_mysqldb import MySQL
 import os
-from itsdangerous import URLSafeTimedSerializer
-import mysql.connector
+from flask_sqlalchemy import SQLAlchemy
 from mutagen.mp3 import MP3
+from PIL import Image
+from io import BytesIO
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
-app.secret_key = "secret123"
-CORS(
-    app,
+CORS(app)
+app.config["SECRET_KEY"] = "22334111"
+
+SQLALCHEMY_DATABASE_URI = (
+    "mysql+mysqlconnector://{username}:{password}@{hostname}/{databasename}".format(
+        username="mgpp",
+        password="galih451",
+        hostname="localhost",
+        databasename="musics",
+    )
 )
 
-# koneksi ke database my sql
-db = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="galih451",
-    database="music_streaming",
-)
-
-s = URLSafeTimedSerializer("secret123")
-
-mysql = MySQL(app)
-
-# membuat cursor untuk berinteraksi nanti dengan database
-cursor = db.cursor(buffered=True)
-
-
-@app.get("/")
-def index():
-    return jsonify({"message": "server ok"})
-
-
-@app.get("/stream_audio/<audio_filename>")
-def stream_audio(audio_filename):
-    audio_path = os.path.join(
-        app.root_path, app.config["UPLOAD_FOLDER"], audio_filename
-    )
-
-    if os.path.exists(audio_path):
-        return send_file(
-            audio_path,
-            as_attachment=False,
-            mimetype="audio/mp3",
-        )
-    else:
-        return make_response(jsonify("File not found")), 404
-
-
-@app.get("/img/<image_filename>")
-def stream_image(image_filename):
-    image_path = os.path.join(app.root_path, app.config["UPLOAD_IMG"], image_filename)
-
-    if os.path.exists(image_path):
-        return (
-            send_file(
-                image_path,
-                as_attachment=False,
-                mimetype="image/jpeg",
-            ),
-            200,
-        )
-    else:
-        return make_response(jsonify("File not found")), 404
-
-
-@app.get("/playlist/img/<image_filename>")
-def stream_playlist_image(image_filename):
-    image_path = os.path.join(
-        app.root_path, app.config["UPLOAD_PLAYLIST_IMG"], image_filename
-    )
-
-    if os.path.exists(image_path):
-        return (
-            send_file(
-                image_path,
-                as_attachment=False,
-                mimetype="image/jpeg",
-            ),
-            200,
-        )
-    else:
-        return make_response(jsonify("File not found")), 404
-
-
-@app.get("/musics")
-def get_all_music():
-    # mendapat semua file dari database
-    cursor.execute("SELECT * FROM musics")
-    musics = cursor.fetchall()
-
-    music_list = []
-    for music in musics:
-        music_info = {
-            "id": music[0],
-            "musicPath": music[1],
-            "musicName": music[2],
-            "musicArtist": music[3],
-            "musicImage": music[4],
-        }
-        music_list.append(music_info)
-
-    # Create a JSON response
-    response = jsonify({"musics": music_list})
-
-    return response, 200
-
-
-# @app.route('/<int:music_id>', methods=['GET'])
-# def play_music(music_id):
-
-#     print(music_id)
-#     cursor.execute("SELECT music_name, path FROM music_list WHERE id = %s", (music_id,))
-#     music = cursor.fetchone()
-
-#     if music is not None:
-#         music_path = os.path.normpath(music[1])
-#         music_path = music_path.replace("\\", "/")
-
-#         return jsonify({'path': music_path})
-#     else:
-#         return "Song not found"
-
-
-@app.post("/upload")
-def upload_music():
-    # metode untuk mendapatkan file dari form data
-    form_data = validate_form_data(request)
-
-    if not form_data:
-        return "Invalid form data", 400
-
-    # mendatapatkan file,name dari form data
-    music_file, music_name, music_artist, music_image = form_data
-
-    if (
-        music_file
-        and allowed_file(music_file.filename)
-        and allowed_image(music_image.filename)
-    ):
-        # Secure the filename to prevent directory traversal
-        audio = secure_filename(music_file.filename)
-        image = secure_filename(music_image.filename)
-
-        save_music_to_server(music_file, audio)
-        save_image_to_server(music_image, image)
-
-        # metode untuk menyimpan form data ke dalam database
-        insert_music_into_db(audio, music_name, music_artist, image)
-
-        return (make_response(jsonify({"message": "Music uploaded successfully"})), 201)
-
-    return make_response(jsonify({"message": "invalid file format"})), 400
-
-
-@app.delete("/delete/<int:music_id>")
-def delete_music(music_id):
-    try:
-        if music_id_exists_in_db(music_id):
-            delete_music_from_db(music_id)
-            return jsonify({"message": f"Music with ID {music_id} has been deleted"})
-        else:
-            return jsonify(
-                {"message": f"Music with ID {music_id} not found in the database"}, 404
-            )
-    except Exception as e:
-        return (
-            jsonify(
-                {
-                    "message": f"Failed to delete music with ID {music_id}",
-                    "error": str(e),
-                }
-            ),
-            500,
-        )
-
-
-@app.post("/playlist/add")
-def add_playlist():
-    try:
-        playlist_name = request.form.get("playlist_name")
-        playlist_image = request.files.get("playlist_image")
-        if playlist_name and playlist_image is not None:
-            image_path = save_playlist_image_to_server(
-                playlist_image, playlist_image.filename
-            )
-            cursor.execute(
-                "INSERT INTO playlists (name, image) VALUES (%s, %s)",
-                (playlist_name, image_path),
-            )
-            db.commit()
-            return jsonify(
-                {
-                    "message": "Created Playlist Successfully",
-                    "Playlist": playlist_name,
-                }
-            )
-        else:
-            return jsonify(
-                {"message": "Missing 'playlist_name' or 'playlist_image' in form data"},
-                400,
-            )
-    except Exception as e:
-        return (
-            jsonify({"message": "Failed to create playlist", "error": str(e)}),
-            500,
-        )
-
-
-@app.get("/playlist")
-def get_all_playlist():
-    try:
-        cursor.execute("SELECT * FROM playlists")
-        playlists = cursor.fetchall()
-
-        playlist_list = []
-        for playlist in playlists:
-            playlist_info = {
-                "id": playlist[0],
-                "playlistName": playlist[1],
-                "playlistImage": playlist[2],
-            }
-            playlist_list.append(playlist_info)
-
-        return jsonify({"playlist": playlist_list}), 200
-    except mysql.connector.Error as e:
-        return jsonify({"message": "Failed to fetch playlist", "error": str(e)}, 400)
-
-
-@app.post("/playlist/addmusic/<int:music_id>/<int:playlist_id>")
-def add_music_to_playlist(music_id, playlist_id):
-    try:
-        cursor.execute(
-            "INSERT INTO music_playlist (music_id, playlist_id) VALUES (%s, %s)",
-            (music_id, playlist_id),
-        )
-        db.commit()
-
-        return jsonify(
-            {
-                "message": f"Added music with ID {music_id} to playlist with ID {playlist_id}"
-            }
-        )
-
-    except mysql.connector.Error as e:
-        return jsonify(
-            {"message": "Failed to add music to playlist", "error": str(e)},
-            500,
-        )
-
-
-@app.get("/playlist/music/<int:playlist_id>")
-def get_playlist_music(playlist_id):
-    try:
-        query = """
-        SELECT m.name AS music_name, m.path, m.image, m.artist,p.name AS playlist_name, p.image
-        FROM music_playlist AS mp
-        JOIN musics AS m ON mp.music_id = m.id
-        JOIN playlists AS p ON mp.playlist_id = p.id
-        WHERE mp.playlist_id = %s
-        """
-
-        cursor.execute(query, (playlist_id,))
-        result = cursor.fetchall()
-
-        music_list = []
-        playlist_info = None  # Initialize playlist_info outside the loop
-
-        for row in result:
-            if playlist_info is None:
-                # Extract playlist name and image only once
-                playlist_info = {"playlistName": row[4], "playlistImage": row[5]}
-
-            music_info = {
-                "musicName": row[0],
-                "musicPath": row[1],
-                "musicImage": row[2],
-                "musicArtist": row[3],
-            }
-            music_list.append(music_info)
-
-        for music_info in music_list:
-            music_path = os.path.join(
-                app.root_path, app.config["UPLOAD_FOLDER"], music_info["musicPath"]
-            )
-            audio = MP3(music_path)
-            # Get the duration in seconds
-            duration_in_seconds = audio.info.length
-            # Calculate minutes and seconds
-            minutes = int(duration_in_seconds // 60)
-            seconds = int(duration_in_seconds % 60)
-            # Format as a string
-            formatted_duration = f"{minutes:02}:{seconds:02}"
-            # Add the formatted duration to the music_info dictionary
-            music_info["duration"] = formatted_duration
-
-            response_data = {
-                "playlist": {
-                    "playlistName": playlist_info["playlistName"],
-                    "playlistImage": playlist_info["playlistImage"],
-                    "musics": music_list,
-                }
-            }
-
-        return jsonify(response_data)
-    except mysql.connector.Error as e:
-        return (
-            jsonify({"message": "Failed to retrieve playlist music", "error": str(e)}),
-            500,
-        )
-
-
-@app.get("/category/<int:year>")
-def get_category_music(year):
-    try:
-        query = """
-        SELECT c.id AS category_id, c.year, m.name AS music_name, m.path, m.image, m.artist
-        FROM category AS c
-        JOIN music_category AS mc ON c.id = mc.category_id
-        JOIN musics AS m ON mc.music_id = m.id
-        WHERE c.year = %s
-        """
-
-        cursor.execute(query, (year,))
-        result = cursor.fetchall()
-
-        music_list = []
-        for row in result:
-            music_info = {
-                "id": row[0],
-                "year": row[1],
-                "musicName": row[2],
-                "musicPath": row[3],
-                "musicImage": row[4],
-                "musicArtist": row[5],
-            }
-            music_list.append(music_info)
-
-        return jsonify({"cat": music_list})
-
-    except mysql.connector.Error as e:
-        return (
-            jsonify({"message": "Failed to retrieve category music", "error": str(e)}),
-            500,
-        )
-
-
-@app.get("/search/music")
-def search_music():
-    search_query = request.args.get("n")
-
-    # /search/music?n=janji setia
-
-    if not search_query:
-        return jsonify({"message": "Please provide a search query."}), 400
-
-    try:
-        cursor.execute(
-            "SELECT * FROM musics WHERE name LIKE %s", ("%" + search_query + "%",)
-        )
-        search_results = cursor.fetchall()
-
-        music_list = []
-        for music in search_results:
-            music_info = {
-                "id": music[0],
-                "musicPath": music[1],
-                "musicName": music[2],
-                "musicArtist": music[3],
-                "musicImage": music[4],
-            }
-            music_list.append(music_info)
-
-        response = jsonify({"results": music_list})
-        return response, 201
-    except mysql.connector.Error as e:
-        return jsonify({"message": "Search failed", "error": str(e)}), 500
-
+app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {"pool_recycle": 280}
 
 # membuat route folder upload file mp3
 UPLOAD_FOLDER = "static/files"
@@ -388,6 +33,673 @@ UPLOAD_PLAYLIST_IMG = "static/img/playlist"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.config["UPLOAD_IMG"] = UPLOAD_IMG
 app.config["UPLOAD_PLAYLIST_IMG"] = UPLOAD_PLAYLIST_IMG
+
+# Helper function to check if the file extension is allowed
+
+ALLOWED_EXTENSIONS = {"mp3"}
+ALLOWED_EXTENSIONS_IMG = {"png", "jpg", "jpeg", "svg"}
+
+api_v1 = Blueprint("api_v1", __name__)
+
+db = SQLAlchemy()
+db.init_app(app)
+
+
+class Musics(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    path = db.Column(db.String(255))
+    name = db.Column(db.String(255))
+    artist = db.Column(db.String(255))
+    image = db.Column(db.String(255))
+    playlists = db.relationship(
+        "Playlists", secondary="music_playlist", back_populates="musics"
+    )
+
+
+class Playlists(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255))
+    image = db.Column(db.String(255))
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    user = db.relationship("Users", back_populates="playlists")
+    musics = db.relationship(
+        "Musics", secondary="music_playlist", back_populates="playlists"
+    )
+
+
+class MusicPlaylist(db.Model):
+    __tablename__ = "music_playlist"
+    id = db.Column(db.Integer, primary_key=True)
+    music_id = db.Column(db.Integer, db.ForeignKey("musics.id"), nullable=False)
+    playlist_id = db.Column(db.Integer, db.ForeignKey("playlists.id"), nullable=False)
+
+
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255))
+    music_category = db.relationship("MusicCategory", backref="category", lazy=True)
+
+
+class MusicCategory(db.Model):
+    __tablename__ = "music_category"
+    id = db.Column(db.Integer, primary_key=True)
+    music_id = db.Column(db.Integer, db.ForeignKey("musics.id"), nullable=False)
+    category_id = db.Column(db.Integer, db.ForeignKey("category.id"), nullable=False)
+    musics = db.relationship("Musics", backref="music_category", lazy=True)
+
+
+class Users(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(255), unique=True, nullable=False)
+    password = db.Column(db.String(255), nullable=False)
+    playlists = db.relationship("Playlists", back_populates="user")
+
+
+@app.get("/stream_audio/<audio_filename>")
+def stream_audio(audio_filename):
+    audio_path = os.path.join(
+        app.root_path, app.config["UPLOAD_FOLDER"], audio_filename
+    )
+
+    if os.path.exists(audio_path):
+        file_size = os.path.getsize(audio_path)
+        start = 0
+        end = file_size - 1
+
+        # Check if "Range" header is present in the request
+        if "Range" in request.headers:
+            range_header = request.headers.get("Range")
+            parts = range_header.replace("bytes=", "").split("-")
+            if len(parts) == 2:
+                start = int(parts[0])
+                end = int(parts[1]) if parts[1] else file_size - 1
+            elif parts[0]:
+                start = int(parts[0])
+
+        content_length = end - start + 1
+
+        with open(audio_path, "rb") as audio:
+            audio.seek(start)
+            data = audio.read(content_length)
+
+        response = make_response(data)
+        response.headers["Accept-Ranges"] = "bytes"
+        response.headers["Content-Range"] = f"bytes {start}-{end}/{file_size}"
+        response.headers["Content-Length"] = content_length
+        response.headers["Content-Type"] = "audio/mp3"
+        return response, 206  # Partial Content status code
+    else:
+        return make_response(jsonify("File not found"), 404)
+
+
+@app.route("/img/<image_filename>")
+def stream_compressed_image(image_filename):
+    image_path = os.path.join(app.root_path, app.config["UPLOAD_IMG"], image_filename)
+
+    if os.path.exists(image_path):
+        # Open the original image
+        original_image = Image.open(image_path)
+
+        # Create an in-memory buffer to save the compressed image
+        compressed_image_buffer = BytesIO()
+
+        # Compress the image with the desired quality (JPEG) or optimize (PNG)
+        if original_image.format == "PNG":
+            original_image.save(compressed_image_buffer, format="PNG", optimize=True)
+        else:
+            original_image.save(compressed_image_buffer, format="JPEG", quality=50)
+
+        # Set the buffer position to the beginning
+        compressed_image_buffer.seek(0)
+
+        # Stream the compressed image
+        response = make_response(
+            send_file(
+                compressed_image_buffer,
+                as_attachment=False,
+                mimetype=f"image/{original_image.format.lower()}",
+            )
+        )
+        # Set cache headers
+        response.headers["Cache-Control"] = "public, max-age=300"  # Cache for 5 minutes
+        response.headers["Expires"] = (datetime.now() + timedelta(minutes=5)).strftime(
+            "%a, %d %b %Y %H:%M:%S GMT"
+        )
+
+        return response, 200
+    else:
+        return make_response(jsonify("File not found"), 404)
+
+
+@app.get("/playlist/img/<image_filename>")
+def stream_playlist_image(image_filename):
+    image_path = os.path.join(
+        app.root_path, app.config["UPLOAD_PLAYLIST_IMG"], image_filename
+    )
+
+    if os.path.exists(image_path):
+        # Open the original image
+        original_image = Image.open(image_path)
+
+        # Create an in-memory buffer to save the compressed image
+        compressed_image_buffer = BytesIO()
+
+        # Compress the image with the desired quality (JPEG) or optimize (PNG)
+        if original_image.format == "PNG":
+            original_image.save(compressed_image_buffer, format="PNG", optimize=True)
+        else:
+            original_image.save(compressed_image_buffer, format="JPEG", quality=50)
+
+        # Set the buffer position to the beginning
+        compressed_image_buffer.seek(0)
+
+        # Stream the compressed image
+        response = make_response(
+            send_file(
+                compressed_image_buffer,
+                as_attachment=False,
+                mimetype=f"image/{original_image.format.lower()}",
+            )
+        )
+        # Set cache headers
+        response.headers["Cache-Control"] = "public, max-age=300"  # Cache for 5 minutes
+        response.headers["Expires"] = (datetime.now() + timedelta(minutes=5)).strftime(
+            "%a, %d %b %Y %H:%M:%S GMT"
+        )
+
+        return response, 200
+    else:
+        return make_response(jsonify("File not found"), 404)
+
+@app.get("/")
+def index():
+    return make_response(jsonify("Hello World"))
+
+
+@api_v1.get("/musics")
+def get_all_music():
+    # Fetch all records from the Music table
+    all_music = Musics.query.all()
+
+    # Create a list to store the results
+    music_list = []
+
+    # Iterate over the query result and create a dictionary for each record
+    for music in all_music:
+        music_info = {
+            "id": music.id,
+            "musicPath": music.path,
+            "musicName": music.name,
+            "musicArtist": music.artist,
+            "musicImage": music.image,
+        }
+        music_list.append(music_info)
+
+    # Create a JSON response
+    response = make_response(jsonify({"musics": music_list}))
+
+    return response, 200
+
+
+@api_v1.delete("/delete/<int:music_id>")
+def delete_music(music_id):
+    try:
+        music = Musics.query.get(music_id)
+
+        if music:
+            # Delete the music record
+            db.session.delete(music)
+            db.session.commit()
+
+            return (
+                make_response(
+                    jsonify({"message": f"Music with ID {music_id} has been deleted"})
+                ),
+                202,
+            )
+        else:
+            return (
+                make_response(
+                    jsonify(
+                        {
+                            "message": f"Music with ID {music_id} not found in the database"
+                        },
+                    )
+                ),
+                404,
+            )
+    except Exception as e:
+        # Handle any errors that might occur during the database operation
+        db.session.rollback()
+        return (
+            make_response(
+                jsonify(
+                    {
+                        "message": f"Failed to delete music with ID {music_id}",
+                        "error": str(e),
+                    }
+                ),
+            )
+        ), 500
+
+
+@api_v1.post("/upload")
+def upload_music():
+    # Method to get file from form data
+    form_data = validate_form_data(request)
+
+    if not form_data:
+        return make_response(jsonify({"Invalid form data"})), 400
+
+    # Get file and name from form data
+    music_file, music_name, music_artist, music_image = form_data
+
+    if (
+        music_file
+        and allowed_file(music_file.filename)
+        and allowed_image(music_image.filename)
+    ):
+        try:
+            # Secure the filename to prevent directory traversal
+            audio = secure_filename(music_file.filename)
+            image = secure_filename(music_image.filename)
+
+            # Save music file and image to the server
+            save_music_to_server(music_file, audio)
+            save_image_to_server(music_image, image)
+
+            # Create a new Music object
+            new_music = Musics(
+                path=audio,
+                name=music_name,
+                artist=music_artist,
+                image=image,
+            )
+
+            # Add the new music record to the database
+            db.session.add(new_music)
+            db.session.commit()
+
+            return (
+                make_response(jsonify({"message": "Music uploaded successfully"})),
+                201,
+            )
+
+        except Exception as e:
+            # Handle any errors that might occur during the database operation
+            db.session.rollback()
+            return (
+                make_response(
+                    jsonify({"message": f"Failed to upload music. Error: {str(e)}"})
+                ),
+                500,
+            )
+
+    return make_response(jsonify({"message": "Invalid file format"})), 400
+
+
+@api_v1.post("/playlist/add")
+def add_playlist():
+    try:
+        playlist_name = request.form.get("playlist_name")
+        playlist_image = request.files.get("playlist_image")
+        current_user_id = request.form.get("user_id")
+
+        if playlist_name and allowed_image(playlist_image.filename):
+            image = secure_filename(playlist_image.filename)
+            save_playlist_image_to_server(playlist_image, image)
+
+            # Create a new Playlist object
+            new_playlist = Playlists(
+                name=playlist_name, image=image, user_id=current_user_id
+            )
+
+            # Add the new playlist record to the database
+            db.session.add(new_playlist)
+            db.session.commit()
+
+            return (
+                make_response(
+                    jsonify(
+                        {
+                            "message": "Created Playlist Successfully",
+                            "Playlist": {
+                                "id": new_playlist.id,
+                                "name": new_playlist.name,
+                                "image": new_playlist.image,
+                            },
+                        }
+                    )
+                ),
+                200,
+            )
+        else:
+            return make_response(
+                jsonify(
+                    {
+                        "message": "Missing 'playlist_name' or 'playlist_image' in form data"
+                    }
+                ),
+                400,
+            )
+    except Exception as e:
+        # Handle any errors that might occur during the database operation
+        db.session.rollback()
+        return (
+            make_response(
+                jsonify({"message": "Failed to create playlist", "error": str(e)})
+            ),
+            500,
+        )
+
+
+@api_v1.get("/playlist")
+def get_user_playlists():
+    try:
+        # Get the 'user_id' from the query parameters
+        user_id_param = request.args.get("JGAREsaeyudvg6rdxlmkopfesdzJVNrKGDIOSK")
+
+        # Convert 'user_id' to an integer
+        current_user_id = int(user_id_param)
+
+        # Fetch playlists for the current user
+        user_playlists = Playlists.query.filter_by(user_id=current_user_id).all()
+
+        # Create a list to store the results
+        playlist_list = []
+
+        # Iterate over the query result and create a dictionary for each record
+        for playlist in user_playlists:
+            playlist_info = {
+                "id": playlist.id,
+                "playlistName": playlist.name,
+                "playlistImage": playlist.image,
+            }
+            playlist_list.append(playlist_info)
+
+        # Create a JSON response
+        response = make_response(jsonify({"playlist": playlist_list}))
+
+        return response, 200
+    except Exception as e:
+        return make_response(
+            jsonify({"message": "Failed to fetch playlists", "error": str(e)}), 500
+        )
+
+
+@api_v1.post("/playlist/addmusic/<int:music_id>/<int:playlist_id>")
+def add_music_to_playlist(music_id, playlist_id):
+    try:
+        # Retrieve the music and playlist objects
+        music = Musics.query.get(music_id)
+        playlist = Playlists.query.get(playlist_id)
+
+        if music and playlist:
+            # Create a new association record
+            music_playlist = MusicPlaylist(music_id=music_id, playlist_id=playlist_id)
+
+            # Add the association record to the database
+            db.session.add(music_playlist)
+            db.session.commit()
+
+            return make_response(
+                jsonify(
+                    {
+                        "message": f"Added music with ID {music_id} to playlist with ID {playlist_id}"
+                    }
+                ),
+                200,
+            )
+        else:
+            return jsonify({"message": "Music or playlist not found"}, 404)
+
+    except Exception as e:
+        # Handle any errors that might occur during the database operation
+        db.session.rollback()
+        return (
+            make_response(
+                jsonify({"message": "Failed to add music to playlist", "error": str(e)})
+            ),
+            500,
+        )
+
+
+@api_v1.get("/playlist/music")
+def get_playlist_music():
+    try:
+        # Get the 'playlist_id' from the query parameters
+        playlist_id_params = request.args.get("GOSSondaAKovmVkjrodankkiwS")
+        # Convert 'playlist_id' to an integer
+        playlist_id = int(playlist_id_params)
+        playlist = Playlists.query.get(playlist_id)
+
+        if playlist:
+            music_list = []
+            playlist_name = playlist.name
+            playlist_image = playlist.image
+            for music in playlist.musics:
+                music_info = {
+                    "musicName": music.name,
+                    "musicPath": music.path,
+                    "musicImage": music.image,
+                    "musicArtist": music.artist,
+                }
+                music_list.append(music_info)
+
+                # Add duration information (assuming you have a function to calculate duration)
+            for music_info in music_list:
+                music_path = os.path.join(
+                    app.root_path, app.config["UPLOAD_FOLDER"], music_info["musicPath"]
+                )
+                audio = MP3(music_path)
+                # Get the duration in seconds
+                duration_in_seconds = audio.info.length
+                # Calculate minutes and seconds
+                minutes = int(duration_in_seconds // 60)
+                seconds = int(duration_in_seconds % 60)
+                # Format as a string
+                formatted_duration = f"{minutes:02}:{seconds:02}"
+                # Add the formatted duration to the music_info dictionary
+                music_info["duration"] = formatted_duration
+
+            response = {
+                "playlist": {
+                    "playlistName": playlist_name,
+                    "playlistImage": playlist_image,
+                    "musics": music_list,
+                },
+            }
+
+            return make_response(jsonify(response)), 200
+        else:
+            return make_response(
+                jsonify(
+                    {
+                        "message": f"Playlist with ID {playlist_id} not found in the database"
+                    }
+                ),
+                404,
+            )
+    except Exception as e:
+        return (
+            make_response(
+                jsonify(
+                    {"message": f"Failed to retrieve playlist music", "error": str(e)}
+                )
+            ),
+            500,
+        )
+
+
+@api_v1.delete("/playlist/<int:playlist_id>")
+def delete_playlist(playlist_id):
+    try:
+        # Retrieve the playlist object by ID
+        playlist = Playlists.query.get(playlist_id)
+
+        if playlist:
+            # Remove all music items from the playlist
+            playlist.musics = []
+
+            # Delete the playlist
+            db.session.delete(playlist)
+            db.session.commit()
+
+            return make_response(
+                jsonify(
+                    {
+                        "message": f"Playlist with ID {playlist_id} and all its music has been deleted"
+                    }
+                ),
+                200,
+            )
+        else:
+            return make_response(
+                jsonify({"message": f"Playlist with ID {playlist_id} not found"}),
+                404,
+            )
+    except Exception as e:
+        # Handle any errors that might occur during the database operation
+        db.session.rollback()
+        return make_response(
+            jsonify({"message": f"Failed to delete the playlist", "error": str(e)}),
+            500,
+        )
+
+
+@api_v1.get("/category")
+def get_all_category():
+    # Fetch all records from the Music table
+    all_cat = Category.query.all()
+
+    # Create a list to store the results
+    cat_list = []
+
+    # Iterate over the query result and create a dictionary for each record
+    for cat in all_cat:
+        cat_info = {
+            "id": cat.id,
+            "name": cat.name,
+        }
+        cat_list.append(cat_info)
+
+    # Create a JSON response
+    response = make_response(jsonify({"cat": cat_list}))
+
+    return response, 200
+
+
+@api_v1.get("/category/<name>")
+def get_category_music(name):
+    try:
+        category = Category.query.filter_by(name=name).first()
+
+        if category:
+            music_list = []
+            for music_category in category.music_category:
+                music = music_category.musics
+                music_info = {
+                    "id": music.id,
+                    "name": category.name,
+                    "musicName": music.name,
+                    "musicPath": music.path,
+                    "musicImage": music.image,
+                    "musicArtist": music.artist,
+                }
+                music_list.append(music_info)
+
+            return make_response(jsonify({"cat": music_list})), 200
+        else:
+            return (
+                make_response(
+                    jsonify({"message": f"No category found for year {name}"})
+                ),
+                404,
+            )
+    except Exception as e:
+        return (
+            make_response(
+                jsonify(
+                    {"message": "Failed to retrieve category music", "error": str(e)}
+                )
+            ),
+            500,
+        )
+
+
+@api_v1.get("/search/music")
+def search_music():
+    search_query = request.args.get("n")
+
+    if not search_query:
+        return jsonify({"message": "Please provide a search query."}), 400
+
+    try:
+        search_results = Musics.query.filter(
+            Musics.name.ilike(f"%{search_query}%")
+        ).all()
+
+        music_list = []
+        for music in search_results:
+            music_info = {
+                "id": music.id,
+                "musicPath": music.path,
+                "musicName": music.name,
+                "musicArtist": music.artist,
+                "musicImage": music.image,
+            }
+            music_list.append(music_info)
+
+        response = make_response(jsonify({"results": music_list}))
+        return response, 201
+    except Exception as e:
+        return (
+            make_response(jsonify({"message": "Search failed", "error": str(e)})),
+            500,
+        )
+
+
+@api_v1.post("/auth/login")
+def login():
+    username = request.form.get("username")
+    password = request.form.get("password")
+
+    user = Users.query.filter_by(username=username, password=password).first()
+
+    if user:
+        # Authentication successful
+        response_data = {
+            "message": "Login successful",
+            "user_id": user.id,  # Include the user ID in the response
+        }
+        return make_response(jsonify(response_data)), 200
+    else:
+        # Authentication failed
+        return make_response(jsonify({"message": "Invalid credentials"})), 401
+
+
+@api_v1.post("/auth/register")
+def register():
+    username = request.form.get("username")
+    password = request.form.get("password")
+
+    existing_user = Users.query.filter_by(username=username).first()
+
+    if existing_user:
+        # User with this username already exists
+        return make_response(jsonify({"message": "Username is taken"})), 400
+
+    # Create a new user
+    new_user = Users(username=username, password=password)
+    db.session.add(new_user)
+    db.session.commit()
+
+    response_data = {
+            "message": "Registration successful",
+            "user_id": new_user.id,  # Include the user ID in the response
+        }
+    
+    return make_response(jsonify(response_data)), 201
 
 
 # membuat handler untuk upload file
@@ -425,31 +737,25 @@ def save_playlist_image_to_server(file, image_name):
     return image_path
 
 
-def insert_music_into_db(file_path, music_name, music_artist, music_image):
-    # TODO : memasukkan form data ke dalam database
-    SQL_QUERY = "INSERT INTO musics (path, name, artist, image) VALUES(%s, %s, %s, %s)"
-    VALUES = (file_path, music_name, music_artist, music_image)
+# def insert_music_into_db(file_path, music_name, music_artist, music_image):
+#     # TODO : memasukkan form data ke dalam database
+#     SQL_QUERY = "INSERT INTO musics (path, name, artist, image) VALUES(%s, %s, %s, %s)"
+#     VALUES = (file_path, music_name, music_artist, music_image)
 
-    # menjalankan sql
-    cursor.execute(SQL_QUERY, VALUES)
-    db.commit()
-
-
-def music_id_exists_in_db(music_id):
-    cursor.execute("SELECT COUNT(*) FROM musics WHERE id = %s", (music_id,))
-    result = cursor.fetchone()
-    return result[0] > 0  # If the count is greater than 0, the music_id exists
+#     # menjalankan sql
+#     cursor.execute(SQL_QUERY, VALUES)
+#     db.commit()
 
 
-def delete_music_from_db(music_id):
-    cursor.execute("DELETE FROM musics WHERE id = %s", (music_id,))
-    db.commit()
+# def music_id_exists_in_db(music_id):
+#     cursor.execute("SELECT COUNT(*) FROM musics WHERE id = %s", (music_id,))
+#     result = cursor.fetchone()
+#     return result[0] > 0  # If the count is greater than 0, the music_id exists
 
 
-# Helper function to check if the file extension is allowed
-
-ALLOWED_EXTENSIONS = {"mp3"}
-ALLOWED_EXTENSIONS_IMG = {"png", "jpg", "jpeg", "svg"}
+# def delete_music_from_db(music_id):
+#     cursor.execute("DELETE FROM musics WHERE id = %s", (music_id,))
+#     db.commit()
 
 
 def allowed_file(filename):
@@ -461,6 +767,6 @@ def allowed_image(filename):
         "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS_IMG
     )
 
-
+app.register_blueprint(api_v1, url_prefix="/api/v1")
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()

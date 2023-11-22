@@ -1,7 +1,6 @@
-flask
-flask-mysqldb
-mysql-connector-python
+Flask
 flask_cors
 mutagen
-pymongo
-itsdangerous
+Pillow
+Flask-SQLAlchemy
+mysql-connector-python

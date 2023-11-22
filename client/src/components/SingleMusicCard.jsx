@@ -215,7 +215,7 @@ const SingleMusicCard = () => {
                             Add to Playlist
                           </DropdownMenu.SubTrigger>
                           <DropdownMenu.SubContent>
-                            <Link to="/playlist/create">
+                            <Link to="/create/playlist">
                               <DropdownMenu.Item className="gap-2 justify-start">
                                 <Plus size={15} /> Create a Playlist
                               </DropdownMenu.Item>

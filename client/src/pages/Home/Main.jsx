@@ -2,7 +2,6 @@ import { Suspense, lazy, useEffect, useState } from "react";
 import { SortAsc, SortDesc } from "lucide-react";
 import TopNavbar from "../../components/Navbar/TopNavbar";
 import { useMusicContext } from "../../Context/MusicContext";
-import { Link } from "react-router-dom";
 import Loading from "../../components/Loading";
 const SkelMusicCard = lazy(() =>
   import("../../components/Skeleton/SkelMusicCard")
@@ -80,15 +79,15 @@ const Main = () => {
             ))
           ) : playlistData.length === 0 ? (
             <div>
-              <h1>
+              {/* <h1>
                 No Playlist Found.{" "}
                 <Link
                   className="underline underline-offset-2"
-                  to="/playlist/create"
+                  to="/create/playlist"
                 >
                   Want to Create?
                 </Link>
-              </h1>
+              </h1> */}
             </div>
           ) : (
             playlistData.map((playlist) => (

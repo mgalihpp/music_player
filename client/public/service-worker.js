@@ -12,11 +12,13 @@ self.addEventListener("fetch", (event) => {
 });
 
 async function handleAudioOrJSRequest(request) {
-  if (request.url.startsWith("chrome-extension://")) {
+  const url = new URL(request.url);
+
+  if (url.origin.startsWith("chrome-extension://")) {
     return fetch(request); // Skip caching extension resources
   }
 
-  const cacheName = request.url.endsWith(".mp3")
+  const cacheName = url.pathname.endsWith(".mp3")
     ? "audio-cache-v1"
     : "js-cache-v1";
   const cache = await caches.open(cacheName);

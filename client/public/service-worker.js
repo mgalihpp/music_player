@@ -1,3 +1,9 @@
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.action === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
+});
+
 self.addEventListener("fetch", (event) => {
   const { pathname } = new URL(event.request.url);
 

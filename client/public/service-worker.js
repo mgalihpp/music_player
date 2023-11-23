@@ -1,10 +1,11 @@
 self.addEventListener("fetch", (event) => {
   const { pathname } = new URL(event.request.url);
 
-  if (pathname.endsWith(".mp3")) {
+  if (event.request.destination === "audio") {
     event.respondWith(handleAudioRequest(event.request));
   } else if (
     pathname.endsWith(".js") ||
+    pathname.endsWith(".svg") ||
     pathname.endsWith(".png") ||
     pathname.endsWith(".jpg") ||
     pathname.endsWith(".jpeg")

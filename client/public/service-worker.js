@@ -4,7 +4,7 @@ self.addEventListener("fetch", (event) => {
   if (url.pathname.endsWith(".mp3") || url.pathname.endsWith(".js")) {
     event.respondWith(handleAudioOrJSRequest(event.request));
   } else {
-    event.respondWith(fetch(event.request));
+    return;
   }
 });
 

@@ -3,8 +3,9 @@ self.addEventListener("fetch", (event) => {
 
   if (url.pathname.endsWith(".mp3") || url.pathname.endsWith(".js")) {
     event.respondWith(handleAudioOrJSRequest(event.request));
-  } else {
-    return;
+  } else if (!url.pathname.includes("/img/")) {
+    // Exclude URLs containing "/img/"
+    event.respondWith(fetch(event.request));
   }
 });
 

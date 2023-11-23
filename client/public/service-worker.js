@@ -1,26 +1,31 @@
 self.addEventListener("fetch", (event) => {
-  const url = new URL(event.request.url);
+  const { pathname } = new URL(event.request.url);
 
-  if (
-    (url.pathname.endsWith(".mp3") || url.pathname.endsWith(".js")) &&
-    !url.origin.startsWith("chrome-extension://")
+  if (pathname.endsWith(".mp3")) {
+    event.respondWith(handleAudioRequest(event.request));
+  } else if (
+    pathname.endsWith(".js") ||
+    pathname.endsWith(".png") ||
+    pathname.endsWith(".jpg") ||
+    pathname.endsWith(".jpeg")
   ) {
-    event.respondWith(handleAudioOrJSRequest(event.request));
+    event.respondWith(handleStaticFileRequest(event.request));
   } else {
     event.respondWith(fetch(event.request));
   }
 });
 
-async function handleAudioOrJSRequest(request) {
-  const url = new URL(request.url);
+async function handleAudioRequest(request) {
+  const cacheName = "audio-cache-v1";
+  return handleCacheRequest(request, cacheName);
+}
 
-  if (url.origin.startsWith("chrome-extension://")) {
-    return fetch(request); // Skip caching extension resources
-  }
+async function handleStaticFileRequest(request) {
+  const cacheName = "static-cache-v1";
+  return handleCacheRequest(request, cacheName);
+}
 
-  const cacheName = url.pathname.endsWith(".mp3")
-    ? "audio-cache-v1"
-    : "js-cache-v1";
+async function handleCacheRequest(request, cacheName) {
   const cache = await caches.open(cacheName);
   const cachedResponse = await cache.match(request);
 
@@ -28,12 +33,14 @@ async function handleAudioOrJSRequest(request) {
     return cachedResponse;
   }
 
-  const fetchResponse = await fetch(request);
-
-  if (!fetchResponse.ok) {
-    return fetchResponse;
+  try {
+    const response = await fetch(request);
+    if (response.ok) {
+      await cache.put(request, response.clone());
+    }
+    return response;
+  } catch (error) {
+    console.error(`Error fetching ${request.url}:`, error);
+    throw error;
   }
-
-  await cache.put(request, fetchResponse.clone());
-  return fetchResponse;
 }

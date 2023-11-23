@@ -1,15 +1,21 @@
 self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
 
-  if (url.pathname.endsWith(".mp3") || url.pathname.endsWith(".js")) {
+  if (
+    (url.pathname.endsWith(".mp3") || url.pathname.endsWith(".js")) &&
+    !url.origin.startsWith("chrome-extension://")
+  ) {
     event.respondWith(handleAudioOrJSRequest(event.request));
-  } else if (!url.pathname.includes("/img/")) {
-    // Exclude URLs containing "/img/"
+  } else {
     event.respondWith(fetch(event.request));
   }
 });
 
 async function handleAudioOrJSRequest(request) {
+  if (request.url.startsWith("chrome-extension://")) {
+    return fetch(request); // Skip caching extension resources
+  }
+
   const cacheName = request.url.endsWith(".mp3")
     ? "audio-cache-v1"
     : "js-cache-v1";

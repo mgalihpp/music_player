@@ -11,24 +11,24 @@ self.addEventListener("fetch", (event) => {
   }
 });
 
-// self.addEventListener("fetch", function (event) {
-//   if (event.request.url.includes("/img/")) {
-//     event.respondWith(
-//       caches.match(event.request).then(function (response) {
-//         if (response) {
-//           return response; // Return the cached image if present in cache
-//         }
-//         // If not cached, fetch and cache the image
-//         return fetch(event.request).then(function (networkResponse) {
-//           caches.open("image-cache").then(function (cache) {
-//             cache.put(event.request, networkResponse.clone());
-//           });
-//           return networkResponse;
-//         });
-//       })
-//     );
-//   }
-// });
+self.addEventListener("fetch", function (event) {
+  if (event.request.url.includes("/img/")) {
+    event.respondWith(
+      caches.match(event.request).then(function (response) {
+        if (response) {
+          return response; // Return the cached image if present in cache
+        }
+        // If not cached, fetch and cache the image
+        return fetch(event.request).then(function (networkResponse) {
+          caches.open("image-cache").then(function (cache) {
+            cache.put(event.request, networkResponse.clone());
+          });
+          return networkResponse;
+        });
+      })
+    );
+  }
+});
 
 async function handleAudioRequest(request) {
   const cache = await caches.open("audio-cache-v1");

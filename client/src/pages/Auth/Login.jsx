@@ -120,9 +120,10 @@ const Login = () => {
               <input
                 className="p-2 w-64 rounded-md"
                 placeholder="Enter Password"
-                type="password"
+                type={auth === "register" ? "new-password" : "current-password"}
                 name="password"
                 id="password"
+                autoComplete="on"
                 onChange={(e) => setPassword(e.target.value)}
                 ref={pwdRef}
                 required

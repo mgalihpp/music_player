@@ -118,7 +118,7 @@ const SearchMusic = () => {
                 id="search"
                 autoComplete="off"
                 autoFocus
-                placeholder="Search for music"
+                placeholder="Search for music or artist"
                 className="p-2 bg-transparent rounded-full w-full focus:outline-none"
                 onKeyUp={handleInputChange}
               />

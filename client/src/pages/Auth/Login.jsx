@@ -120,7 +120,7 @@ const Login = () => {
               <input
                 className="p-2 w-64 rounded-md"
                 placeholder="Enter Password"
-                type={auth === "register" ? "new-password" : "current-password"}
+                type="password"
                 name="password"
                 id="password"
                 autoComplete="on"

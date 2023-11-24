@@ -71,7 +71,7 @@ const playlistItems = (data, isLoading) => {
   return (
     <Suspense fallback={<Loading />}>
       <nav
-        className="grid grid-cols-2 p-1 mx-auto overflow-invisible hover:overflow-y-auto"
+        className="flex flex-row flex-wrap p-1 mx-auto overflow-invisible hover:overflow-y-auto"
         style={{ maxHeight: "390px", overflowX: "hidden" }}
       >
         {isLoading

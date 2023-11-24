@@ -64,7 +64,7 @@ const SearchMusic = () => {
                         className="rotate-[15deg] w-16 h-16 sm:w-24 sm:h-24 object-cover"
                       />
                     ) : (
-                      <Music className="rotate-[15deg] w-[50px] h-[50px] sm:w-[80px] sm:h-[100px]"/>
+                      <Music className="rotate-[15deg] w-[50px] h-[50px] sm:w-[80px] sm:h-[100px]" />
                     )}
                   </div>
                 </div>
@@ -148,8 +148,7 @@ const SearchMusic = () => {
           </h1>
         </div>
         <div
-          className={`flex items-start justify-center flex-row flex-wrap sm:grid xl:ml-2 lg:ml-6 
-            xl:grid-cols-5 2xl:grid-cols-6 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-4 mt-4
+          className={`flex items-center flex-row flex-wrap gap-4 mt-4
         `}
         >
           {renderMusicCards()}

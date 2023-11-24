@@ -67,7 +67,9 @@ const Main = () => {
     <div className="p-6 mx-auto">
       <TopNavbar />
       <div className="flex flex-row items-center justify-between space-y-2 mt-6 mb-4">
-        <h1 className="text-md md:text-3xl font-semibold text-zinc-50">{getGreeting()}</h1>
+        <h1 className="text-md md:text-3xl font-semibold text-zinc-50">
+          {getGreeting()}
+        </h1>
       </div>
       <Suspense fallback={<Loading />}>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -124,7 +126,7 @@ const Main = () => {
 
       <Suspense fallback={<Loading />}>
         <div
-          className={`flex flex-row flex-wrap items-start justify-center sm:grid xl:grid-cols-5 2xl:grid-cols-6 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-4 mt-4
+          className={`flex flex-row flex-wrap items-start justify-center gap-4 mt-4
         `}
         >
           {isLoading ? (

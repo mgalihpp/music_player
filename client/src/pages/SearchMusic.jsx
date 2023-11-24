@@ -148,7 +148,7 @@ const SearchMusic = () => {
           </h1>
         </div>
         <div
-          className={`flex items-center flex-row flex-wrap gap-4 mt-4
+          className={`flex items-center flex-row flex-wrap justify-center sm:justify-start gap-4 mt-4
         `}
         >
           {renderMusicCards()}

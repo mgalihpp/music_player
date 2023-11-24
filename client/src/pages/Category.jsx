@@ -44,7 +44,7 @@ const Category = () => {
         </div>
       </div>
       <div
-        className={`flex flex-row flex-wrap items-start mx-auto justify-center gap-2 bg-gradient-to-b ${selectedCat?.re} ${selectedCat?.to} h-full sm:gap-4 py-12 px-4
+        className={`flex flex-row flex-wrap items-start mx-auto justify-center sm:justify-start gap-2 bg-gradient-to-b ${selectedCat?.re} ${selectedCat?.to} h-full sm:gap-4 py-12 px-4
         `}
       >
         {compLoad ? (

@@ -72,7 +72,7 @@ const Main = () => {
         </h1>
       </div>
       <Suspense fallback={<Loading />}>
-        <div className="flex flex-wrap mx-auto flex-row items-center justify-start gap-4">
+        <div className="flex flex-wrap mx-auto flex-row items-center justify-center sm:justify-start gap-4">
           {isPLoading ? (
             Array.from({ length: 3 }, (_, index) => (
               <div key={index}>
@@ -126,7 +126,7 @@ const Main = () => {
 
       <Suspense fallback={<Loading />}>
         <div
-          className={`flex flex-row flex-wrap items-start justify-center gap-4 mt-4
+          className={`flex flex-row flex-wrap start items-start justify-center sm:justify-start gap-4 mt-4
         `}
         >
           {isLoading ? (

@@ -29,7 +29,10 @@ export const Footer = () => {
         <div className="flex items-center gap-6">
           <Shuffle size={20} className="text-zinc-200" />
           <SkipBack size={20} className="text-zinc-200" />
-          <button className="flex items-center justify-center pl-2.5 p-2 rounded-full bg-white text-black">
+          <button
+            aria-label="play"
+            className="flex items-center justify-center pl-2.5 p-2 rounded-full bg-white text-black"
+          >
             <Play className="fill-black" />
           </button>
           <SkipForward size={20} className="text-zinc-200" />

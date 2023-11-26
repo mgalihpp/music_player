@@ -1,3 +1,6 @@
 .venv
 __pycache__
 dummy.db.sql
+app3.py
+.vercel
+firebase.py

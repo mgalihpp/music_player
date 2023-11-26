@@ -311,7 +311,7 @@ const Playlist = () => {
                           className="flex flex-row items-center justify-between hover:bg-white/5 gap-12 w-full px-0 sm:px-4 py-2 rounded-md"
                         >
                           <div className="flex flex-row items-center justify-start gap-6 w-96 group">
-                            <div className="block group-hover:hidden w-4">
+                            <div className="block group-hover:hidden w-6">
                               {index + 1}
                             </div>
                             <button

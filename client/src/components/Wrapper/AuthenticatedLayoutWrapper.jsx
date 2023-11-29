@@ -26,7 +26,7 @@ const AuthenticatedLayout = () => (
             element={<SingleMusicCardWrapper />}
           />
           <Route path="/search" element={<SearchMusicWrapper />} />
-          <Route path="/create/playlist" element={<CreatePlaylistWrapper />} />
+          <Route path="/playlist/create" element={<CreatePlaylistWrapper />} />
           <Route path="/playlist/:playlistName" element={<PlaylistWrapper />} />
           <Route path="/category/:name" element={<CategoryWrapper />} />
           <Route path="*" element={<h1 className="flex items-center justify-center h-[90%] text-2xl mt-4">404 Not Found</h1>} />

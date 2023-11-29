@@ -103,7 +103,7 @@ const playlistHeader = (title) => (
 const createPlaylistButton = () => (
   <div className="flex items-center justify-center">
     <Link
-      to="/playlist/create"
+      to="/create/playlist"
       aria-label="Create"
       className="rounded-full bg-white/5 group p-2"
       title="Create a Playlist?"

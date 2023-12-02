@@ -52,7 +52,7 @@ export function MusicProvider({ children }) {
 
   async function searchMusic(query) {
     try {
-      const response = await fetch(`${url}search/music?n=${query}`, {
+      const response = await fetch(`${url}musics?n=${query}`, {
         method: "GET",
         headers: {
           "Access-Control-Allow-Headers": "Content-Type",

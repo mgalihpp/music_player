@@ -13,13 +13,14 @@ CORS(app)
 app.config["SECRET_KEY"] = "22334111"
 
 SQLALCHEMY_DATABASE_URI = (
-    "mysql+mysqlconnector://{username}:{password}@{hostname}/{databasename}".format(
+    "mysql://{username}:{password}@{hostname}/{databasename}".format(
         username="mgpp",
         password="galih451",
         hostname="localhost",
         databasename="musics",
     )
 )
+
 
 app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -37,7 +38,7 @@ app.config["UPLOAD_PLAYLIST_IMG"] = UPLOAD_PLAYLIST_IMG
 # Helper function to check if the file extension is allowed
 
 ALLOWED_EXTENSIONS = {"mp3"}
-ALLOWED_EXTENSIONS_IMG = {"png", "jpg", "jpeg", "svg"}
+ALLOWED_EXTENSIONS_IMG = {"png", "jpg", "jpeg", "svg", "webp"}
 
 api_v1 = Blueprint("api_v1", __name__)
 
@@ -123,6 +124,10 @@ def stream_audio(audio_filename):
             data = audio.read(content_length)
 
         response = make_response(data)
+        response.headers["Cache-Control"] = "public, max-age=7200"  # Cache for 2 hour
+        response.headers["Expires"] = (datetime.now() + timedelta(hours=2)).strftime(
+            "%a, %d %b %Y %H:%M:%S GMT"
+        )
         response.headers["Accept-Ranges"] = "bytes"
         response.headers["Content-Range"] = f"bytes {start}-{end}/{file_size}"
         response.headers["Content-Length"] = content_length
@@ -130,6 +135,11 @@ def stream_audio(audio_filename):
         return response, 206  # Partial Content status code
     else:
         return make_response(jsonify("File not found"), 404)
+
+
+@app.get("/")
+def index():
+    return make_response(jsonify("Hello World!")), 200
 
 
 @app.route("/img/<image_filename>")
@@ -161,8 +171,8 @@ def stream_compressed_image(image_filename):
             )
         )
         # Set cache headers
-        response.headers["Cache-Control"] = "public, max-age=300"  # Cache for 5 minutes
-        response.headers["Expires"] = (datetime.now() + timedelta(minutes=5)).strftime(
+        response.headers["Cache-Control"] = "public, max-age=3600"  # Cache for 1 hour
+        response.headers["Expires"] = (datetime.now() + timedelta(hours=1)).strftime(
             "%a, %d %b %Y %H:%M:%S GMT"
         )
 
@@ -202,43 +212,14 @@ def stream_playlist_image(image_filename):
             )
         )
         # Set cache headers
-        response.headers["Cache-Control"] = "public, max-age=300"  # Cache for 5 minutes
-        response.headers["Expires"] = (datetime.now() + timedelta(minutes=5)).strftime(
+        response.headers["Cache-Control"] = "public, max-age=3600"  # Cache for 1 hour
+        response.headers["Expires"] = (datetime.now() + timedelta(hours=1)).strftime(
             "%a, %d %b %Y %H:%M:%S GMT"
         )
 
         return response, 200
     else:
         return make_response(jsonify("File not found"), 404)
-
-@app.get("/")
-def index():
-    return make_response(jsonify("Hello World"))
-
-
-@api_v1.get("/musics")
-def get_all_music():
-    # Fetch all records from the Music table
-    all_music = Musics.query.all()
-
-    # Create a list to store the results
-    music_list = []
-
-    # Iterate over the query result and create a dictionary for each record
-    for music in all_music:
-        music_info = {
-            "id": music.id,
-            "musicPath": music.path,
-            "musicName": music.name,
-            "musicArtist": music.artist,
-            "musicImage": music.image,
-        }
-        music_list.append(music_info)
-
-    # Create a JSON response
-    response = make_response(jsonify({"musics": music_list}))
-
-    return response, 200
 
 
 @api_v1.delete("/delete/<int:music_id>")
@@ -419,6 +400,7 @@ def get_user_playlists():
 
         # Create a JSON response
         response = make_response(jsonify({"playlist": playlist_list}))
+        response.headers["Cache-Control"] = "public, max-age=0"  # Cache for 1 hour
 
         return response, 200
     except Exception as e:
@@ -627,36 +609,38 @@ def get_category_music(name):
         )
 
 
-@api_v1.get("/search/music")
-def search_music():
+@api_v1.get("/musics")
+def get_musics():
     search_query = request.args.get("n")
+    print(f"Received search query: {search_query}")
 
-    if not search_query:
-        return jsonify({"message": "Please provide a search query."}), 400
+    if search_query is None:
+        return get_all_music()
+    else:
+        try:
+            search_results = Musics.query.filter(
+                Musics.name.ilike(f"%{search_query}%")
+            ).all()
 
-    try:
-        search_results = Musics.query.filter(
-            Musics.name.ilike(f"%{search_query}%")
-        ).all()
+            music_list = []
+            for music in search_results:
+                music_info = {
+                    "id": music.id,
+                    "musicPath": music.path,
+                    "musicName": music.name,
+                    "musicArtist": music.artist,
+                    "musicImage": music.image,
+                }
+                music_list.append(music_info)
 
-        music_list = []
-        for music in search_results:
-            music_info = {
-                "id": music.id,
-                "musicPath": music.path,
-                "musicName": music.name,
-                "musicArtist": music.artist,
-                "musicImage": music.image,
-            }
-            music_list.append(music_info)
+            response = make_response(jsonify({"results": music_list}))
+            return response, 201
 
-        response = make_response(jsonify({"results": music_list}))
-        return response, 201
-    except Exception as e:
-        return (
-            make_response(jsonify({"message": "Search failed", "error": str(e)})),
-            500,
-        )
+        except Exception as e:
+            return (
+                make_response(jsonify({"message": "Search failed", "error": str(e)})),
+                500,
+            )
 
 
 @api_v1.post("/auth/login")
@@ -695,11 +679,35 @@ def register():
     db.session.commit()
 
     response_data = {
-            "message": "Registration successful",
-            "user_id": new_user.id,  # Include the user ID in the response
-        }
-    
+        "message": "Registration successful",
+        "user_id": new_user.id,  # Include the user ID in the response
+    }
+
     return make_response(jsonify(response_data)), 201
+
+
+def get_all_music():
+    # Fetch all records from the Music table
+    all_music = Musics.query.all()
+
+    # Create a list to store the results
+    music_list = []
+
+    # Iterate over the query result and create a dictionary for each record
+    for music in all_music:
+        music_info = {
+            "id": music.id,
+            "musicPath": music.path,
+            "musicName": music.name,
+            "musicArtist": music.artist,
+            "musicImage": music.image,
+        }
+        music_list.append(music_info)
+
+    # Create a JSON response
+    response = make_response(jsonify({"musics": music_list}))
+    response.headers["Cache-Control"] = "public, max-age=0"
+    return response, 200
 
 
 # membuat handler untuk upload file
@@ -766,6 +774,7 @@ def allowed_image(filename):
     return (
         "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS_IMG
     )
+
 
 app.register_blueprint(api_v1, url_prefix="/api/v1")
 if __name__ == "__main__":

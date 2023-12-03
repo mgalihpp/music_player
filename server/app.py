@@ -14,8 +14,8 @@ app.config["SECRET_KEY"] = "22334111"
 
 SQLALCHEMY_DATABASE_URI = (
     "mysql://{username}:{password}@{hostname}/{databasename}".format(
-        username="mgpp",
-        password="galih451",
+        username="root",
+        password="root",
         hostname="localhost",
         databasename="musics",
     )
@@ -29,10 +29,12 @@ app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {"pool_recycle": 280}
 # membuat route folder upload file mp3
 UPLOAD_FOLDER = "static/files"
 UPLOAD_IMG = "static/img"
+UPLOAD_PROFILE = "static/img/profile"
 UPLOAD_PLAYLIST_IMG = "static/img/playlist"
 
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.config["UPLOAD_IMG"] = UPLOAD_IMG
+app.config["UPLOAD_PROFILE"] = UPLOAD_PROFILE
 app.config["UPLOAD_PLAYLIST_IMG"] = UPLOAD_PLAYLIST_IMG
 
 # Helper function to check if the file extension is allowed
@@ -93,6 +95,7 @@ class Users(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(255), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
+    image = db.Column(db.String(255))
     playlists = db.relationship("Playlists", back_populates="user")
 
 
@@ -181,6 +184,47 @@ def stream_compressed_image(image_filename):
         return make_response(jsonify("File not found"), 404)
 
 
+@app.route("/img/profile/<image_filename>")
+def stream_compressed_profile_image(image_filename):
+    image_path = os.path.join(
+        app.root_path, app.config["UPLOAD_PROFILE"], image_filename
+    )
+
+    if os.path.exists(image_path):
+        # Open the original image
+        original_image = Image.open(image_path)
+
+        # Create an in-memory buffer to save the compressed image
+        compressed_image_buffer = BytesIO()
+
+        # Compress the image with the desired quality (JPEG) or optimize (PNG)
+        if original_image.format == "PNG":
+            original_image.save(compressed_image_buffer, format="PNG", optimize=True)
+        else:
+            original_image.save(compressed_image_buffer, format="JPEG", quality=50)
+
+        # Set the buffer position to the beginning
+        compressed_image_buffer.seek(0)
+
+        # Stream the compressed image
+        response = make_response(
+            send_file(
+                compressed_image_buffer,
+                as_attachment=False,
+                mimetype=f"image/{original_image.format.lower()}",
+            )
+        )
+        # Set cache headers
+        response.headers["Cache-Control"] = "public, max-age=3600"  # Cache for 1 hour
+        response.headers["Expires"] = (datetime.now() + timedelta(hours=1)).strftime(
+            "%a, %d %b %Y %H:%M:%S GMT"
+        )
+
+        return response, 200
+    else:
+        return make_response(jsonify("File not found"), 404)
+
+
 @app.get("/playlist/img/<image_filename>")
 def stream_playlist_image(image_filename):
     image_path = os.path.join(
@@ -220,6 +264,40 @@ def stream_playlist_image(image_filename):
         return response, 200
     else:
         return make_response(jsonify("File not found"), 404)
+
+
+@api_v1.route("/user", methods=["GET", "PUT"])
+def get_user():
+    if request.method == "GET":
+        userId = request.args.get("id")
+
+        user = Users.query.filter_by(id=userId).first()
+
+        if user:
+            response_data = {"username": user.username, "profile": user.image}
+            return make_response(jsonify(response_data)), 200
+        else:
+            return make_response(jsonify({"message": "user not valid"})), 401
+    if request.method == "PUT":
+        userId = request.args.get("id")
+        profileImage = request.files.get("profile_image")
+
+        if userId and profileImage and allowed_image(profileImage.filename):
+            user = Users.query.filter_by(id=userId).first()
+
+            if user:
+                image = secure_filename(profileImage.filename)
+                save_profile_image_to_server(profileImage, image)
+
+                user.image = image
+                db.session.commit()
+
+                return (
+                    make_response(jsonify({"message": "Update User Successfull"})),
+                    201,
+                )
+            else:
+                return make_response(jsonify({"message": "Failed to Update User"})), 400
 
 
 @api_v1.delete("/delete/<int:music_id>")
@@ -612,7 +690,6 @@ def get_category_music(name):
 @api_v1.get("/musics")
 def get_musics():
     search_query = request.args.get("n")
-    print(f"Received search query: {search_query}")
 
     if search_query is None:
         return get_all_music()
@@ -733,6 +810,12 @@ def save_music_to_server(file, filename):
 def save_image_to_server(file, image_name):
     # metode untuk menyimpan image ke folder "static/image" di dalam server
     image_path = os.path.join(app.root_path, app.config["UPLOAD_IMG"], image_name)
+    file.save(image_path)
+    return image_path
+
+
+def save_profile_image_to_server(file, image_name):
+    image_path = os.path.join(app.root_path, app.config["UPLOAD_PROFILE"], image_name)
     file.save(image_path)
     return image_path
 

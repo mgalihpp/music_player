@@ -70,7 +70,7 @@ const Main = () => {
       <TopNavbar />
       <div className="flex flex-row items-center justify-between space-y-2 mt-6 mb-4">
         <h1 className="text-md md:text-3xl font-semibold text-zinc-50">
-          {getGreeting()} {userInfo?.username + "!"}
+          {getGreeting()} {userInfo.username + "!" ?? ""}
         </h1>
       </div>
       <Suspense fallback={<Loading />}>

@@ -43,7 +43,10 @@ const DropdownMenu = () => {
         title="Toggle"
         onClick={toggleMenu}
       >
-        {userInfo && userInfo.profile !== null && userInfo.profile !== "" ? (
+        {userInfo &&
+        userInfo.profile !== null &&
+        userInfo.profile !== undefined &&
+        userInfo.profile !== "" ? (
           <div>
             <img
               src={`${host}img/profile/${userInfo.profile}`}

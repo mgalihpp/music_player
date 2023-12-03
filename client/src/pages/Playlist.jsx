@@ -11,6 +11,7 @@ import { AlertDialog, Button, DropdownMenu, Flex } from "@radix-ui/themes";
 import * as Toast from "@radix-ui/react-toast";
 import { useUploadContext } from "../Context/UploadContext";
 import Loading from "./../components/Loading";
+import { useAuth } from "../Context/AuthContext";
 
 const Playlist = () => {
   const { playlistName } = useParams();
@@ -21,6 +22,7 @@ const Playlist = () => {
     isMPLoading,
     setIsMPLoading,
   } = useMusicContext();
+  const { userInfo } = useAuth();
   const { setIsPFetching } = useUploadContext();
   const [currentPlaylistId, setCurrentPlaylistId] = useState(null);
   const [selectedPlaylist, setSelectedPlaylist] = useState(null);
@@ -146,11 +148,7 @@ const Playlist = () => {
       {compLoad ? (
         <LoadingBar color="#00a827" shadow={true} progress={progress} />
       ) : (
-        <Color
-          src={IMAGE_URL}
-          crossOrigin="anonymous"
-          format="rgbString"
-        >
+        <Color src={IMAGE_URL} crossOrigin="anonymous" format="rgbString">
           {({ data, loading }) => {
             if (loading) {
               return (
@@ -196,7 +194,7 @@ const Playlist = () => {
                         {selectedPlaylist.playlistName}
                       </h1>
                       <h4 className="font-semibold text-xs sm:text-sm text-zinc-100 flex items-center justify-start">
-                        {"user"} <Dot size={20} />{" "}
+                        {userInfo.username} <Dot size={20} />{" "}
                         {musicPlaylistData?.musics?.length + " " + "Songs"}
                       </h4>
                     </div>

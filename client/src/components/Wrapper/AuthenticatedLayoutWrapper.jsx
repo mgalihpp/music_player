@@ -29,7 +29,15 @@ const AuthenticatedLayout = () => (
           <Route path="/create/playlist" element={<CreatePlaylistWrapper />} />
           <Route path="/playlist/:playlistName" element={<PlaylistWrapper />} />
           <Route path="/category/:name" element={<CategoryWrapper />} />
-          <Route path="*" element={<h1 className="flex items-center justify-center h-[90%] text-2xl mt-4">404 Not Found</h1>} />
+          <Route path="/setting" element={<h1>Setting</h1>} />
+          <Route
+            path="*"
+            element={
+              <h1 className="flex items-center justify-center h-[90%] text-2xl mt-4">
+                404 Not Found
+              </h1>
+            }
+          />
         </Routes>
       </main>
     </div>

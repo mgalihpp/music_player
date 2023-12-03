@@ -1,14 +1,18 @@
 import { useEffect, useRef, useState } from "react";
 import { useTheme } from "../../Context/ThemeContext";
-import { LogOut, Palette, User2 } from "lucide-react";
+import { LogOut, Palette, Settings, User2 } from "lucide-react";
 import { PropTypes } from "prop-types";
 import { useAuth } from "../../Context/AuthContext";
+import { host } from "../../utils";
+import { useNavigate } from "react-router-dom";
 
 const DropdownMenu = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const ref = useRef(null);
   const { toggleTheme } = useTheme();
-  const { setUser } = useAuth();
+  const { setUser, userInfo } = useAuth();
+
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -39,34 +43,46 @@ const DropdownMenu = () => {
         title="Toggle"
         onClick={toggleMenu}
       >
-        <User2
-          alt="profile"
-          className="object-cover rounded-full w-full h-full bg-zinc-800 p-0.5"
-        />
+        {userInfo && userInfo.profile !== null && userInfo.profile !== "" ? (
+          <div>
+            <img
+              src={`${host}img/profile/${userInfo.profile}`}
+              alt="profile"
+              className="object-cover w-full h-full rounded-full"
+            />
+          </div>
+        ) : (
+          <User2
+            alt="profile"
+            className="object-cover rounded-full w-full h-full bg-zinc-800 p-0.5"
+          />
+        )}
       </button>
       {isMenuOpen && (
         <div className="origin-top-right absolute right-0 mt-2 w-36 rounded-md shadow-lg bg-zinc-900 ring-1 ring-black ring-opacity-5 focus:outline-none z-[998]">
-          <div className="p-0.5 flex flex-col items-end">
-            <MenuButton
-              title="Switch Theme to Gradient or Dark"
-              onClick={toggleTheme}
-              label="Switch"
-              icon={<Palette className="w-5 h-5" />}
-            />
-          </div>
-          <div>
-            <MenuButton
-              title="Logout"
-              onClick={() => {
-                setUser(false);
-                localStorage.clear("user_id");
-                localStorage.clear("current_path");
-                window.location.reload();
-              }}
-              label="Logout"
-              icon={<LogOut className="w-5 h-5" />}
-            />
-          </div>
+          <MenuButton
+            title="Switch Theme to Gradient or Dark"
+            onClick={toggleTheme}
+            label="Switch"
+            icon={<Palette className="w-5 h-5" />}
+          />
+          <MenuButton
+            title="Change Profile"
+            onClick={() => navigate("/setting")}
+            label="Settings"
+            icon={<Settings className="w-5 h-5" />}
+          />
+          <MenuButton
+            title="Logout"
+            onClick={() => {
+              setUser(false);
+              localStorage.clear("user_id");
+              localStorage.clear("current_path");
+              window.location.reload();
+            }}
+            label="Logout"
+            icon={<LogOut className="w-5 h-5" />}
+          />
         </div>
       )}
     </div>

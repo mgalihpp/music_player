@@ -3,6 +3,7 @@ import { SortAsc, SortDesc } from "lucide-react";
 import TopNavbar from "../../components/Navbar/TopNavbar";
 import { useMusicContext } from "../../Context/MusicContext";
 import Loading from "../../components/Loading";
+import { useAuth } from "../../Context/AuthContext";
 const SkelMusicCard = lazy(() =>
   import("../../components/Skeleton/SkelMusicCard")
 );
@@ -19,6 +20,7 @@ const Main = () => {
   const [sortOrder, setSortOrder] = useState("asc");
   const [sortedMusicData, setSortedMusicData] = useState([]);
   const [isDisable, setDisable] = useState(false);
+  const { userInfo } = useAuth();
 
   useEffect(() => {
     const sortMusicData = () => {
@@ -68,7 +70,7 @@ const Main = () => {
       <TopNavbar />
       <div className="flex flex-row items-center justify-between space-y-2 mt-6 mb-4">
         <h1 className="text-md md:text-3xl font-semibold text-zinc-50">
-          {getGreeting()}
+          {getGreeting()} {userInfo?.username + "!"}
         </h1>
       </div>
       <Suspense fallback={<Loading />}>
@@ -163,11 +165,11 @@ function getGreeting() {
   const currentHour = now.getHours();
 
   if (currentHour >= 6 && currentHour < 12) {
-    return "Good Morning!";
+    return "Good Morning";
   } else if (currentHour >= 12 && currentHour < 18) {
-    return "Good Afternoon!";
+    return "Good Afternoon";
   } else {
-    return "Good Night!";
+    return "Good Night";
   }
 }
 

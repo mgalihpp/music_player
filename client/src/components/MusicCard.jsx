@@ -64,9 +64,11 @@ const MusicCard = (props) => {
                   />
                 </div>
                 <div className="flex flex-col items-start">
-                  <span className="text-xs max-w-[150px] whitespace-nowrap overflow-hidden overflow-ellipsis">
-                    {musicName}
-                  </span>
+                  <Link to={"/music/" + musicName}>
+                    <span className="text-xs max-w-[150px] whitespace-nowrap overflow-hidden overflow-ellipsis">
+                      {musicName}
+                    </span>
+                  </Link>
                   <span className="text-[10px] text-zinc-400 max-w-[150px] whitespace-nowrap overflow-hidden overflow-ellipsis">
                     {musicArtist}
                   </span>

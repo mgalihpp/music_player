@@ -45,9 +45,66 @@ const MusicCard = (props) => {
 
   return (
     <>
+      {/* Mobile */}
+
+      <div className="flex hhh min-w-[270px] h-full sm:hidden flex-col justify-center items-center text-zinc-200 gap-2 font-semibold rounded-md bg-white/5 hover:bg-white/10 transition-all">
+        <table className="w-full h-full">
+          <tbody>
+            <tr className="flex items-center">
+              <td className="flex flex-row items-center justify-center gap-2">
+                <div className="relative flex items-center justify-center">
+                  <img
+                    src={
+                      musicImage
+                        ? `${host + "img/" + musicImage}`
+                        : "/img/download.jpeg"
+                    }
+                    alt="cover"
+                    className="rounded-lg object-cover w-[50px] h-[50px]"
+                  />
+                </div>
+                <div className="flex flex-col items-start">
+                  <span className="text-xs max-w-[150px] whitespace-nowrap overflow-hidden overflow-ellipsis">
+                    {musicName}
+                  </span>
+                  <span className="text-[10px] text-zinc-400 max-w-[150px] whitespace-nowrap overflow-hidden overflow-ellipsis">
+                    {musicArtist}
+                  </span>
+                </div>
+              </td>
+              <td className="ml-auto w-6 flex items-center justify-center mr-2">
+                <div
+                  className={`playing-mobile ${
+                    isCurrentSelected && !isPause ? "visible" : "invisible"
+                  }`}
+                >
+                  <span className="playing__bar playing__bar1"></span>
+                  <span className="playing__bar playing__bar2"></span>
+                  <span className="playing__bar playing__bar3"></span>
+                </div>
+                <button
+                  onClick={handlePlayClick}
+                  className={`items-center justify-center mx-auto ${
+                    isCurrentSelected && isPause
+                      ? "flex"
+                      : isCurrentSelected && !isPause
+                      ? "hidden"
+                      : "flex"
+                  }
+          `}
+                >
+                  <Play fill="white" color="white" size={15} />
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      {/* Dekstop */}
       <div
         className={` cursor-pointer
-          flex items-center justify-center p-4 group min-w-[135px] min-h-[135px] w-[135px] sm:w-[180px] flex-col text-base text-zinc-200 gap-3 font-semibold rounded-md bg-white/5 hover:bg-white/10 transition-all`}
+          hidden sm:flex items-center justify-center p-4 group min-w-[135px] min-h-[135px] w-[135px] sm:w-[180px] flex-col text-base text-zinc-200 gap-3 font-semibold rounded-md bg-white/5 hover:bg-white/10 transition-all`}
       >
         <div className="relative flex items-center justify-center">
           <img

@@ -12,8 +12,7 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(false);
   const [userId, setUserId] = useState(localStorage.getItem("user_id") || null);
   const [userInfo, setUserInfo] = useState({});
-
-  console.log(userInfo);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const getUser = async () => {
@@ -31,12 +30,25 @@ export function AuthProvider({ children }) {
         console.log(error);
       }
     };
-    if (userId !== null) getUser();
-  }, [userId]);
+    if (userId !== null && isLoading) {
+      getUser();
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
+    }
+  }, [userId, isLoading]);
 
   return (
     <AuthContext.Provider
-      value={{ user, setUser, userId, setUserId, userInfo }}
+      value={{
+        user,
+        setUser,
+        userId,
+        setUserId,
+        userInfo,
+        isLoading,
+        setIsLoading,
+      }}
     >
       {children}
     </AuthContext.Provider>

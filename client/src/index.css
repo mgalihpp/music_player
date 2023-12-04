@@ -56,6 +56,36 @@ html {
   background-color: rgb(44, 44, 46);
 }
 
+@media (min-width: 320px) {
+  .hhh {
+    width: 280px;
+  }
+}
+
+@media (min-width: 375px) {
+  .hhh {
+    width: 300px;
+  }
+}
+
+@media (min-width: 400px) {
+  .hhh {
+    width: 330px;
+  }
+}
+
+@media (min-width: 475px) {
+  .hhh {
+    width: 400px;
+  }
+}
+
+@media (min-width: 600px) {
+  .hhh {
+    width: 475px;
+  }
+}
+
 .button-transition {
   transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
 }
@@ -64,15 +94,21 @@ html {
   transition: transform 0.8s ease-in-out; /* Add a CSS transition */
 }
 
-.playing {
-  background: rgba(255, 255, 255, 0.1);
+.playing-mobile {
+  background: rgba(0, 0, 0, 0.3);
   width: 2rem;
   height: 2rem;
   border-radius: 0.3rem;
+  gap: 0.5px;
+  padding: 0.5rem;
+  display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  padding: 0.5rem;
   box-sizing: border-box;
+  position: absolute;
+  /* bottom: 5px; */
+  /* right: 5px; */
+  z-index: 997;
 }
 
 .playing-ui {

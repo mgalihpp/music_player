@@ -288,7 +288,89 @@ const Playlist = () => {
                     </Toast.Root>
                     <Toast.Viewport className="[--viewport-padding:_25px] fixed bottom-0 right-0 flex flex-col p-[var(--viewport-padding)] gap-[10px] w-[390px] max-w-[100vw] m-0 list-none z-[2147483647] outline-none" />
                   </Toast.Provider>
-                  <div className="bg-black/20 flex flex-col items-center justify-normal px-8 py-4">
+                  <div className="bg-black/20 px-2 sm:px-8 py-4">
+                    <div className="overflow-x-auto">
+                      <table className="min-w-full divide-y divide-zinc-700">
+                        <thead className="w-full">
+                          <tr className="bg-black/10 flex flex-row">
+                            <th className="px-4 py-2 text-left w-[40px]">#</th>
+                            <th className="px-4 py-2 text-center w-[200px]">
+                              Title
+                            </th>
+                            <th className="px-4 py-2 hidden sm:block ml-auto text-start w-[500px]">
+                              Artist
+                            </th>
+                            <th className="px-4 py-2 hidden sm:block text-center ml-auto w-[200px]">
+                              Duration
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody className="w-full">
+                          {isMPLoading ? (
+                            <Loading />
+                          ) : (
+                            musicPlaylistData?.musics?.map((music, index) => (
+                              <tr
+                                key={index}
+                                className="hover:bg-white/5 h-14 flex flex-row"
+                              >
+                                <td className="px-4 py-2 relative group w-[40px]">
+                                  <span className="w-full flex items-center justify-center h-full absolute top-0 left-0 opacity-100 group-hover:opacity-0 transition-opacity">
+                                    {index + 1}
+                                  </span>
+                                  <button
+                                    onClick={() =>
+                                      handlePlayClick(music.musicName)
+                                    }
+                                    className="absolute flex items-center justify-center top-0 left-0 w-full h-full opacity-0 group-hover:opacity-100 transition-opacity"
+                                  >
+                                    {selectedMusic === music.musicName &&
+                                    selectedAudio &&
+                                    !isPause ? (
+                                      <Pause
+                                        fill="white"
+                                        color="white"
+                                        size={15}
+                                      />
+                                    ) : (
+                                      <Play
+                                        fill="white"
+                                        color="white"
+                                        size={15}
+                                      />
+                                    )}
+                                  </button>
+                                </td>
+                                <td className="flex items-center justify-start pl-12 w-full sm:w-[200px]">
+                                  <figure className="flex flex-row items-center gap-4">
+                                    <img
+                                      src={`${
+                                        host + "img/" + music.musicImage
+                                      }`}
+                                      alt="cover"
+                                      className="object-cover w-10 h-10"
+                                    />
+                                    <figcaption className="text-sm font-semibold hover:underline">
+                                      <Link to={`/music/${music.musicName}`}>
+                                        {music.musicName}
+                                      </Link>
+                                    </figcaption>
+                                  </figure>{" "}
+                                </td>
+                                <td className="px-4 py-2 hidden sm:block ml-auto text-start w-[500px]">
+                                  {music.musicArtist}
+                                </td>
+                                <td className="px-4 py-2 hidden sm:block ml-auto text-center w-[200px]">
+                                  {music.duration}
+                                </td>
+                              </tr>
+                            ))
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  {/* <div className="bg-black/20 flex flex-col items-center justify-normal px-8 py-4">
                     <div className="flex flex-row items-center justify-between gap-12 w-full px-4 py-2 rounded-md">
                       <div className="flex flex-row items-center justify-start gap-6 w-96">
                         <h1>#</h1>
@@ -348,7 +430,7 @@ const Playlist = () => {
                         </div>
                       ))
                     )}
-                  </div>
+                  </div> */}
                 </div>
               );
             }

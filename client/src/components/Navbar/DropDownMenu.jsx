@@ -43,7 +43,7 @@ const DropdownMenu = () => {
         title="Toggle"
         onClick={toggleMenu}
       >
-        {userInfo &&
+        {userInfo.profile &&
         userInfo.profile !== null &&
         userInfo.profile !== undefined &&
         userInfo.profile !== "" ? (

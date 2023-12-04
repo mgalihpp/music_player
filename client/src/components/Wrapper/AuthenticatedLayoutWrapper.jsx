@@ -10,6 +10,8 @@ import {
   SingleMusicCardWrapper,
   UploadFileWrapper,
 } from ".";
+import Settings from "../../pages/Settings";
+import About from "../../pages/About";
 
 const AuthenticatedLayout = () => (
   <div className="h-screen flex p-2 flex-col overflow-hidden w-screen">
@@ -29,7 +31,8 @@ const AuthenticatedLayout = () => (
           <Route path="/create/playlist" element={<CreatePlaylistWrapper />} />
           <Route path="/playlist/:playlistName" element={<PlaylistWrapper />} />
           <Route path="/category/:name" element={<CategoryWrapper />} />
-          <Route path="/setting" element={<h1>Setting</h1>} />
+          <Route path="/setting" element={<Settings />} />
+          <Route path="/about" element={<About />} />
           <Route
             path="*"
             element={

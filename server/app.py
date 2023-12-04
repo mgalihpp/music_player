@@ -280,24 +280,28 @@ def get_user():
             return make_response(jsonify({"message": "user not valid"})), 401
     if request.method == "PUT":
         userId = request.args.get("id")
+        username = request.form.get("username")
         profileImage = request.files.get("profile_image")
 
-        if userId and profileImage and allowed_image(profileImage.filename):
-            user = Users.query.filter_by(id=userId).first()
+        user = Users.query.filter_by(id=userId).first()
 
-            if user:
+        if user:
+            if username:
+                user.username = username
+
+            if profileImage and allowed_image(profileImage.filename):
                 image = secure_filename(profileImage.filename)
                 save_profile_image_to_server(profileImage, image)
-
                 user.image = image
-                db.session.commit()
 
-                return (
-                    make_response(jsonify({"message": "Update User Successfull"})),
-                    201,
-                )
-            else:
-                return make_response(jsonify({"message": "Failed to Update User"})), 400
+            db.session.commit()
+
+            return (
+                make_response(jsonify({"message": "Update User Successfull"})),
+                201,
+            )
+        else:
+            return make_response(jsonify({"message": "Failed to Update User"})), 400
 
 
 @api_v1.delete("/delete/<int:music_id>")

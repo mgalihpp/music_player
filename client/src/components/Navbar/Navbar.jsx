@@ -11,7 +11,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className={`space-y-1 rounded-md bg-white/5`}>
+      <nav className={`rounded-md bg-white/5`}>
         {navLink("Home", "/", <Home className="w-7 h-7" />)}
         {navLink("Search", "/search", <Search className="w-7 h-7" />)}
         {navLink("Upload", "/upload", <PlusSquare className="w-7 h-7" />)}
@@ -19,7 +19,7 @@ const Navbar = () => {
 
       <div className={`p-1 rounded-t-md bg-white/5 mt-2 `}>
         <div className="flex items-center justify-between text-zinc-400 gap-2 mb-5 ml-1 px-4 py-1">
-          {playlistHeader("Your Playlist")}
+          {playlistHeader("My Playlist")}
           {createPlaylistButton()}
         </div>
 
@@ -36,10 +36,12 @@ const navLink = (title, to, icon) => (
     className={({ isActive, isPending, isTransitioning }) =>
       [
         isPending ? "pending" : "",
-        isActive ? "bg-white/5  transition-all ease-in-out duration-300" : "",
+        isActive
+          ? "bg-white/10  transition-all ease-in-out duration-300 text-zinc-100"
+          : "",
         isTransitioning ? "transitioning" : "",
       ].join(
-        " flex items-center text-base text-zinc-400 hover:text-zinc-100 gap-4 transition-all ease-in-out duration-300 font-bold rounded-md p-3.5 hover:bg-white/5 "
+        " flex items-center text-base hover:text-zinc-100 gap-4 transition-all ease-in-out duration-300 font-bold rounded-md p-3.5 hover:bg-white/10 "
       )
     }
   >
@@ -49,8 +51,8 @@ const navLink = (title, to, icon) => (
 
 const playlistHeader = (title) => (
   <div className="flex items-center justify-center gap-2">
-    <Library className="w-7 h-7" />
-    <h1 className="text-lg font-bold">{title}</h1>
+    <Library className="w-7 h-7" color="white" />
+    <h1 className="text-lg font-bold text-zinc-200">{title}</h1>
   </div>
 );
 
@@ -72,7 +74,7 @@ const playlistItems = (data, isLoading) => {
     <Suspense fallback={<Loading />}>
       <nav
         className="flex flex-row flex-wrap p-1 mx-auto overflow-invisible hover:overflow-y-auto"
-        style={{ maxHeight: "390px", overflowX: "hidden" }}
+        style={{ maxHeight: "430px", overflowX: "hidden" }}
       >
         {isLoading
           ? Array.from({ length: 6 }, (_, index) => (

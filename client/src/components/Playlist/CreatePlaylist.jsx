@@ -84,14 +84,14 @@ const CreatePlaylist = () => {
         <TopNavbar />
 
         <div className="flex items-center justify-center mt-24 h-full">
-          <div className="w-[500px] space-x-2 space-y-2 bg-white/5 rounded-md p-4 flex flex-col justify-center items-center mx-auto">
+          <div className="w-full sm:w-[500px] space-x-2 space-y-2 bg-white/5 rounded-md p-4 flex flex-col justify-center items-center mx-auto">
             <h1 className="text-2xl font-bold">Create Playlist</h1>
 
             <form
               onSubmit={handleSubmit}
               className="p-4 flex flex-col items-center justify-center"
             >
-              <div className="flex flex-row items-center justify-center">
+              <div className="flex flex-col sm:flex-row items-center justify-center">
                 <div className="flex flex-col items-center justify-center min-w-[150px] min-h-[150px] w-[180px]">
                   <div className="relative flex flex-col items-center justify-center">
                     <span className="text-sm mb-4">Playlist Image :</span>
@@ -140,13 +140,13 @@ const CreatePlaylist = () => {
                   />
                 </div>
               </div>
-              <div className="flex ml-auto">
+              <div className="flex mx-auto sm:ml-auto">
                 <button
                   aria-label="submit"
                   title="Create"
                   type="submit"
                   disabled={isSubmit}
-                  className="bg-green-500 hover:bg-green-500/90 font-semibold text-black rounded-full px-5 py-2"
+                  className="bg-green-500 hover:bg-green-500/90 font-semibold text-black rounded-md px-5 py-2"
                 >
                   Submit
                 </button>

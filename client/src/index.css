@@ -86,6 +86,11 @@ html {
   }
 }
 
+.w-inherit {
+  width: 100%;
+  max-width: inherit;
+}
+
 .button-transition {
   transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
 }

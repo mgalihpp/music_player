@@ -156,7 +156,7 @@ const Main = () => {
           )}
         </div>
       </Suspense>
-      <footer className="flex flex-row justify-between bg-black/10 px-2 sm:px-8 pt-24 pb-4">
+      <footer className="flex flex-row justify-between px-2 sm:px-8 pt-24 pb-4">
         <div className="flex flex-col items-start justify-center gap-2">
           <h1 className="text-lg font-bold">This Page</h1>
           <Link

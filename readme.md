@@ -40,52 +40,19 @@ Python -m venv .venv
 pip install -r requirements.txt
 ```
 
-5. Create a MYSQL Database:
-
-```
-CREATE DATABASE music_streaming
-
-use music_streaming
-
-CREATE TABLE musics (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `path` varchar(1000) DEFAULT NULL,
-  `name` varchar(1000) DEFAULT NULL,
-  `artist` varchar(3000) DEFAULT NULL,
-  `image` varchar(1000) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
-```
-
-```
-CREATE TABLE playlists (
-  `id` INT NOT NULL auto_increment PRIMARY KEY,
-  `name` VARCHAR(255) DEFAULT NULL,
-  `image` varchar(1000) DEFAULT NULL
-)engine=InnoDB auto_increment=1;
-
-CREATE TABLE music_playlist (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    music_id INT,
-    playlist_id INT,
-    FOREIGN KEY (music_id) REFERENCES musics(id),
-    FOREIGN KEY (playlist_id) REFERENCES playlists(id)
-);
-```
-
-6. Run application:
+5. Run application:
 
 ```
 flask --app app run
 ```
 
-7. Run Client Application
+6. Run Client Application
 
 ```
 cd client
 ```
 
-8. Install dependecies and Run Application:
+7. Install dependecies and Run Application:
 
 ```
 npm i

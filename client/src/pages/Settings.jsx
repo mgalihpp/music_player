@@ -1,4 +1,11 @@
-import { Camera, MoreHorizontal, Pen, User2, XIcon } from "lucide-react";
+import {
+  Camera,
+  Loader2,
+  MoreHorizontal,
+  Pen,
+  User2,
+  XIcon,
+} from "lucide-react";
 import { useAuth } from "../Context/AuthContext";
 import { useMusicContext } from "../Context/MusicContext";
 import * as Dialog from "@radix-ui/react-dialog";
@@ -14,6 +21,7 @@ const Settings = () => {
   const [userName, setUserName] = useState("");
   const [imageSrc, setImageSrc] = useState(null);
   const [open, setIsOpen] = useState(false);
+  const [disable, setDisable] = useState(false);
 
   const [isUsernameChanged, setIsUsernameChanged] = useState(false);
   const [isImageChanged, setIsImageChanged] = useState(false);
@@ -27,6 +35,7 @@ const Settings = () => {
 
   const updateUser = async (e) => {
     e.preventDefault();
+    setDisable(true);
     try {
       const formData = new FormData();
       formData.append("username", isUsernameChanged ? userName : "");
@@ -46,6 +55,7 @@ const Settings = () => {
       console.error(error);
     } finally {
       setIsLoading(true);
+      setDisable(false);
       setIsOpen(false);
     }
   };
@@ -77,7 +87,7 @@ const Settings = () => {
   return (
     <div className="mx-auto pt-12">
       <div
-        className="flex flex-col sm:flex-row items-center pt-10 pb-4 px-6 cursor-pointer"
+        className="flex flex-col sm:flex-row items-center pt-10 pb-4 px-6 cursor-pointer bg-black/5"
         onClick={() => setIsOpen(true)}
       >
         <div className="relative w-40 h-40">
@@ -94,7 +104,7 @@ const Settings = () => {
             <img
               src={`${host}img/profile/${userInfo.profile}`}
               alt="profile"
-              className="object-cover w-full h-full rounded-full"
+              className="object-cover rounded-full w-40 h-40 max-w-[160px] max-h-[160px]"
             />
           ) : (
             <User2
@@ -107,7 +117,7 @@ const Settings = () => {
           <h4 className="font-semibold text-xs sm:text-sm text-zinc-200">
             Profile
           </h4>
-          <h1 className="text-xl sm:text-7xl font-bold text-zinc-50">
+          <h1 className="text-xl sm:text-7xl font-bold text-zinc-50 sm:mb-6">
             {userInfo.username ?? ""}
           </h1>
           <h4 className="font-semibold text-xs sm:text-sm text-zinc-100 flex items-center justify-start">
@@ -115,7 +125,7 @@ const Settings = () => {
           </h4>
         </div>
       </div>
-      <div className="bg-black/10 px-2 sm:px-8 py-4">
+      <div className="bg-black/5 px-2 sm:px-8 py-4">
         <DropdownMenu.Root>
           <DropdownMenu.Trigger>
             <Button
@@ -140,7 +150,7 @@ const Settings = () => {
           </DropdownMenu.Content>
         </DropdownMenu.Root>
       </div>
-      <div className="flex flex-col px-2 sm:px-8 py-4 gap-4 bg-black/10">
+      <div className="flex flex-col px-2 sm:px-8 py-4 gap-4 h-screen">
         <h1 className="text-2xl font-bold">Most Played Music</h1>
         <div className="flex items-center justify-center sm:block">
           <MusicCard
@@ -179,6 +189,16 @@ const Settings = () => {
                       userInfo.profile !== null &&
                       userInfo.profile !== undefined &&
                       userInfo.profile !== "" ? (
+                        <img
+                          src={
+                            imageSrc !== null
+                              ? imageSrc
+                              : `${host}img/profile/${userInfo.profile}`
+                          }
+                          alt="profile"
+                          className="object-cover w-24 h-24 sm:w-36 sm:h-36 rounded-full max-w-[144px] max-h-[144px]"
+                        />
+                      ) : imageSrc ? (
                         <img
                           src={
                             imageSrc !== null
@@ -231,7 +251,11 @@ const Settings = () => {
                     type="submit"
                     className="bg-green-500 text-black hover:bg-green-500/75 focus:shadow-green-500 inline-flex h-[35px] items-center justify-center rounded-[4px] px-[15px] font-bold leading-none focus:shadow-[0_0_0_2px] focus:outline-none"
                   >
-                    Save
+                    {disable ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      "Save"
+                    )}
                   </button>
                 </div>
               </form>

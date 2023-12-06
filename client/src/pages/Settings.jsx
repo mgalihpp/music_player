@@ -170,9 +170,9 @@ const Settings = () => {
                         onClick={handleImageClick}
                         className="absolute top-0 left-0 cursor-pointer w-full h-full opacity-0 rounded-full transition-opacity duration-300 bg-black bg-opacity-50 flex items-center justify-center text-white hover:opacity-100"
                       >
-                        <span className="flex flex-col items-center justify-center">
+                        <span className="flex flex-col items-center justify-center text-xs sm:text-base">
                           Choose Photo
-                          <Camera className="w-8 h-8" />
+                          <Camera className="sm:w-8 sm:h-8 w-6 h-6" />
                         </span>
                       </div>
                       {userInfo.profile &&

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Music, Search } from "lucide-react";
 import TopNavbar from "../components/Navbar/TopNavbar";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useMusicContext } from "../Context/MusicContext";
 import SkelMusicCard from "../components/Skeleton/SkelMusicCard";
 import MusicCard from "../components/MusicCard";
@@ -12,10 +12,12 @@ const SearchMusic = () => {
     useMusicContext();
   const [query, setQuery] = useState("");
   const [timeoutId, setTimeoutId] = useState(null);
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     setQuery(e.target.value);
     setIsLoading(true);
+    navigate(`/search?n=${e.target.value}`);
 
     if (timeoutId) {
       clearTimeout(timeoutId);
@@ -110,7 +112,7 @@ const SearchMusic = () => {
       <TopNavbar className="p-6">
         <div className="hidden sm:flex items-center justify-center bg-white/5 rounded-full p-2 relative focus-within:ring-2 ring-white">
           <Search className="text-gray-500" />
-          <div className="relative sm:w-52 md:72">
+          <div className="relative sm:w-52 md:w-72">
             <input
               type="search"
               name="search"

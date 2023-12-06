@@ -110,7 +110,7 @@ const SearchMusic = () => {
       <TopNavbar className="p-6">
         <div className="hidden sm:flex items-center justify-center bg-white/5 rounded-full p-2 relative focus-within:ring-2 ring-white">
           <Search className="text-gray-500" />
-          <div className="relative w-72">
+          <div className="relative sm:w-52 md:72">
             <input
               type="search"
               name="search"

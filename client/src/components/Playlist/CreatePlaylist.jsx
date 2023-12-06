@@ -1,5 +1,4 @@
 import { useRef, useState } from "react";
-import TopNavbar from "../Navbar/TopNavbar";
 import { useUploadContext } from "../../Context/UploadContext";
 import LoadingBar from "react-top-loading-bar";
 import { api } from "../../utils";
@@ -81,8 +80,6 @@ const CreatePlaylist = () => {
   return (
     <>
       <div className="p-6 m-auto">
-        <TopNavbar />
-
         <div className="flex items-center justify-center mt-24 h-full">
           <div className="w-full sm:w-[500px] space-x-2 space-y-2 bg-white/5 rounded-md p-4 flex flex-col justify-center items-center mx-auto">
             <h1 className="text-2xl font-bold">Create Playlist</h1>

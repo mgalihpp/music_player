@@ -1,6 +1,5 @@
 import { useRef, useState } from "react";
 import { useUploadContext } from "../Context/UploadContext";
-import TopNavbar from "../components/Navbar/TopNavbar";
 import { Play } from "lucide-react";
 import LoadingBar from "react-top-loading-bar";
 import { api } from "../utils";
@@ -79,11 +78,10 @@ const UploadFile = () => {
 
   return (
     <>
-      <div className="p-6">
-        <TopNavbar />
+      <div className="px-6 pt-24">
         <div className="flex flex-row justify-center items-center sm:mt-0 mt-2">
           <div
-            className={`flex sm:flex-row flex-col justify-center h-auto sm:h-[500px] mx-auto ${
+            className={`flex sm:flex-row flex-col justify-center h-auto max-w-screen-sm sm:h-[500px] mx-auto ${
               previewImage ? "w-auto" : "w-[500px]"
             }  rounded-xl items-center bg-white/5 text-white`}
           >
@@ -95,7 +93,7 @@ const UploadFile = () => {
                 Upload Music
               </label>
               <input
-                className="outline-none bg-zinc-900 p-2"
+                className="outline-none bg-zinc-900 p-2 w-full"
                 type="file"
                 name="music_file"
                 id="music_file"
@@ -108,7 +106,7 @@ const UploadFile = () => {
                 Upload Image
               </label>
               <input
-                className="outline-none bg-zinc-900 p-2"
+                className="outline-none bg-zinc-900 p-2 w-full"
                 type="file"
                 name="music_image"
                 id="music_image"
@@ -117,9 +115,7 @@ const UploadFile = () => {
                 ref={fileImageRef}
                 required={true}
               />
-              <label htmlFor="music_name" className="text-base font-semibold">
-                Music Name
-              </label>
+
               <input
                 className="p-2 rounded-md w-full outline-none bg-zinc-900"
                 type="text"
@@ -132,9 +128,7 @@ const UploadFile = () => {
                 ref={fileNameRef}
                 required={true}
               />
-              <label htmlFor="music_artist" className="text-base font-semibold">
-                Artist Name
-              </label>
+
               <input
                 className="p-2 rounded-md w-full outline-none bg-zinc-900"
                 type="text"
@@ -271,7 +265,7 @@ const UploadFile = () => {
                 </svg>
               </div>
               <div className="ml-3 text-sm font-normal">
-                Failed To Upload Music. <br/> Invalid File Format
+                Failed To Upload Music. <br /> Invalid File Format
               </div>
               <button
                 type="button"

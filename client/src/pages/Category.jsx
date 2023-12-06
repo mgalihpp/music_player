@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { api, category } from "./../utils";
 import MusicCard from "./../components/MusicCard";
-import TopNavbar from "./../components/Navbar/TopNavbar";
 import LoadingBar from "react-top-loading-bar";
 import SkelMusicCard from "../components/Skeleton/SkelMusicCard";
 
@@ -36,7 +35,6 @@ const Category = () => {
       <div
         className={`mx-auto bg-gradient-to-b ${selectedCat?.from} ${selectedCat?.to}  px-6 pt-6 pb-14  `}
       >
-        <TopNavbar />
         <div className="flex flex-row items-center justify-between mt-12">
           <h1 className="text-4xl sm:text-7xl font-semibold text-zinc-50">
             Category {selectedCat?.label}!

@@ -83,7 +83,7 @@ const SearchMusic = () => {
 
     if (searchResults?.length === 0) {
       return (
-        <h1 className="flex gap-2 text-semibold text-xl whitespace-nowrap">
+        <h1 className="flex gap-2 text-semibold text-sm whitespace-nowrap p-6 sm:text-xl">
           No Music Found for {query}.
           <Link to="/upload" className="italic underline">
             Add Music
@@ -107,52 +107,50 @@ const SearchMusic = () => {
 
   return (
     <>
-      <div className="px-6 py-4">
-        <TopNavbar>
-          <div className="hidden sm:flex items-center justify-center bg-white/5 rounded-full p-2 relative focus-within:ring-2 ring-white">
-            <Search className="text-gray-500" />
-            <div className="relative w-72">
-              <input
-                type="search"
-                name="search"
-                id="search"
-                autoComplete="off"
-                autoFocus
-                placeholder="Search for music or artist"
-                className="p-2 bg-transparent rounded-full w-full focus:outline-none"
-                onKeyUp={handleInputChange}
-              />
-            </div>
-          </div>
-        </TopNavbar>
-        <div className="flex sm:hidden mt-2 items-center justify-center bg-white/5 rounded-full p-2 relative focus-within:ring-2 ring-white">
+      <TopNavbar className="p-6">
+        <div className="hidden sm:flex items-center justify-center bg-white/5 rounded-full p-2 relative focus-within:ring-2 ring-white">
           <Search className="text-gray-500" />
           <div className="relative w-72">
             <input
-              type="searchmb"
-              name="searchmb"
-              id="searchmb"
+              type="search"
+              name="search"
+              id="search"
               autoComplete="off"
               autoFocus
-              placeholder="Search for music"
+              placeholder="Search for music or artist"
               className="p-2 bg-transparent rounded-full w-full focus:outline-none"
               onKeyUp={handleInputChange}
             />
           </div>
         </div>
-        <div className="flex items-start space-y-2 mt-6 mb-4">
-          <h1 className="text-4xl font-semibold">
-            {query.length === 0 || (query.length > 0 && query.length < 2)
-              ? "Browse"
-              : "Results"}
-          </h1>
+      </TopNavbar>
+      <div className="flex sm:hidden mx-4 mt-2 items-center justify-center bg-white/5 rounded-full p-2 relative focus-within:ring-2 ring-white">
+        <Search className="text-gray-500" />
+        <div className="relative w-72">
+          <input
+            type="searchmb"
+            name="searchmb"
+            id="searchmb"
+            autoComplete="off"
+            autoFocus
+            placeholder="Search for music"
+            className="p-2 bg-transparent rounded-full w-full focus:outline-none"
+            onKeyUp={handleInputChange}
+          />
         </div>
-        <div
-          className={`flex items-center flex-row flex-wrap justify-center sm:justify-start gap-4 mt-4
+      </div>
+      <div className="flex items-start space-y-2 mt-6 mb-4 p-6">
+        <h1 className="text-2xl sm:text-4xl font-semibold">
+          {query.length === 0 || (query.length > 0 && query.length < 2)
+            ? "Browse"
+            : "Results"}
+        </h1>
+      </div>
+      <div
+        className={`flex items-center flex-row flex-wrap justify-center sm:justify-start gap-4 mt-4 p-6
         `}
-        >
-          {renderMusicCards()}
-        </div>
+      >
+        {renderMusicCards()}
       </div>
     </>
   );

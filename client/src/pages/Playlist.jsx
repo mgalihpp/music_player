@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { Dot, MoreHorizontal, Pause, Play } from "lucide-react";
 import Color from "color-thief-react";
 import LoadingBar from "react-top-loading-bar";
-import TopNavbar from "../components/Navbar/TopNavbar";
 import { useAudioContext } from "../Context/AudioContext";
 import { host, api } from "../utils";
 import { AlertDialog, Button, DropdownMenu, Flex } from "@radix-ui/themes";
@@ -172,8 +171,6 @@ const Playlist = () => {
                     background: `linear-gradient(${topColor}, ${bottomColor})`,
                   }}
                 >
-                  <TopNavbar className="p-6" />
-
                   <div className="flex flex-col sm:flex-row items-start  pt-10 pb-4 px-6">
                     <div className="relative">
                       <img
@@ -289,12 +286,12 @@ const Playlist = () => {
                     <Toast.Viewport className="[--viewport-padding:_25px] fixed bottom-0 right-0 flex flex-col p-[var(--viewport-padding)] gap-[10px] w-[390px] max-w-[100vw] m-0 list-none z-[2147483647] outline-none" />
                   </Toast.Provider>
                   <div className="bg-black/20 px-2 sm:px-8 py-4">
-                    <div className="overflow-x-auto">
+                    <div className="overflow-x-hidden sm:overflow-x-auto">
                       <table className="min-w-full divide-y divide-zinc-700">
                         <thead className="w-full">
                           <tr className="bg-black/10 flex flex-row">
                             <th className="px-4 py-2 text-left w-[40px]">#</th>
-                            <th className="px-4 py-2 text-center w-[200px]">
+                            <th className="px-4 py-2 text-left w-[300px]">
                               Title
                             </th>
                             <th className="px-4 py-2 hidden sm:block ml-auto text-start w-[500px]">
@@ -307,7 +304,11 @@ const Playlist = () => {
                         </thead>
                         <tbody className="w-full">
                           {isMPLoading ? (
-                            <Loading />
+                            <tr>
+                              <td>
+                                <Loading />
+                              </td>
+                            </tr>
                           ) : (
                             musicPlaylistData?.musics?.map((music, index) => (
                               <tr
@@ -341,7 +342,7 @@ const Playlist = () => {
                                     )}
                                   </button>
                                 </td>
-                                <td className="flex items-center justify-start pl-12 w-full sm:w-[200px]">
+                                <td className="flex items-start justify-start pl-4 w-full sm:w-[300px]">
                                   <figure className="flex flex-row items-center gap-4">
                                     <img
                                       src={`${

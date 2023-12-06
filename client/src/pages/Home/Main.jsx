@@ -1,10 +1,8 @@
 import { Suspense, lazy, useEffect, useState } from "react";
 import { SortAsc, SortDesc } from "lucide-react";
-import TopNavbar from "../../components/Navbar/TopNavbar";
 import { useMusicContext } from "../../Context/MusicContext";
 import Loading from "../../components/Loading";
 import { useAuth } from "../../Context/AuthContext";
-import { Link } from "react-router-dom";
 const SkelMusicCard = lazy(() =>
   import("../../components/Skeleton/SkelMusicCard")
 );
@@ -67,8 +65,7 @@ const Main = () => {
   };
 
   return (
-    <div className="p-6 mx-auto">
-      <TopNavbar />
+    <div className="px-6 py-8">
       <div className="flex flex-row items-center justify-between space-y-2 mt-6 mb-4">
         <h1 className="text-md md:text-3xl font-semibold text-zinc-50">
           {getGreeting()} {userInfo.username ?? ""}
@@ -128,7 +125,7 @@ const Main = () => {
       </div>
       <Suspense fallback={<Loading />}>
         <div
-          className={`flex flex-row flex-wrap start items-start justify-center sm:justify-start gap-4 mt-4
+          className={`flex flex-row flex-wrap items-center justify-center gap-4 mt-4
         `}
         >
           {isLoading ? (
@@ -156,27 +153,6 @@ const Main = () => {
           )}
         </div>
       </Suspense>
-      <footer className="flex flex-row justify-between px-2 sm:px-8 pt-24 pb-4">
-        <div className="flex flex-col items-start justify-center gap-2">
-          <h1 className="text-lg font-bold">This Page</h1>
-          <Link
-            to="/about"
-            className="text-zinc-400 text-sm font-semibold hover:underline hover:text-zinc-100 transition-all"
-          >
-            About
-          </Link>
-          <Link
-            target="_blank"
-            to="https://github.com/mgalihpp/music_player"
-            className="text-zinc-400 text-sm font-semibold hover:underline hover:text-zinc-100 transition-all"
-          >
-            Github
-          </Link>
-        </div>
-        <div className="flex flex-col items-end justify-center">
-          <h1>&copy; mgpp</h1>
-        </div>
-      </footer>
     </div>
   );
 };

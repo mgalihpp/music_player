@@ -1,10 +1,6 @@
-import TopNavbar from "../components/Navbar/TopNavbar";
-
 const About = () => {
   return (
-    <div className="mx-auto">
-      <TopNavbar className="p-6" />
-
+    <div className="mx-auto pt-16">
       <div className="flex flex-col gap-6 p-6 w-full sm:w-[600px] ">
         <h1 className="text-xl font-bold text-zinc-100">
           About This Application

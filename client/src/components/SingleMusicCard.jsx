@@ -1,5 +1,4 @@
 import { Link, useParams } from "react-router-dom";
-import TopNavbar from "./Navbar/TopNavbar";
 import {
   Heart,
   Loader2,
@@ -113,11 +112,7 @@ const SingleMusicCard = () => {
       {compLoad ? (
         <LoadingBar color="#00a827" shadow={true} progress={progress} />
       ) : (
-        <Color
-          src={`${IMAGE_URL}`}
-          crossOrigin=""
-          format="rgbString"
-        >
+        <Color src={`${IMAGE_URL}`} crossOrigin="" format="rgbString">
           {({ data, loading, error }) => {
             if (loading) {
               return (
@@ -145,8 +140,6 @@ const SingleMusicCard = () => {
                     background: `linear-gradient(${topColor}, ${bottomColor})`,
                   }}
                 >
-                  <TopNavbar className="p-6" />
-
                   <div className="flex flex-col sm:flex-row items-start  pt-20 pb-4 px-6">
                     <div className="relative">
                       <img
@@ -156,7 +149,9 @@ const SingleMusicCard = () => {
                       />
                     </div>
                     <div className="flex flex-col items-start px-6 justify-end mt-4 sm:mt-auto mb-0 gap-2">
-                      <h4 className="font-semibold text-xs sm:text-sm text-zinc-200">Song</h4>
+                      <h4 className="font-semibold text-xs sm:text-sm text-zinc-200">
+                        Song
+                      </h4>
                       <h1 className="text-xl sm:text-7xl font-bold text-zinc-50">
                         {selectedMusic.musicName}
                       </h1>
@@ -204,7 +199,7 @@ const SingleMusicCard = () => {
                         </Button>
                       </DropdownMenu.Trigger>
                       <DropdownMenu.Content color="gray">
-                        <DropdownMenu.Item 
+                        <DropdownMenu.Item
                         // onClick={handleAddToLikedSongs}
                         >
                           Add to Liked Songs

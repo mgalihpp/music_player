@@ -1,13 +1,11 @@
 import { Camera, MoreHorizontal, Pen, User2, XIcon } from "lucide-react";
 import { useAuth } from "../Context/AuthContext";
 import { useMusicContext } from "../Context/MusicContext";
-import TopNavbar from "../components/Navbar/TopNavbar";
 import * as Dialog from "@radix-ui/react-dialog";
 import { host, api } from "../utils";
 import { useEffect, useRef, useState } from "react";
 import { Button, DropdownMenu } from "@radix-ui/themes";
 import MusicCard from "./../components/MusicCard";
-import { Link } from "react-router-dom";
 
 const Settings = () => {
   const { userInfo, userId, setIsLoading } = useAuth();
@@ -77,9 +75,7 @@ const Settings = () => {
   };
 
   return (
-    <div className="mx-auto">
-      <TopNavbar className="p-6" />
-
+    <div className="mx-auto pt-12">
       <div
         className="flex flex-col sm:flex-row items-center pt-10 pb-4 px-6 cursor-pointer"
         onClick={() => setIsOpen(true)}
@@ -154,27 +150,6 @@ const Settings = () => {
           />
         </div>
       </div>
-      <footer className="flex flex-row justify-between bg-black/10 px-2 sm:px-8 py-24 ">
-        <div className="flex flex-col items-start justify-center gap-2">
-          <h1 className="text-lg font-bold">This Page</h1>
-          <Link
-            to="/about"
-            className="text-zinc-400 text-sm font-semibold hover:underline hover:text-zinc-100 transition-all"
-          >
-            About
-          </Link>
-          <Link
-            target="_blank"
-            to="https://github.com/mgalihpp/music_player"
-            className="text-zinc-400 text-sm font-semibold hover:underline hover:text-zinc-100 transition-all"
-          >
-            Github
-          </Link>
-        </div>
-        <div className="flex flex-col items-end justify-center">
-          <h1>&copy; mgpp</h1>
-        </div>
-      </footer>
       <>
         <Dialog.Root open={open} onOpenChange={setIsOpen}>
           <Dialog.Portal>

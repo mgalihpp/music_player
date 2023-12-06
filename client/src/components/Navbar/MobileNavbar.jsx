@@ -34,7 +34,7 @@ const MobileNavbar = () => {
 
   useEffect(() => {
     // Add or remove 'overflow-hidden' class based on the 'open' state
-    const mainElement = document.getElementsByTagName("main")[0];
+    const mainElement = document.getElementsByClassName("scroll")[0];
 
     if (mainElement) {
       mainElement.style.overflow = open ? "hidden" : "";

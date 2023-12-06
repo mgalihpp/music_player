@@ -266,44 +266,6 @@ def stream_playlist_image(image_filename):
         return make_response(jsonify("File not found"), 404)
 
 
-@api_v1.route("/user", methods=["GET", "PUT"])
-def get_user():
-    if request.method == "GET":
-        userId = request.args.get("id")
-
-        user = Users.query.filter_by(id=userId).first()
-
-        if user:
-            response_data = {"username": user.username, "profile": user.image}
-            return make_response(jsonify(response_data)), 200
-        else:
-            return make_response(jsonify({"message": "user not valid"})), 401
-    if request.method == "PUT":
-        userId = request.args.get("id")
-        username = request.form.get("username")
-        profileImage = request.files.get("profile_image")
-
-        user = Users.query.filter_by(id=userId).first()
-
-        if user:
-            if username:
-                user.username = username
-
-            if profileImage and allowed_image(profileImage.filename):
-                image = secure_filename(profileImage.filename)
-                save_profile_image_to_server(profileImage, image)
-                user.image = image
-
-            db.session.commit()
-
-            return (
-                make_response(jsonify({"message": "Update User Successfull"})),
-                201,
-            )
-        else:
-            return make_response(jsonify({"message": "Failed to Update User"})), 400
-
-
 @api_v1.delete("/delete/<int:music_id>")
 def delete_music(music_id):
     try:

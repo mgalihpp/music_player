@@ -59,5 +59,5 @@ export default TopNavbar;
 TopNavbar.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
-  position: PropTypes.string,
+  position: PropTypes.any,
 };

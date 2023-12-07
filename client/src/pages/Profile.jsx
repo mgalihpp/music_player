@@ -29,8 +29,6 @@ const Settings = () => {
   const [isImageChanged, setIsImageChanged] = useState(false);
   const imageRef = useRef();
 
-  console.log(token);
-
   const getUserMostPlayedMusic = useCallback(async () => {
     try {
       const res = await fetch(`${api}mostmusics`, {
@@ -45,8 +43,6 @@ const Settings = () => {
       console.error(error);
     }
   }, [token]);
-
-  console.log(musicData);
 
   useEffect(() => {
     if (token) {

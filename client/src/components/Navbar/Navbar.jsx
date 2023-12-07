@@ -19,7 +19,7 @@ const Navbar = () => {
 
       <div className={`p-1 rounded-t-md bg-white/5 mt-2 `}>
         <div className="flex items-center justify-between text-zinc-400 gap-2 mb-5 ml-1 px-4 py-1">
-          {playlistHeader("My Playlist")}
+          {playlistHeader("My Playlists")}
           {createPlaylistButton()}
         </div>
 

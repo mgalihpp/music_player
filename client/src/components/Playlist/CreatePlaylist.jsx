@@ -137,7 +137,7 @@ const CreatePlaylist = () => {
                   />
                 </div>
               </div>
-              <div className="flex mx-auto sm:ml-auto">
+              <div className="flex sm:ml-auto">
                 <button
                   aria-label="submit"
                   title="Create"

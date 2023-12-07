@@ -1,11 +1,13 @@
 import { useRef, useState } from "react";
 import { useUploadContext } from "../Context/UploadContext";
-import { Play } from "lucide-react";
+import { Image, Play, Upload } from "lucide-react";
 import LoadingBar from "react-top-loading-bar";
 import { api } from "../utils";
+import { Button } from "@radix-ui/themes";
 
 const UploadFile = () => {
   const [file, setFile] = useState(null);
+  const [selectedFileName, setSelectedFileName] = useState("");
   const [fileName, setFileName] = useState("");
   const [artist, setArtist] = useState("");
   const [image, setImage] = useState(null);
@@ -32,17 +34,22 @@ const UploadFile = () => {
       formData.append("music_name", fileName);
       formData.append("music_artist", artist);
       formData.append("music_image", image);
-      const res = await fetch(`${api}upload`, {
-        method: "POST",
-        body: formData,
-      });
-      if (res.status === 201) {
-        setIsFetching(true);
-        setToast(true);
-        return res;
+
+      if (file && image) {
+        const res = await fetch(`${api}upload`, {
+          method: "POST",
+          body: formData,
+        });
+        if (res.status === 201) {
+          setIsFetching(true);
+          setToast(true);
+          return res;
+        } else {
+          setEToast(true);
+          setIsFetching(false);
+        }
       } else {
-        setEToast(true);
-        setIsFetching(false);
+        throw new Error();
       }
     } catch (error) {
       console.log(error);
@@ -64,6 +71,26 @@ const UploadFile = () => {
         setToast(false);
         setEToast(false);
       }, 5000);
+    }
+  };
+
+  const handleFileButtonClick = () => {
+    if (fileRef.current) {
+      fileRef.current.click();
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    // Set the selected file to state
+    setFile(selectedFile);
+    // Display the selected file name
+    setSelectedFileName(selectedFile?.name ?? "");
+  };
+
+  const handleImageButtonClick = () => {
+    if (fileImageRef.current) {
+      fileImageRef.current.click();
     }
   };
 
@@ -93,31 +120,50 @@ const UploadFile = () => {
                 Upload Music
               </label>
               <input
-                className="outline-none bg-zinc-900 p-2 w-full"
+                className="outline-none bg-zinc-900 p-2 w-full hidden"
                 type="file"
                 name="music_file"
                 id="music_file"
-                onChange={(e) => setFile(e.target.files[0])}
+                onChange={handleFileChange}
                 accept=".mp3"
                 ref={fileRef}
-                required={true}
               />
+              <div className="flex flex-row items-center justify-center gap-2">
+                <Button color="grass" onClick={handleFileButtonClick}>
+                  <Upload className="w-4 h-4" />
+                  Upload
+                </Button>
+                {selectedFileName && (
+                  <p className="text-xs whitespace-nowrap overflow-hidden overflow-ellipsis w-36">
+                    Selected File: {selectedFileName}
+                  </p>
+                )}
+              </div>
               <label htmlFor="music_image" className="text-base font-semibold">
                 Upload Image
               </label>
               <input
-                className="outline-none bg-zinc-900 p-2 w-full"
+                className="outline-none bg-zinc-900 p-2 w-full hidden"
                 type="file"
                 name="music_image"
                 id="music_image"
                 accept=".jpg, .jpeg, .png, .svg"
                 onChange={handleImageChange}
                 ref={fileImageRef}
-                required={true}
               />
-
+              <div className="flex flex-row items-center justify-center gap-2">
+                <Button color="grass" onClick={handleImageButtonClick}>
+                  <Image className="w-4 h-4" />
+                  Upload
+                </Button>
+                {image && (
+                  <p className="text-xs whitespace-nowrap overflow-hidden overflow-ellipsis w-36">
+                    Selected Image: {image.name}
+                  </p>
+                )}
+              </div>
               <input
-                className="p-2 rounded-md w-full outline-none bg-zinc-900"
+                className="text-white inline-flex h-12 w-full items-center justify-center rounded-[4px] px-[10px] text-sm sm:text-[15px] leading-none shadow-[0_0_0_1px] outline-none focus:shadow-[0_0_0_2px]"
                 type="text"
                 name="music_name"
                 id="music_name"
@@ -126,18 +172,18 @@ const UploadFile = () => {
                 autoFocus
                 onChange={(e) => setFileName(e.target.value)}
                 ref={fileNameRef}
-                required={true}
+                required
               />
 
               <input
-                className="p-2 rounded-md w-full outline-none bg-zinc-900"
+                className="text-white inline-flex h-12 w-full items-center justify-center rounded-[4px] px-[10px] text-sm sm:text-[15px] leading-none shadow-[0_0_0_1px] outline-none focus:shadow-[0_0_0_2px]"
                 type="text"
                 name="music_artist"
                 id="music_artist"
                 placeholder="Music Artist Name"
                 onChange={(e) => setArtist(e.target.value)}
                 ref={fileArtistRef}
-                required={true}
+                required
               />
               <button
                 aria-label="submit"
@@ -151,7 +197,7 @@ const UploadFile = () => {
               </button>
             </form>
             {previewImage && (
-              <div className="flex flex-col justify-center h-[500px] w-[300px] rounded-xl items-center text-white">
+              <div className="sm:flex flex-col hidden justify-center h-[500px] w-[300px] rounded-xl items-center text-white">
                 <h1 className="text-2xl font-semibold">Preview</h1>
                 <div
                   className={`mt-6 cursor-pointer
@@ -264,7 +310,7 @@ const UploadFile = () => {
                   />
                 </svg>
               </div>
-              <div className="ml-3 text-sm font-normal">
+              <div className="ml-3 text-xs font-normal">
                 Failed To Upload Music. <br /> Invalid File Format
               </div>
               <button

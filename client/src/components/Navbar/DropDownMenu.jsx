@@ -51,7 +51,7 @@ const DropdownMenu = () => {
             <img
               src={`${host}img/profile/${userInfo.profile}`}
               alt="profile"
-              className="object-cover w-full h-full rounded-full"
+              className="object-cover w-9 h-9 max-w-[40px] max-h-[40px] rounded-full"
             />
           </div>
         ) : (
@@ -70,9 +70,9 @@ const DropdownMenu = () => {
             icon={<Palette className="w-5 h-5" />}
           />
           <MenuButton
-            title="Change Profile"
-            onClick={() => navigate("/setting")}
-            label="Settings"
+            title="User Profile"
+            onClick={() => navigate("/profile")}
+            label="Profile"
             icon={<Settings className="w-5 h-5" />}
           />
           <MenuButton
@@ -81,6 +81,7 @@ const DropdownMenu = () => {
               setUser(false);
               localStorage.clear("user_id");
               localStorage.clear("current_path");
+              localStorage.clear();
               window.location.reload();
             }}
             label="Logout"

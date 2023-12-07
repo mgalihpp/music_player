@@ -17,7 +17,7 @@ const SearchMusic = () => {
   const handleInputChange = (e) => {
     setQuery(e.target.value);
     setIsLoading(true);
-    navigate(`/search?n=${e.target.value}`);
+    navigate(`/search?q=${e.target.value}`);
 
     if (timeoutId) {
       clearTimeout(timeoutId);

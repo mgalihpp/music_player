@@ -1,7 +1,7 @@
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useMusicContext } from "../Context/MusicContext";
 import { useEffect, useState } from "react";
-import { Dot, MoreHorizontal, Pause, Play } from "lucide-react";
+import { Clock, Dot, MoreHorizontal, Pause, Play } from "lucide-react";
 import Color from "color-thief-react";
 import LoadingBar from "react-top-loading-bar";
 import { useAudioContext } from "../Context/AudioContext";
@@ -25,8 +25,6 @@ const Playlist = () => {
   const { setIsPFetching } = useUploadContext();
   const [currentPlaylistId, setCurrentPlaylistId] = useState(null);
   const [selectedPlaylist, setSelectedPlaylist] = useState(null);
-  const [musicName, setMusicName] = useState("");
-  const [selectedMusic, setSelectedMusic] = useState(null);
   const [progress, setprogress] = useState(0);
   const [compLoad, setComLoad] = useState(true);
   const [open, setOpen] = useState(false);
@@ -40,17 +38,19 @@ const Playlist = () => {
     currentIndex,
     setCurrentIndex,
     setData,
+    currentMusicPlayed,
+    setCurrentMusicPlayed,
   } = useAudioContext();
 
   useEffect(() => {
-    if (selectedAudio?.musicName === musicName) {
+    if (selectedAudio?.musicName === (currentMusicPlayed !== null)) {
       setCurrentIndex(currentIndex);
     }
-  }, [selectedAudio, musicName, currentIndex, setCurrentIndex]);
+  }, [selectedAudio, currentMusicPlayed, currentIndex, setCurrentIndex]);
 
   useEffect(() => {
     if (playlistData && playlistData.length !== 0) {
-      const selectedPlaylist = playlistData.find(
+      const selectedPlaylist = playlistData?.find(
         (playlist) => playlist.playlistName === playlistName
       );
 
@@ -73,9 +73,7 @@ const Playlist = () => {
   ]);
 
   const handlePlayClick = (musicName) => {
-    setMusicName(musicName);
-
-    if (selectedAudio?.musicName === musicName) {
+    if (selectedAudio?.musicName === (currentMusicPlayed !== null)) {
       if (isPause) {
         playAudio(selectedAudio);
       } else {
@@ -92,7 +90,7 @@ const Playlist = () => {
 
         setCurrentIndex(musicPlaylistData?.musics?.indexOf(selectedMusic));
       }
-      setSelectedMusic(musicName);
+      setCurrentMusicPlayed(selectedMusic);
     }
   };
 
@@ -130,15 +128,21 @@ const Playlist = () => {
 
   if (!playlistName || !selectedPlaylist) {
     return (
-      <div className="flex flex-col items-center justify-center h-[100%] p-6 gap-2">
-        <h1 className="text-2xl text-center">Playlist Not Found</h1>
-        <Link
-          to="/"
-          className="p-2 bg-black/50 rounded-md hover:bg-black transition-all hover:scale-105 duration-300 "
-        >
-          Go Home
-        </Link>
-      </div>
+      <>
+        {isMPLoading ? (
+          <Loading className="pt-12" />
+        ) : (
+          <div className="flex flex-col items-center justify-center h-[100%] p-6 gap-2">
+            <h1 className="text-2xl text-center">Playlist Not Found</h1>
+            <Link
+              to="/"
+              className="p-2 bg-black/50 rounded-md hover:bg-black transition-all hover:scale-105 duration-300 "
+            >
+              Go Home
+            </Link>
+          </div>
+        )}
+      </>
     );
   }
 
@@ -171,7 +175,7 @@ const Playlist = () => {
                     background: `linear-gradient(${topColor}, ${bottomColor})`,
                   }}
                 >
-                  <div className="flex flex-col sm:flex-row items-start  pt-10 pb-4 px-6">
+                  <div className="flex flex-col lg:flex-row items-start pt-20 pb-4 px-6 space-y-4">
                     <div className="relative">
                       <img
                         src={`${
@@ -203,7 +207,11 @@ const Playlist = () => {
                       onClick={() => handlePlayClick(getFirstMusic)}
                       className={`flex items-center justify-center p-4 rounded-full bg-green-500/90 text-black button-transition hover:scale-110 hover:bg-green-500 hover:shadow-md`}
                     >
-                      <Play fill="black" className="ml-1" />
+                      {selectedAudio && !isPause ? (
+                        <Pause fill="black" />
+                      ) : (
+                        <Play fill="black" className="ml-1" />
+                      )}
                     </button>
                     <DropdownMenu.Root>
                       <DropdownMenu.Trigger>
@@ -285,7 +293,135 @@ const Playlist = () => {
                     </Toast.Root>
                     <Toast.Viewport className="[--viewport-padding:_25px] fixed bottom-0 right-0 flex flex-col p-[var(--viewport-padding)] gap-[10px] w-[390px] max-w-[100vw] m-0 list-none z-[2147483647] outline-none" />
                   </Toast.Provider>
-                  <div className="bg-black/20 px-2 sm:px-8 py-4">
+                  <div className="bg-black/20 sm:px-8 px-4">
+                    <div className="overflow-x-hidden">
+                      <div className="max-w-screen-xl">
+                        <div className="flex flex-row px-4 border-b border-zinc-800 mb-4 gap-2">
+                          <div className="w-8 lg:w-4">
+                            <span className="text-zinc-400 text-sm">#</span>
+                          </div>
+                          <div className="w-72 lg:w-52 xl:w-96">
+                            <span className="text-zinc-400 text-sm">Title</span>
+                          </div>
+                          <div className="w-72 hidden lg:block ml-auto">
+                            <span className="text-zinc-400 text-sm">
+                              Artist
+                            </span>
+                          </div>
+                          <div className="w-12 ml-auto">
+                            <span className="text-zinc-400">
+                              <Clock className="w-5 h-5" />
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex flex-col items-center justify-between px-4 border-b border-zinc-800 gap-2">
+                          {isMPLoading ? (
+                            <Loading />
+                          ) : (
+                            musicPlaylistData?.musics?.map((music, index) => (
+                              <div
+                                key={index}
+                                className="flex flex-row items-center gap-2 w-full"
+                              >
+                                <div className="w-8 h-8 lg:w-4 lg:h-4 relative group">
+                                  <span
+                                    className={`w-full ${
+                                      currentMusicPlayed?.musicName ===
+                                        music.musicName &&
+                                      selectedAudio &&
+                                      !isPause
+                                        ? "hidden"
+                                        : "flex"
+                                    }  text-zinc-400 text-sm items-center justify-start h-full absolute top-0 left-0 opacity-100 group-hover:opacity-0 transition-opacity`}
+                                  >
+                                    {index + 1}
+                                  </span>
+                                  <div
+                                    className={`playing-playlist ${
+                                      currentMusicPlayed?.musicName ===
+                                        music.musicName &&
+                                      selectedAudio &&
+                                      !isPause
+                                        ? "visible"
+                                        : "invisible"
+                                    }`}
+                                  >
+                                    <span className="playing__bar playing__bar1"></span>
+                                    <span className="playing__bar playing__bar2"></span>
+                                    <span className="playing__bar playing__bar3"></span>
+                                  </div>
+                                  <button
+                                    onClick={() =>
+                                      handlePlayClick(music.musicName)
+                                    }
+                                    className={`absolute ${
+                                      currentMusicPlayed?.musicName ===
+                                        music.musicName &&
+                                      selectedAudio &&
+                                      !isPause
+                                        ? "hidden"
+                                        : ""
+                                    } flex items-center justify-start top-0 left-0 w-full h-full opacity-0 group-hover:opacity-100 transition-opacity`}
+                                  >
+                                    $
+                                    {currentMusicPlayed?.musicName ===
+                                      music.musicName &&
+                                    selectedAudio &&
+                                    !isPause ? (
+                                      <Pause
+                                        fill="white"
+                                        color="white"
+                                        size={15}
+                                      />
+                                    ) : (
+                                      <Play
+                                        fill="white"
+                                        color="white"
+                                        size={15}
+                                      />
+                                    )}
+                                  </button>
+                                </div>
+                                <div className="w-72 lg:w-52 xl:w-96">
+                                  <figure className="flex flex-row items-center gap-4">
+                                    <img
+                                      src={`${
+                                        host + "img/" + music.musicImage
+                                      }`}
+                                      alt="cover"
+                                      className="object-cover w-10 h-10 rounded-md"
+                                    />
+                                    <figcaption className="text-sm font-semibold text-zinc-200 w-24 xl:w-96 lg:whitespace-normal overflow-hidden overflow-ellipsis whitespace-nowrap">
+                                      <Link
+                                        className="hover:underline"
+                                        to={`/music/${music.musicName}`}
+                                      >
+                                        {music.musicName}
+                                      </Link>
+                                      <span className="block lg:hidden text-xs text-zinc-400 font-normal ">
+                                        {music.musicArtist}
+                                      </span>
+                                    </figcaption>
+                                  </figure>
+                                </div>
+                                <div className="w-72 hidden lg:block ml-auto">
+                                  <span className="text-zinc-400 text-sm">
+                                    {music.musicArtist}
+                                  </span>
+                                </div>
+                                <div className="w-12 ml-auto">
+                                  <span className="text-zinc-400 text-sm">
+                                    {music.duration}
+                                  </span>
+                                </div>
+                              </div>
+                            ))
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {/* <div className="bg-black/20 px-2 sm:px-8 py-4">
                     <div className="overflow-x-hidden sm:overflow-x-auto">
                       <table className="min-w-full divide-y divide-zinc-700">
                         <thead className="w-full">
@@ -370,67 +506,6 @@ const Playlist = () => {
                         </tbody>
                       </table>
                     </div>
-                  </div>
-                  {/* <div className="bg-black/20 flex flex-col items-center justify-normal px-8 py-4">
-                    <div className="flex flex-row items-center justify-between gap-12 w-full px-4 py-2 rounded-md">
-                      <div className="flex flex-row items-center justify-start gap-6 w-96">
-                        <h1>#</h1>
-                        <h1>Title</h1>
-                      </div>
-                      <div className="flex flex-row items-center justify-between w-96 gap-2 sm:gap-0">
-                        <h1>Artist</h1>
-                        <h1>Duration</h1>
-                      </div>
-                    </div>
-                    <hr className="border-b border-zinc-700 w-full mb-4" />
-                    {isMPLoading ? (
-                      <Loading />
-                    ) : (
-                      musicPlaylistData?.musics?.map((music, index) => (
-                        <div
-                          key={index}
-                          className="flex flex-row items-center justify-between hover:bg-white/5 gap-12 w-full px-0 sm:px-4 py-2 rounded-md"
-                        >
-                          <div className="flex flex-row items-center justify-start gap-6 w-96 group">
-                            <div className="block group-hover:hidden w-6">
-                              {index + 1}
-                            </div>
-                            <button
-                              onClick={() => handlePlayClick(music.musicName)}
-                              className="hidden group-hover:block w-4"
-                            >
-                              {selectedMusic === music.musicName &&
-                              selectedAudio &&
-                              !isPause ? (
-                                <Pause fill="white" color="white" size={15} />
-                              ) : (
-                                <Play fill="white" color="white" size={15} />
-                              )}
-                            </button>
-                            <figure className="flex flex-row items-center justify-center gap-4">
-                              <img
-                                src={`${host + "img/" + music.musicImage}`}
-                                alt="cover"
-                                className="object-cover w-10 h-10"
-                              />
-                              <figcaption className="sm:block hidden text-sm font-semibold hover:underline">
-                                <Link to={`/music/${music.musicName}`}>
-                                  {music.musicName}
-                                </Link>
-                              </figcaption>
-                            </figure>
-                          </div>
-                          <div className="flex flex-row items-center justify-between w-96 gap-2 sm:gap-0">
-                            <p className="text-xs sm:text-sm font-semibold">
-                              {music.musicArtist}
-                            </p>
-                            <p className="text-xs sm:text-sm font-semibold text-center">
-                              {music.duration}
-                            </p>
-                          </div>
-                        </div>
-                      ))
-                    )}
                   </div> */}
                 </div>
               );

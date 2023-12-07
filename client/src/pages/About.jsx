@@ -11,7 +11,8 @@ const About = () => {
           services like Spotify in building{" "}
           <span className="font-semibold">Music Player</span>. By taking some
           inspiration from already successful concepts, we strive to provide a
-          similar experience but with a unique twist and different features.
+          similar experience but with a unique twist and different features. And
+          this project was made for our assignment in college.
         </p>
         <p className="text-base text-zinc-200">
           <span className="font-semibold">Want to Find Out More?</span> <br />{" "}

@@ -67,6 +67,6 @@ export const category = [
     from: "from-blue-500",
     to: "to-blue-900/5",
     re: "from-blue-900/5",
-    images: "/img/chill-vibes.jpeg",
+    images: "https://mgpp.pythonanywhere.com/img/chill-vibes.jpeg",
   },
 ];

@@ -6,8 +6,14 @@ import { Link } from "react-router-dom";
 import { host } from "../utils";
 
 const AudioPlayerComponent = () => {
-  const { selectedAudio, setIsPause, isPause, playNext, playPrevious, playShuffle } =
-    useAudioContext();
+  const {
+    selectedAudio,
+    setIsPause,
+    isPause,
+    playNext,
+    playPrevious,
+    playShuffle,
+  } = useAudioContext();
   const audioRef = useRef(null);
   const [isAudioReady, setIsAudioReady] = useState(false);
 
@@ -36,7 +42,7 @@ const AudioPlayerComponent = () => {
           src={
             selectedAudio
               ? `${host + "img/" + selectedAudio.musicImage}`
-              : "/img/download.jpeg"
+              : `${host}img/default_icon.jpeg`
           }
           alt="cover"
           width={56}
@@ -78,10 +84,8 @@ const AudioPlayerComponent = () => {
           onClickPrevious={playPrevious}
         />
         <div>
-          <button
-          aria-label="shuffle"
-          onClick={playShuffle}>
-            <Shuffle className="sm:w-6 sm:h-6 w-4 h-4"/>
+          <button aria-label="shuffle" onClick={playShuffle}>
+            <Shuffle className="sm:w-6 sm:h-6 w-4 h-4" />
           </button>
         </div>
       </div>

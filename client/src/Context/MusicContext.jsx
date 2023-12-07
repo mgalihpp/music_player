@@ -121,7 +121,7 @@ export function MusicProvider({ children }) {
     if (musicData.length === 0 && isLoading && !isFetching && user) {
       fetchData();
     }
-  }, [musicData, fetchData, isFetching, isLoading, user]);
+  }, [musicData.length, fetchData, isFetching, isLoading, user]);
 
   useEffect(() => {
     if (isFetching && user) {

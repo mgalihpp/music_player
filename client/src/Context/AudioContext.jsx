@@ -1,6 +1,14 @@
-import { createContext, useCallback, useContext, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { PropTypes } from "prop-types";
 import { useMusicContext } from "./MusicContext";
+import { useAuth } from "./AuthContext";
+import { api } from "../utils";
 
 export const AudioContext = createContext();
 
@@ -12,6 +20,7 @@ export function AudioProvider({ children }) {
   const [selectedAudio, setSelectedAudio] = useState(null);
   const [isPause, setIsPause] = useState(true);
   const [data, setData] = useState("default");
+  const { userId } = useAuth();
 
   const [currentIndex, setCurrentIndex] = useState(-1);
   const { musicData, musicPlaylistData } = useMusicContext();
@@ -84,7 +93,38 @@ export function AudioProvider({ children }) {
     setCurrentIndex(shuffleIndex);
     playAudio(shuffleMusic);
   };
-  
+
+  const postEvent = useCallback(async () => {
+    try {
+      const res = await fetch(`${api}event`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: Number(userId),
+          musicName: selectedAudio.musicName,
+        }),
+      });
+
+      if (res.ok) {
+        // Update play count in localStorage
+        // const musicName = selectedAudio.musicName;
+        // const playCount = localStorage.getItem(musicName) || 0;
+        // localStorage.setItem(musicName, Number(playCount) + 1);
+        return res;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }, [userId, selectedAudio]);
+
+  useEffect(() => {
+    if (selectedAudio !== null) {
+      postEvent();
+    }
+  }, [selectedAudio, postEvent]);
+
   return (
     <AudioContext.Provider
       value={{

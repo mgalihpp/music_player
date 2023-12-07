@@ -1,4 +1,4 @@
-import { Link, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import {
   NavbarWrapper,
   MainWrapper,
@@ -9,9 +9,10 @@ import {
   SearchMusicWrapper,
   SingleMusicCardWrapper,
   UploadFileWrapper,
+  FooterWrapper,
+  AboutWrapper,
+  ProfileWrapper,
 } from ".";
-import Settings from "../../pages/Settings";
-import About from "../../pages/About";
 import TopNavbar from "../Navbar/TopNavbar";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
@@ -32,7 +33,7 @@ const AuthenticatedLayout = () => {
           <NavbarWrapper />
         </aside>
         <div
-          className="flex-1 rounded-t-md bg-white/5 overflow-x-auto relative scroll"
+          className="flex-1 rounded-t-md bg-white/5 overflow-x-auto justify-between relative scroll"
           onScroll={handleScroll}
         >
           <main className="max-w-screen-xl w-full">
@@ -45,7 +46,7 @@ const AuthenticatedLayout = () => {
 
             <Router />
           </main>
-          <Footer />
+          <FooterWrapper />
         </div>
       </div>
       <div className="bg-white/5 border-t border-zinc-700 p-0 flex items-center justify-between rounded-b-md">
@@ -65,43 +66,17 @@ const Router = () => {
       <Route path="/create/playlist" element={<CreatePlaylistWrapper />} />
       <Route path="/playlist/:playlistName" element={<PlaylistWrapper />} />
       <Route path="/category/:name" element={<CategoryWrapper />} />
-      <Route path="/setting" element={<Settings />} />
-      <Route path="/about" element={<About />} />
+      <Route path="/profile" element={<ProfileWrapper />} />
+      <Route path="/about" element={<AboutWrapper />} />
       <Route
         path="*"
         element={
-          <h1 className="flex items-center justify-center h-[90%] text-2xl mt-4">
+          <h1 className="flex items-center justify-center h-screen text-2xl mt-4">
             404 Not Found
           </h1>
         }
       />
     </Routes>
-  );
-};
-
-const Footer = () => {
-  return (
-    <footer className="flex flex-row justify-between px-4 sm:px-8 pt-24 pb-4 bg-zinc-950/50">
-      <div className="flex flex-col items-start justify-center gap-2">
-        <h1 className="text-lg font-bold">This Page</h1>
-        <Link
-          to="/about"
-          className="text-zinc-400 text-sm font-semibold hover:underline hover:text-zinc-100 transition-all"
-        >
-          About
-        </Link>
-        <Link
-          target="_blank"
-          to="https://github.com/mgalihpp/music_player"
-          className="text-zinc-400 text-sm font-semibold hover:underline hover:text-zinc-100 transition-all"
-        >
-          Github
-        </Link>
-      </div>
-      <div className="flex flex-col items-end justify-center">
-        <h1>&copy; mgpp</h1>
-      </div>
-    </footer>
   );
 };
 

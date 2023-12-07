@@ -10,9 +10,10 @@ import { useAuth } from "../Context/AuthContext";
 import { useMusicContext } from "../Context/MusicContext";
 import * as Dialog from "@radix-ui/react-dialog";
 import { host, api } from "../utils";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Button, DropdownMenu } from "@radix-ui/themes";
-import MusicCard from "./../components/MusicCard";
+import MusicCard from "../components/MusicCard";
+import MainPlaylist from "../components/Playlist/MainPlaylist";
 
 const Settings = () => {
   const { userInfo, userId, setIsLoading } = useAuth();
@@ -22,10 +23,31 @@ const Settings = () => {
   const [imageSrc, setImageSrc] = useState(null);
   const [open, setIsOpen] = useState(false);
   const [disable, setDisable] = useState(false);
+  const [musicData, setMusicData] = useState([]);
 
   const [isUsernameChanged, setIsUsernameChanged] = useState(false);
   const [isImageChanged, setIsImageChanged] = useState(false);
   const imageRef = useRef();
+
+  const getUserMostPlayedMusic = useCallback(async () => {
+    try {
+      const res = await fetch(`${api}mostmusics?id=${userId}`, {
+        method: "GET",
+      });
+      const data = await res.json();
+      setMusicData(data.musics);
+    } catch (error) {
+      console.error(error);
+    }
+  }, [userId]);
+
+  console.log(musicData);
+
+  useEffect(() => {
+    if (userId !== null) {
+      getUserMostPlayedMusic();
+    }
+  }, [getUserMostPlayedMusic, userId]);
 
   useEffect(() => {
     if (userInfo.username) {
@@ -150,15 +172,36 @@ const Settings = () => {
           </DropdownMenu.Content>
         </DropdownMenu.Root>
       </div>
-      <div className="flex flex-col px-2 sm:px-8 py-4 gap-4 h-screen">
-        <h1 className="text-2xl font-bold">Most Played Music</h1>
-        <div className="flex items-center justify-center sm:block">
-          <MusicCard
-            musicName={"TEST"}
-            musicArtist={"TEST"}
-            musicImage={"shyy_frog.jpeg"}
-          />
-        </div>
+      <div className="flex flex-col px-2 sm:px-8 py-4 gap-4 space-y-4 h-screen">
+        <section className="space-y-2">
+          <h1 className="text-2xl font-bold">Top played musics</h1>
+          <div className="flex flex-col flex-wrap sm:flex-row items-center justify-start gap-4">
+            {musicData.length !== 0 &&
+              musicData.map((music) => (
+                <div key={music.id}>
+                  <MusicCard
+                    musicName={music.musicName}
+                    musicArtist={music.musicArtist}
+                    musicImage={music.musicImage}
+                    musicPath={music.musicPath}
+                  />
+                </div>
+              ))}
+          </div>
+        </section>
+        <section className="space-y-2">
+          <h1 className="text-2xl font-bold">Public Playlists</h1>
+          <div className="flex flex-col flex-wrap sm:flex-row items-center justify-start gap-4">
+            {playlistData.length !== 0 &&
+              playlistData.map((playlist) => (
+                <MainPlaylist
+                  key={playlist.id}
+                  name={playlist.playlistName}
+                  image={playlist.playlistImage}
+                />
+              ))}
+          </div>
+        </section>
       </div>
       <>
         <Dialog.Root open={open} onOpenChange={setIsOpen}>

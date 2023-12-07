@@ -12,6 +12,9 @@ const Playlist = lazy(() => import("../../pages/Playlist"));
 const Category = lazy(() => import("../../pages/Category"));
 const AudioPlayerComponent = lazy(() => import("../AudioPlayerComponents"));
 const Navbar = lazy(() => import("./../Navbar/Navbar"));
+const Footer = lazy(() => import("../../components/Footer"));
+const Profile = lazy(() => import("../../pages/Profile"));
+const About = lazy(() => import("../../pages/About"));
 
 export const LoginWrapper = () => {
   return (
@@ -102,6 +105,42 @@ export const NavbarWrapper = () => {
   return (
     <Suspense fallback={<Loading />}>
       <Navbar />
+    </Suspense>
+  );
+};
+
+// export const TopNavbarWrapper = ({ position }) => {
+//   return (
+//     <Suspense fallback={<Loading />}>
+//       <TopNavbar position={position} />
+//     </Suspense>
+//   );
+// };
+
+export const FooterWrapper = () => {
+  return (
+    <Suspense fallback={<Loading />}>
+      <Footer />
+    </Suspense>
+  );
+};
+
+export const ProfileWrapper = () => {
+  return (
+    <Suspense
+      fallback={<LoadingBar color="#00a827" shadow={true} progress={100} />}
+    >
+      <Profile />
+    </Suspense>
+  );
+};
+
+export const AboutWrapper = () => {
+  return (
+    <Suspense
+      fallback={<LoadingBar color="#00a827" shadow={true} progress={100} />}
+    >
+      <About />
     </Suspense>
   );
 };

@@ -129,7 +129,11 @@ const UploadFile = () => {
                 ref={fileRef}
               />
               <div className="flex flex-row items-center justify-center gap-2">
-                <Button color="grass" onClick={handleFileButtonClick}>
+                <Button
+                  type="button"
+                  color="grass"
+                  onClick={handleFileButtonClick}
+                >
                   <Upload className="w-4 h-4" />
                   Upload
                 </Button>
@@ -152,7 +156,11 @@ const UploadFile = () => {
                 ref={fileImageRef}
               />
               <div className="flex flex-row items-center justify-center gap-2">
-                <Button color="grass" onClick={handleImageButtonClick}>
+                <Button
+                  type="button"
+                  color="grass"
+                  onClick={handleImageButtonClick}
+                >
                   <Image className="w-4 h-4" />
                   Upload
                 </Button>

@@ -41,6 +41,7 @@ const Login = () => {
         // Return a success response
 
         loadingRef.current.complete();
+        navigate("/");
         return { success: true, data };
       }
       if (!res.ok && auth === "register") {
@@ -62,7 +63,6 @@ const Login = () => {
     } finally {
       userRef.current.value = "";
       pwdRef.current.value = "";
-      navigate("/");
     }
   };
 

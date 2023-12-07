@@ -40,15 +40,19 @@ export function AuthProvider({ children }) {
   };
 
   useEffect(() => {
-    if (user && !updateUser) {
+    if (user) {
       getUser();
-    } else if (updateUser) {
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (updateUser) {
       getUser();
       setTimeout(() => {
         setUpdateUser(false);
       }, 1000);
     }
-  }, [user, updateUser]);
+  }, [updateUser]);
 
   return (
     <AuthContext.Provider

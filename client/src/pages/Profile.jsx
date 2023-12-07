@@ -14,6 +14,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Button, DropdownMenu } from "@radix-ui/themes";
 import MusicCard from "../components/MusicCard";
 import MainPlaylist from "../components/Playlist/MainPlaylist";
+import SkelMusicCard from "../components/Skeleton/SkelMusicCard";
 
 const Settings = () => {
   const { userInfo, setUpdateUser, token } = useAuth();
@@ -24,6 +25,7 @@ const Settings = () => {
   const [open, setIsOpen] = useState(false);
   const [disable, setDisable] = useState(false);
   const [musicData, setMusicData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [isUsernameChanged, setIsUsernameChanged] = useState(false);
   const [isImageChanged, setIsImageChanged] = useState(false);
@@ -41,6 +43,8 @@ const Settings = () => {
       setMusicData(data.musics);
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   }, [token]);
 
@@ -113,7 +117,7 @@ const Settings = () => {
   return (
     <div className="mx-auto pt-12">
       <div
-        className="flex flex-col sm:flex-row items-center pt-10 pb-4 px-6 cursor-pointer bg-black/5"
+        className="flex flex-col lg:flex-row items-center pt-10 pb-4 px-6 cursor-pointer bg-black/5 space-y-4"
         onClick={() => setIsOpen(true)}
       >
         <div className="relative w-40 h-40">
@@ -139,11 +143,11 @@ const Settings = () => {
             />
           )}
         </div>
-        <div className="flex flex-col items-start px-6 justify-end mt-4 sm:mt-auto mb-0 gap-2">
+        <div className="flex flex-col items-center lg:items-start px-6 justify-end mt-4 sm:mt-auto mb-0 lg:gap-2 gap-4 w-full">
           <h4 className="font-semibold text-xs sm:text-sm text-zinc-200">
             Profile
           </h4>
-          <h1 className="text-xl sm:text-7xl font-bold text-zinc-50 sm:mb-6">
+          <h1 className="text-xl lg:text-7xl font-bold text-zinc-50 lg:mb-6">
             {userInfo.username ?? ""}
           </h1>
           <h4 className="font-semibold text-xs sm:text-sm text-zinc-100 flex items-center justify-start">
@@ -180,17 +184,23 @@ const Settings = () => {
         <section className="space-y-2">
           <h1 className="text-2xl font-bold">Top played musics</h1>
           <div className="flex flex-col flex-wrap sm:flex-row items-center justify-start gap-4">
-            {musicData.length !== 0 &&
-              musicData.map((music) => (
-                <div key={music.id}>
-                  <MusicCard
-                    musicName={music.musicName}
-                    musicArtist={music.musicArtist}
-                    musicImage={music.musicImage}
-                    musicPath={music.musicPath}
-                  />
-                </div>
-              ))}
+            {isLoading
+              ? Array.from({ length: 3 }, (_, index) => (
+                  <div key={index}>
+                    <SkelMusicCard />
+                  </div>
+                ))
+              : musicData.length !== 0 &&
+                musicData.map((music) => (
+                  <div key={music.id}>
+                    <MusicCard
+                      musicName={music.musicName}
+                      musicArtist={music.musicArtist}
+                      musicImage={music.musicImage}
+                      musicPath={music.musicPath}
+                    />
+                  </div>
+                ))}
           </div>
         </section>
         <section className="space-y-2">

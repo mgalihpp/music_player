@@ -110,7 +110,7 @@ const SearchMusic = () => {
   return (
     <>
       <TopNavbar className="p-6">
-        <div className="hidden sm:flex items-center justify-center bg-white/5 rounded-full p-2 relative focus-within:ring-2 ring-white">
+        <div className="hidden lg:flex items-center justify-center bg-white/5 rounded-full p-2 relative focus-within:ring-2 ring-white">
           <Search className="text-gray-500" />
           <div className="relative sm:w-52 md:w-72">
             <input
@@ -126,7 +126,7 @@ const SearchMusic = () => {
           </div>
         </div>
       </TopNavbar>
-      <div className="flex sm:hidden mx-4 mt-2 items-center justify-center bg-white/5 rounded-full p-2 relative focus-within:ring-2 ring-white">
+      <div className="flex lg:hidden mx-4 mt-2 items-center justify-center bg-white/5 rounded-full p-2 relative focus-within:ring-2 ring-white">
         <Search className="text-gray-500" />
         <div className="relative w-72">
           <input
@@ -141,7 +141,7 @@ const SearchMusic = () => {
           />
         </div>
       </div>
-      <div className="flex items-start space-y-2 mt-6 mb-4 p-6">
+      <div className="flex items-start space-y-2 mt-6 mb-4 px-6">
         <h1 className="text-2xl sm:text-4xl font-semibold">
           {query.length === 0 || (query.length > 0 && query.length < 2)
             ? "Browse"

@@ -81,14 +81,14 @@ const CreatePlaylist = () => {
     <>
       <div className="p-6 m-auto">
         <div className="flex items-center justify-center mt-24 h-full">
-          <div className="w-full sm:w-[500px] space-x-2 space-y-2 bg-white/5 rounded-md p-4 flex flex-col justify-center items-center mx-auto">
+          <div className="w-full lg:w-[500px] space-x-2 space-y-2 bg-white/5 rounded-md p-4 flex flex-col justify-center items-center mx-auto">
             <h1 className="text-2xl font-bold">Create Playlist</h1>
 
             <form
               onSubmit={handleSubmit}
               className="p-4 flex flex-col items-center justify-center"
             >
-              <div className="flex flex-col sm:flex-row items-center justify-center">
+              <div className="flex flex-col lg:flex-row items-center justify-center">
                 <div className="flex flex-col items-center justify-center min-w-[150px] min-h-[150px] w-[180px]">
                   <div className="relative flex flex-col items-center justify-center">
                     <span className="text-sm mb-4">Playlist Image :</span>
@@ -137,7 +137,7 @@ const CreatePlaylist = () => {
                   />
                 </div>
               </div>
-              <div className="flex sm:ml-auto">
+              <div className="flex lg:ml-auto">
                 <button
                   aria-label="submit"
                   title="Create"

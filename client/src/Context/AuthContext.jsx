@@ -1,5 +1,5 @@
 import { PropTypes } from "prop-types";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { api } from "./../utils";
 
 const AuthContext = createContext();
@@ -14,29 +14,37 @@ export function AuthProvider({ children }) {
   const [userInfo, setUserInfo] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const getUser = async () => {
-      try {
-        const res = await fetch(`${api}user?id=${userId}`, {
-          method: "GET",
-        });
-        if (res.ok) {
-          const data = await res.json();
+  const getUser = async () => {
+    try {
+      const res = await fetch(`${api}user?id=${userId}`, {
+        method: "GET",
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.username) {
           setUserInfo(data);
+          setUser(true);
         } else {
-          throw new Error("Failed to fetch user info");
+          setUser(false);
         }
-      } catch (error) {
-        console.log(error);
+      } else {
+        throw new Error("Failed to fetch user info");
       }
-    };
-    if (userId !== null && isLoading) {
-      getUser();
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 1000);
+    } catch (error) {
+      setUser(false);
+      localStorage.clear("user_id");
+      console.log(error);
     }
-  }, [userId, isLoading]);
+  };
+
+  // useEffect(() => {
+  //   if (userId !== null && isLoading) {
+  //     getUser();
+  //     setTimeout(() => {
+  //       setIsLoading(false);
+  //     }, 1000);
+  //   }
+  // }, [userId, isLoading]);
 
   return (
     <AuthContext.Provider
@@ -48,6 +56,7 @@ export function AuthProvider({ children }) {
         userInfo,
         isLoading,
         setIsLoading,
+        getUser,
       }}
     >
       {children}

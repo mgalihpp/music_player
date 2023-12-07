@@ -11,7 +11,7 @@ const AuthenticatedLayout = lazy(() =>
 );
 
 function App() {
-  const { user, setUser } = useAuth();
+  const { user, setUser, getUser } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -23,11 +23,16 @@ function App() {
 
   useEffect(() => {
     const storedUserId = localStorage.getItem("user_id");
-    const storedCurrentPath = localStorage.getItem("current_path");
 
     if (storedUserId) {
-      setUser(true);
+      getUser();
+    } else {
+      setUser(false);
     }
+  }, []);
+
+  useEffect(() => {
+    const storedCurrentPath = localStorage.getItem("current_path");
 
     if (user && location.pathname === "/login") {
       navigate(storedCurrentPath || "/");

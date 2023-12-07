@@ -8,7 +8,7 @@ const MainPlaylist = ({ id, name, image }) => {
     <div
       key={id}
       className={`
-        bg-white/5 group rounded w-64 flex items-center gap-4 overflow-hidden hover:bg-white/20 transition-all
+        bg-white/5 group rounded w-72 sm:w-64 flex items-center gap-4 overflow-hidden hover:bg-white/20 transition-all
         `}
     >
       <img

@@ -22,11 +22,16 @@ const MobileNavbar = () => {
         !ref.current.contains(e.target) &&
         e.target.tagName !== "BUTTON"
       ) {
+        // Close the menu if the click is outside the menu or not on a button
+        closeMenu();
+      } else if (e.target.tagName === "A") {
+        // Close the menu if a link is clicked
         closeMenu();
       }
     };
 
     document.addEventListener("click", handleClick);
+
     return () => {
       document.removeEventListener("click", handleClick);
     };

@@ -27,7 +27,7 @@ export function MusicProvider({ children }) {
   const { isFetching, setIsFetching, isPFetching, setIsPFetching } =
     useUploadContext();
   const [searchResults, setSearchResults] = useState([]);
-  const { user, userId } = useAuth();
+  const { user, token } = useAuth();
 
   const fetchData = useCallback(async () => {
     try {
@@ -73,27 +73,26 @@ export function MusicProvider({ children }) {
 
   const getPlaylist = useCallback(async () => {
     try {
-      const response = await fetch(
-        `${url}playlist?JGAREsaeyudvg6rdxlmkopfesdzJVNrKGDIOSK=${userId}`,
-        {
-          method: "GET",
-          headers: {
-            "Access-Control-Allow-Headers": "Content-Type",
-            "Access-Control-Allow-Methods": "GET",
-          },
-        }
-      );
+      const response = await fetch(`${url}playlists`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Access-Control-Allow-Methods": "GET",
+        },
+      });
       if (response.ok) {
         const data = await response.json();
         setPlaylistData(data.playlist);
         setIsPLoading(false);
       } else {
-        console.error("Failed To Search Music");
+        console.error("Failed To Fetch User Playlist");
       }
     } catch (error) {
       console.error(error);
     }
-  }, [userId]);
+  }, [token]);
 
   const getAllMusicAndPlaylist = async (playlist_id) => {
     try {

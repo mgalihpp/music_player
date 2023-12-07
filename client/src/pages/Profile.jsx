@@ -16,7 +16,7 @@ import MusicCard from "../components/MusicCard";
 import MainPlaylist from "../components/Playlist/MainPlaylist";
 
 const Settings = () => {
-  const { userInfo, userId, setUpdateUser } = useAuth();
+  const { userInfo, setUpdateUser, token } = useAuth();
   const { playlistData } = useMusicContext();
   const [userImage, setUserImage] = useState(null);
   const [userName, setUserName] = useState("");
@@ -29,25 +29,30 @@ const Settings = () => {
   const [isImageChanged, setIsImageChanged] = useState(false);
   const imageRef = useRef();
 
+  console.log(token);
+
   const getUserMostPlayedMusic = useCallback(async () => {
     try {
-      const res = await fetch(`${api}mostmusics?id=${userId}`, {
+      const res = await fetch(`${api}mostmusics`, {
         method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
       const data = await res.json();
       setMusicData(data.musics);
     } catch (error) {
       console.error(error);
     }
-  }, [userId]);
+  }, [token]);
 
   console.log(musicData);
 
   useEffect(() => {
-    if (userId !== null) {
+    if (token) {
       getUserMostPlayedMusic();
     }
-  }, [getUserMostPlayedMusic, userId]);
+  }, [getUserMostPlayedMusic, token]);
 
   useEffect(() => {
     if (userInfo.username) {
@@ -65,8 +70,11 @@ const Settings = () => {
 
       // Check if either username or profile image has been changed
       if (isUsernameChanged || isImageChanged) {
-        const res = await fetch(`${api}user?id=${userId}`, {
+        const res = await fetch(`${api}user`, {
           method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           body: formData,
         });
         return res;

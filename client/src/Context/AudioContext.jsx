@@ -20,7 +20,7 @@ export function AudioProvider({ children }) {
   const [selectedAudio, setSelectedAudio] = useState(null);
   const [isPause, setIsPause] = useState(true);
   const [data, setData] = useState("default");
-  const { userId } = useAuth();
+  const { token } = useAuth();
 
   const [currentIndex, setCurrentIndex] = useState(-1);
   const { musicData, musicPlaylistData } = useMusicContext();
@@ -99,10 +99,10 @@ export function AudioProvider({ children }) {
       const res = await fetch(`${api}event`, {
         method: "POST",
         headers: {
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          id: Number(userId),
           musicName: selectedAudio.musicName,
         }),
       });
@@ -117,7 +117,7 @@ export function AudioProvider({ children }) {
     } catch (error) {
       console.error(error);
     }
-  }, [userId, selectedAudio]);
+  }, [selectedAudio, token]);
 
   useEffect(() => {
     if (selectedAudio !== null) {

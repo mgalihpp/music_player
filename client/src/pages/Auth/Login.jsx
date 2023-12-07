@@ -2,13 +2,15 @@ import { useRef, useState } from "react";
 import { api } from "./../../utils";
 import { useAuth } from "../../Context/AuthContext";
 import LoadingBar from "react-top-loading-bar";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [auth, setAuth] = useState("login");
-  const { setUser, setUserId } = useAuth();
+  const { setUser } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [userTaken, setUserTaken] = useState(false);
+  const navigate = useNavigate();
 
   const userRef = useRef();
   const pwdRef = useRef();
@@ -31,12 +33,10 @@ const Login = () => {
       });
       if (res.ok) {
         const data = await res.json();
-        const { user_id } = data;
-        // Save user ID to local storage
-        localStorage.setItem("user_id", user_id);
+        const { access_token } = data;
+        localStorage.setItem("access_token", access_token);
 
         // Set the state
-        setUserId(user_id);
         setUser(true);
         // Return a success response
 
@@ -62,6 +62,7 @@ const Login = () => {
     } finally {
       userRef.current.value = "";
       pwdRef.current.value = "";
+      navigate("/");
     }
   };
 

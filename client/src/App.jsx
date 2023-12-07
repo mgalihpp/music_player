@@ -11,7 +11,7 @@ const AuthenticatedLayout = lazy(() =>
 );
 
 function App() {
-  const { user, setUser, getUser } = useAuth();
+  const { setUser } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -22,24 +22,18 @@ function App() {
   }, [location.pathname]);
 
   useEffect(() => {
-    const storedUserId = localStorage.getItem("user_id");
-
-    if (storedUserId) {
-      getUser();
-    } else {
-      setUser(false);
-    }
-  }, []);
-
-  useEffect(() => {
+    const token = localStorage.getItem("access_token");
     const storedCurrentPath = localStorage.getItem("current_path");
 
-    if (user && location.pathname === "/login") {
-      navigate(storedCurrentPath || "/");
-    } else if (!user) {
+    if (token) {
+      setUser(true);
+      if (location.pathname === "/login") {
+        navigate(storedCurrentPath || "/");
+      }
+    } else {
       navigate("/login");
     }
-  }, [user, setUser, navigate, location.pathname]);
+  }, [navigate, setUser, location.pathname]);
 
   return (
     <ErrorBoundary>

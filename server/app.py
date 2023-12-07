@@ -1,4 +1,10 @@
 from flask import Flask, jsonify, request, make_response, send_file, Blueprint
+from flask_jwt_extended import (
+    JWTManager,
+    create_access_token,
+    get_jwt_identity,
+    jwt_required,
+)
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 import os
@@ -12,6 +18,9 @@ from datetime import datetime, timedelta
 app = Flask(__name__)
 CORS(app)
 app.config["SECRET_KEY"] = "22334111"
+app.config["JWT_SECRET_KEY"] = "music_player_mgpp"
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
+jwt = JWTManager(app)
 
 SQLALCHEMY_DATABASE_URI = (
     "mysql://{username}:{password}@{hostname}/{databasename}".format(
@@ -282,23 +291,24 @@ def stream_playlist_image(image_filename):
 
 
 @api_v1.route("/user", methods=["GET", "PUT"])
+@jwt_required()
 def get_user():
-    if request.method == "GET":
-        userId = request.args.get("id")
+    current_user_id = get_jwt_identity()
+    token = request.args.get("id")
 
-        user = Users.query.filter_by(id=userId).first()
+    if request.method == "GET":
+        user = Users.query.filter_by(id=current_user_id).first()
 
         if user:
             response_data = {"username": user.username, "profile": user.image}
             return make_response(jsonify(response_data)), 200
         else:
-            return make_response(jsonify({"message": "user not valid"})), 401
+            return make_response(jsonify({"message": "Unauthorized"})), 401
     if request.method == "PUT":
-        userId = request.args.get("id")
         username = request.form.get("username")
         profileImage = request.files.get("profile_image")
 
-        user = Users.query.filter_by(id=userId).first()
+        user = Users.query.filter_by(id=current_user_id).first()
 
         if user:
             if username:
@@ -417,11 +427,12 @@ def upload_music():
 
 
 @api_v1.post("/playlist/add")
+@jwt_required()
 def add_playlist():
     try:
         playlist_name = request.form.get("playlist_name")
         playlist_image = request.files.get("playlist_image")
-        current_user_id = request.form.get("user_id")
+        current_user_id = get_jwt_identity()
 
         if playlist_name and allowed_image(playlist_image.filename):
             image = secure_filename(playlist_image.filename)
@@ -471,14 +482,12 @@ def add_playlist():
         )
 
 
-@api_v1.get("/playlist")
+@api_v1.get("/playlists")
+@jwt_required()
 def get_user_playlists():
     try:
         # Get the 'user_id' from the query parameters
-        user_id_param = request.args.get("JGAREsaeyudvg6rdxlmkopfesdzJVNrKGDIOSK")
-
-        # Convert 'user_id' to an integer
-        current_user_id = int(user_id_param)
+        current_user_id = get_jwt_identity()
 
         # Fetch playlists for the current user
         user_playlists = Playlists.query.filter_by(user_id=current_user_id).all()
@@ -745,12 +754,15 @@ def login():
     password = request.form.get("password")
 
     user = Users.query.filter_by(username=username, password=password).first()
+    print(user)
 
     if user:
         # Authentication successful
+        access_token = create_access_token(identity=user.id)
         response_data = {
-            "message": "Login successful",
-            "user_id": user.id,  # Include the user ID in the response
+            "message": "Registration successful",
+            "access_token": access_token,
+            "user_id": user.id,
         }
         return make_response(jsonify(response_data)), 200
     else:
@@ -774,28 +786,33 @@ def register():
     db.session.add(new_user)
     db.session.commit()
 
+    access_token = create_access_token(identity=new_user.id)
     response_data = {
         "message": "Registration successful",
-        "user_id": new_user.id,  # Include the user ID in the response
+        "access_token": access_token,
+        "user_id": new_user.id,
     }
 
     return make_response(jsonify(response_data)), 201
 
 
 @api_v1.post("/event")
+@jwt_required()
 def event():
     request_data = request.get_json()
+    current_user_id = get_jwt_identity()
 
     music_name = request_data.get("musicName")
-    userId = request_data.get("id")
 
     # Find the music entry in the database
     music = Musics.query.filter_by(name=music_name).first()
-    user = Users.query.filter_by(id=userId).first()
+    user = Users.query.filter_by(id=current_user_id).first()
 
     if music and user:
-        # Check if the play count entry exists in the MusicPlayCount table
-        play_count_entry = MusicPlayCount.query.filter_by(music_id=music.id).first()
+        # Check if the play count entry exists in the MusicPlayCount table for this user and music
+        play_count_entry = MusicPlayCount.query.filter_by(
+            music_id=music.id, user_id=user.id
+        ).first()
 
         if play_count_entry:
             # If the entry exists, increment the play count
@@ -803,9 +820,7 @@ def event():
         else:
             # If the entry doesn't exist, create a new entry with a play count of 1
             new_play_count_entry = MusicPlayCount(
-                music_id=music.id,
-                play_count=1,
-                user=user,  # Assuming user is associated here
+                music_id=music.id, user_id=user.id, play_count=1
             )
             db.session.add(new_play_count_entry)
 
@@ -832,13 +847,16 @@ def event():
 
 
 @api_v1.get("/mostmusics")
+@jwt_required()
 def get_most_music_played():
-    userId = request.args.get("id")
+    current_user_id = get_jwt_identity()
 
     top_3_music = (
         db.session.query(Musics)
         .join(MusicPlayCount, Musics.id == MusicPlayCount.music_id)
-        .filter(MusicPlayCount.user_id == userId)  # Replace user_id with the user's ID
+        .filter(
+            MusicPlayCount.user_id == current_user_id
+        )  # Replace user_id with the user's ID
         .order_by(desc(MusicPlayCount.play_count))
         .limit(3)
         .all()
@@ -858,6 +876,14 @@ def get_most_music_played():
 
     # Return the most played music data
     return make_response(jsonify({"musics": most_played_music}), 200)
+
+
+@api_v1.route("/protected", methods=["GET"])
+@jwt_required()  # This decorator ensures a valid token is present
+def protected():
+    # Get the identity from the token
+    current_user = get_jwt_identity()
+    return f"Authenticated user: {current_user}"
 
 
 def get_all_music():

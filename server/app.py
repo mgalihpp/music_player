@@ -3,6 +3,7 @@ from flask_cors import CORS
 from werkzeug.utils import secure_filename
 import os
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import desc
 from mutagen.mp3 import MP3
 from PIL import Image
 from io import BytesIO
@@ -91,8 +92,22 @@ class MusicCategory(db.Model):
     musics = db.relationship("Musics", backref="music_category", lazy=True)
 
 
-class Users(db.Model):
+class MusicPlayCount(db.Model):
+    __tablename__ = "music_count"
     id = db.Column(db.Integer, primary_key=True)
+    music_id = db.Column(db.Integer, db.ForeignKey("musics.id"), nullable=False)
+    play_count = db.Column(db.Integer, default=0, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+
+    music = db.relationship("Musics", backref="play_count")
+    user = db.relationship("Users", backref="music_play_count")
+
+    def __repr__(self):
+        return f"<MusicPlayCount - Music ID: {self.music_id}, User ID: {self.user_id}, Play Count: {self.play_count}>"
+
+
+class Users(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(255), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
     image = db.Column(db.String(255))
@@ -264,6 +279,44 @@ def stream_playlist_image(image_filename):
         return response, 200
     else:
         return make_response(jsonify("File not found"), 404)
+
+
+@api_v1.route("/user", methods=["GET", "PUT"])
+def get_user():
+    if request.method == "GET":
+        userId = request.args.get("id")
+
+        user = Users.query.filter_by(id=userId).first()
+
+        if user:
+            response_data = {"username": user.username, "profile": user.image}
+            return make_response(jsonify(response_data)), 200
+        else:
+            return make_response(jsonify({"message": "user not valid"})), 401
+    if request.method == "PUT":
+        userId = request.args.get("id")
+        username = request.form.get("username")
+        profileImage = request.files.get("profile_image")
+
+        user = Users.query.filter_by(id=userId).first()
+
+        if user:
+            if username:
+                user.username = username
+
+            if profileImage and allowed_image(profileImage.filename):
+                image = secure_filename(profileImage.filename)
+                save_profile_image_to_server(profileImage, image)
+                user.image = image
+
+            db.session.commit()
+
+            return (
+                make_response(jsonify({"message": "Update User Successfull"})),
+                201,
+            )
+        else:
+            return make_response(jsonify({"message": "Failed to Update User"})), 400
 
 
 @api_v1.delete("/delete/<int:music_id>")
@@ -727,6 +780,84 @@ def register():
     }
 
     return make_response(jsonify(response_data)), 201
+
+
+@api_v1.post("/event")
+def event():
+    request_data = request.get_json()
+
+    music_name = request_data.get("musicName")
+    userId = request_data.get("id")
+
+    # Find the music entry in the database
+    music = Musics.query.filter_by(name=music_name).first()
+    user = Users.query.filter_by(id=userId).first()
+
+    if music and user:
+        # Check if the play count entry exists in the MusicPlayCount table
+        play_count_entry = MusicPlayCount.query.filter_by(music_id=music.id).first()
+
+        if play_count_entry:
+            # If the entry exists, increment the play count
+            play_count_entry.play_count += 1
+        else:
+            # If the entry doesn't exist, create a new entry with a play count of 1
+            new_play_count_entry = MusicPlayCount(
+                music_id=music.id,
+                play_count=1,
+                user=user,  # Assuming user is associated here
+            )
+            db.session.add(new_play_count_entry)
+
+        # Commit the changes to the database
+        db.session.commit()
+
+        # Return the updated play count as a response
+        return (
+            make_response(
+                jsonify(
+                    {
+                        "error": [],
+                        "play_count": play_count_entry.play_count
+                        if play_count_entry
+                        else 1,
+                    }
+                )
+            ),
+            200,
+        )
+
+    else:
+        return make_response(jsonify({"error": "Music or user not found"})), 404
+
+
+@api_v1.get("/mostmusics")
+def get_most_music_played():
+    userId = request.args.get("id")
+
+    top_3_music = (
+        db.session.query(Musics)
+        .join(MusicPlayCount, Musics.id == MusicPlayCount.music_id)
+        .filter(MusicPlayCount.user_id == userId)  # Replace user_id with the user's ID
+        .order_by(desc(MusicPlayCount.play_count))
+        .limit(3)
+        .all()
+    )
+
+    # Convert the retrieved music data to a list of dictionaries
+    most_played_music = [
+        {
+            "id": music.id,
+            "musicName": music.name,
+            "musicArtist": music.artist,
+            "musicImage": music.image,
+            "musicPath": music.path,
+        }
+        for music in top_3_music
+    ]
+
+    # Return the most played music data
+    return make_response(jsonify({"musics": most_played_music}), 200)
 
 
 def get_all_music():

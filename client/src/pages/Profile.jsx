@@ -172,7 +172,7 @@ const Settings = () => {
           </DropdownMenu.Content>
         </DropdownMenu.Root>
       </div>
-      <div className="flex flex-col px-2 sm:px-8 py-4 gap-4 space-y-4 h-screen">
+      <div className="flex flex-col px-2 sm:px-8 py-4 gap-4 space-y-4 h-full">
         <section className="space-y-2">
           <h1 className="text-2xl font-bold">Top played musics</h1>
           <div className="flex flex-col flex-wrap sm:flex-row items-center justify-start gap-4">

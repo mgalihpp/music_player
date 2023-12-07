@@ -1,5 +1,5 @@
 import { PropTypes } from "prop-types";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { api } from "./../utils";
 
 const AuthContext = createContext();
@@ -12,7 +12,7 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(false);
   const [userId, setUserId] = useState(localStorage.getItem("user_id") || null);
   const [userInfo, setUserInfo] = useState({});
-  const [isLoading, setIsLoading] = useState(true);
+  const [updateUser, setUpdateUser] = useState(true);
 
   const getUser = async () => {
     try {
@@ -37,14 +37,14 @@ export function AuthProvider({ children }) {
     }
   };
 
-  // useEffect(() => {
-  //   if (userId !== null && isLoading) {
-  //     getUser();
-  //     setTimeout(() => {
-  //       setIsLoading(false);
-  //     }, 1000);
-  //   }
-  // }, [userId, isLoading]);
+  useEffect(() => {
+    if (updateUser) {
+      getUser();
+      setTimeout(() => {
+        setUpdateUser(false);
+      }, 1000);
+    }
+  }, [updateUser]);
 
   return (
     <AuthContext.Provider
@@ -54,8 +54,8 @@ export function AuthProvider({ children }) {
         userId,
         setUserId,
         userInfo,
-        isLoading,
-        setIsLoading,
+        updateUser,
+        setUpdateUser,
         getUser,
       }}
     >

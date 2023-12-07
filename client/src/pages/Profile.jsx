@@ -16,7 +16,7 @@ import MusicCard from "../components/MusicCard";
 import MainPlaylist from "../components/Playlist/MainPlaylist";
 
 const Settings = () => {
-  const { userInfo, userId, setIsLoading } = useAuth();
+  const { userInfo, userId, setUpdateUser } = useAuth();
   const { playlistData } = useMusicContext();
   const [userImage, setUserImage] = useState(null);
   const [userName, setUserName] = useState("");
@@ -76,7 +76,7 @@ const Settings = () => {
     } catch (error) {
       console.error(error);
     } finally {
-      setIsLoading(true);
+      setUpdateUser(true);
       setDisable(false);
       setIsOpen(false);
     }

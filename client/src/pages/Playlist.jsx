@@ -363,7 +363,6 @@ const Playlist = () => {
                                         : ""
                                     } flex items-center justify-start top-0 left-0 w-full h-full opacity-0 group-hover:opacity-100 transition-opacity`}
                                   >
-                                    $
                                     {currentMusicPlayed?.musicName ===
                                       music.musicName &&
                                     selectedAudio &&

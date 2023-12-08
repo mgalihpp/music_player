@@ -140,7 +140,7 @@ const SingleMusicCard = () => {
                     background: `linear-gradient(${topColor}, ${bottomColor})`,
                   }}
                 >
-                  <div className="flex flex-col sm:flex-row items-start  pt-20 pb-4 px-6">
+                  <div className="flex flex-col lg:flex-row items-start pt-20 pb-4 px-6 space-y-4">
                     <div className="relative">
                       <img
                         src={`${IMAGE_URL}`}
@@ -152,7 +152,7 @@ const SingleMusicCard = () => {
                       <h4 className="font-semibold text-xs sm:text-sm text-zinc-200">
                         Song
                       </h4>
-                      <h1 className="text-xl sm:text-7xl font-bold text-zinc-50">
+                      <h1 className="text-xl lg:text-7xl font-bold text-zinc-50">
                         {selectedMusic.musicName}
                       </h1>
                       <h4 className="font-normal text-xs sm:text-sm text-zinc-100">

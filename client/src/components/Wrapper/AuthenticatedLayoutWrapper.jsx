@@ -14,20 +14,27 @@ import {
   ProfileWrapper,
 } from ".";
 import TopNavbar from "../Navbar/TopNavbar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { useMediaQuery } from "react-responsive";
+import AudioPlayerComponent from "../AudioPlayerComponents";
 
 const AuthenticatedLayout = () => {
   const [scrollPos, setScrollPos] = useState(0);
   const location = useLocation();
+  const isDesktop = useMediaQuery({ minWidth: 650 });
 
   const handleScroll = (e) => {
     const { scrollTop } = e.target;
     setScrollPos(scrollTop);
   };
 
+  useEffect(() => {
+    setScrollPos(0);
+  }, [location.pathname]);
+
   return (
-    <div className="h-screen flex p-2 flex-col overflow-hidden max-w-screen-2xl w-full">
+    <div className="h-screen flex p-0 lg:p-2 flex-col overflow-hidden max-w-screen-2xl w-full">
       <div className="flex flex-1 overflow-hidden">
         <aside className="w-72 p-0 pr-2 sm:block hidden">
           <NavbarWrapper />
@@ -49,8 +56,12 @@ const AuthenticatedLayout = () => {
           <FooterWrapper />
         </div>
       </div>
-      <div className="bg-white/5 border-t border-zinc-700 p-0 flex items-center justify-between rounded-b-md">
-        <AudioPlayerComponentWrapper />
+      <div className="bg-white/5 border-t mb-12 sm:mb-0 sm:flex border-zinc-700 p-0 items-center justify-between rounded-b-md">
+        {isDesktop ? (
+          <AudioPlayerComponentWrapper />
+        ) : (
+          <AudioPlayerComponent showJumpControls={false} />
+        )}
       </div>
     </div>
   );

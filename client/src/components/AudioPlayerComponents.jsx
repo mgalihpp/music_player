@@ -5,7 +5,7 @@ import { Shuffle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { host } from "../utils";
 
-const AudioPlayerComponent = () => {
+const AudioPlayerComponent = ({ showJumpControls }) => {
   const {
     selectedAudio,
     setIsPause,
@@ -80,6 +80,7 @@ const AudioPlayerComponent = () => {
               : ""
           }
           showSkipControls
+          showJumpControls={showJumpControls}
           onClickNext={playNext}
           onClickPrevious={playPrevious}
         />

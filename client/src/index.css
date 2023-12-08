@@ -62,13 +62,13 @@ html {
 
 @media (min-width: 375px) {
   .hhh {
-    width: 300px;
+    width: 320px;
   }
 }
 
 @media (min-width: 400px) {
   .hhh {
-    width: 330px;
+    width: 350px;
   }
 }
 

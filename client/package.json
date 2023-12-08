@@ -22,6 +22,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-h5-audio-player": "^3.9.0",
+    "react-responsive": "^9.0.2",
     "react-router-dom": "^6.17.0",
     "react-sticky-nav": "^4.0.6",
     "react-top-loading-bar": "^2.3.1"

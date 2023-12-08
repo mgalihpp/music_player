@@ -35,6 +35,9 @@ export function AuthProvider({ children }) {
     } catch (error) {
       setUser(false);
       localStorage.clear("access_token");
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
       console.error(error);
     }
   };

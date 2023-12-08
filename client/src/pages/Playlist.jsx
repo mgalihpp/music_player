@@ -30,7 +30,6 @@ const Playlist = () => {
   const [open, setOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [firstMusic, setFirstMusic] = useState("");
-  console.log(firstMusic);
   const navigate = useNavigate();
   const {
     selectedAudio,

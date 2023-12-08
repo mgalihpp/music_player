@@ -46,9 +46,12 @@ html {
   -webkit-box-shadow: inset 0 0 6px rgb(24 24 27 / 1);
 } */
 
-/* Handle */
-::-webkit-scrollbar-thumb {
+.dark ::-webkit-scrollbar-thumb {
   background-color: rgb(44, 44, 46);
+}
+
+.gradient ::-webkit-scrollbar-thumb {
+  background-color: rgba(170, 170, 170, 0.3);
 }
 
 @media (min-width: 320px) {
@@ -83,7 +86,13 @@ html {
     width: 475px;
   }
   ::-webkit-scrollbar {
-    width: 16px;
+    width: 12px;
+  }
+}
+
+@media (min-width: 768px) {
+  .hhh {
+    width: 280px;
   }
 }
 
@@ -114,7 +123,7 @@ html {
   position: absolute;
   /* bottom: 5px; */
   /* right: 5px; */
-  z-index: 997;
+  z-index: 0;
 }
 
 .playing-playlist {
@@ -130,7 +139,7 @@ html {
   box-sizing: border-box;
   position: absolute;
   left: -10px;
-  z-index: 997;
+  z-index: 0;
 }
 
 @media (min-width: 1024px) {
@@ -154,7 +163,7 @@ html {
   position: absolute;
   bottom: 5px;
   right: 5px;
-  z-index: 997;
+  z-index: 0;
 }
 
 .playing__bar {

@@ -29,9 +29,8 @@ const Playlist = () => {
   const [compLoad, setComLoad] = useState(true);
   const [open, setOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
-  const [firstMusic, setFirstMusic] = useState(
-    musicPlaylistData?.musics[0]?.musicName
-  );
+  const [firstMusic, setFirstMusic] = useState("");
+  console.log(firstMusic);
   const navigate = useNavigate();
   const {
     selectedAudio,
@@ -78,13 +77,12 @@ const Playlist = () => {
   ]);
 
   useEffect(() => {
-    if (
-      musicPlaylistData?.musics &&
-      musicPlaylistData.musics.length > 0 &&
-      currentIndex >= 0 &&
-      currentIndex < musicPlaylistData.musics.length
-    ) {
-      setFirstMusic(musicPlaylistData.musics[currentIndex].musicName);
+    if (musicPlaylistData?.musics && musicPlaylistData.musics.length > 0) {
+      if (currentIndex >= 0 && currentIndex < musicPlaylistData.musics.length) {
+        setFirstMusic(musicPlaylistData.musics[currentIndex].musicName);
+      } else {
+        setFirstMusic(musicPlaylistData.musics[0].musicName);
+      }
     }
   }, [musicPlaylistData, currentIndex]);
 
@@ -221,7 +219,7 @@ const Playlist = () => {
                       onClick={() => handlePlayClick(firstMusic)}
                       className={`flex items-center justify-center p-4 rounded-full bg-green-500/90 text-black button-transition hover:scale-110 hover:bg-green-500 hover:shadow-md`}
                     >
-                      {selectedPlayedPlaylist.id === selectedPlaylist.id &&
+                      {selectedPlayedPlaylist?.id === selectedPlaylist?.id &&
                       currentMusicPlayed &&
                       selectedAudio &&
                       !isPause ? (

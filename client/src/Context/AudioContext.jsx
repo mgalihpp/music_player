@@ -29,6 +29,9 @@ export function AudioProvider({ children }) {
   const playAudio = useCallback((audio) => {
     setSelectedAudio(audio);
     setIsPause(false);
+    if (data === "default") {
+      setCurrentMusicPlayed(null);
+    }
   }, []);
 
   const pauseAudio = useCallback(() => {

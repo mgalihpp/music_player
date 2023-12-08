@@ -18,8 +18,9 @@ export function useAudioContext() {
 
 export function AudioProvider({ children }) {
   const [selectedAudio, setSelectedAudio] = useState(null);
+  const [selectedPlayedPlaylist, setSelectedPlayedPlaylist] = useState(null);
   const [isPause, setIsPause] = useState(true);
-  const [currentMusicPlayed, setCurrentMusicPlayed] = useState();
+  const [currentMusicPlayed, setCurrentMusicPlayed] = useState(null);
   const [data, setData] = useState("default");
   const { token } = useAuth();
 
@@ -31,8 +32,12 @@ export function AudioProvider({ children }) {
     setIsPause(false);
     if (data === "default") {
       setCurrentMusicPlayed(null);
+    } else {
+      setCurrentMusicPlayed(audio);
     }
   }, []);
+
+  console.log(currentMusicPlayed);
 
   const pauseAudio = useCallback(() => {
     setIsPause(true);
@@ -61,14 +66,14 @@ export function AudioProvider({ children }) {
         const nextIndex = currentIndex + 1;
         const nextMusic = musicPlaylistData.musics[nextIndex];
         playAudio(nextMusic);
-        setCurrentMusicPlayed(nextMusic.musicName);
+        setCurrentMusicPlayed(nextMusic);
         setCurrentIndex(nextIndex);
       }
       if (currentIndex >= musicPlaylistData.musics.length - 1) {
         const nextIndex = 0;
         const resetMusic = musicPlaylistData.musics[nextIndex];
         playAudio(resetMusic);
-        setCurrentMusicPlayed(resetMusic.musicName);
+        setCurrentMusicPlayed(resetMusic);
         setCurrentIndex(nextIndex);
       }
     }
@@ -88,7 +93,7 @@ export function AudioProvider({ children }) {
         const previousIndex = currentIndex - 1;
         const previousMusic = musicPlaylistData.musics[previousIndex];
         playAudio(previousMusic);
-        setCurrentMusicPlayed(previousMusic.musicName);
+        setCurrentMusicPlayed(previousMusic);
         setCurrentIndex(previousIndex);
       }
   };
@@ -150,6 +155,8 @@ export function AudioProvider({ children }) {
         setData,
         currentMusicPlayed,
         setCurrentMusicPlayed,
+        setSelectedPlayedPlaylist,
+        selectedPlayedPlaylist,
       }}
     >
       {children}

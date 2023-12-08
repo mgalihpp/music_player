@@ -29,6 +29,9 @@ const Playlist = () => {
   const [compLoad, setComLoad] = useState(true);
   const [open, setOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
+  const [firstMusic, setFirstMusic] = useState(
+    musicPlaylistData?.musics[0]?.musicName
+  );
   const navigate = useNavigate();
   const {
     selectedAudio,
@@ -40,6 +43,8 @@ const Playlist = () => {
     setData,
     currentMusicPlayed,
     setCurrentMusicPlayed,
+    setSelectedPlayedPlaylist,
+    selectedPlayedPlaylist,
   } = useAudioContext();
 
   useEffect(() => {
@@ -72,13 +77,29 @@ const Playlist = () => {
     setIsMPLoading,
   ]);
 
+  useEffect(() => {
+    if (
+      musicPlaylistData?.musics &&
+      musicPlaylistData.musics.length > 0 &&
+      currentIndex >= 0 &&
+      currentIndex < musicPlaylistData.musics.length
+    ) {
+      setFirstMusic(musicPlaylistData.musics[currentIndex].musicName);
+    }
+  }, [musicPlaylistData, currentIndex]);
+
+  console.log(firstMusic);
+
   const handlePlayClick = (musicName) => {
-    if (selectedAudio?.musicName === (currentMusicPlayed !== null)) {
+    if (selectedAudio?.musicName === musicName) {
       if (isPause) {
         playAudio(selectedAudio);
+        console.log("this play...");
       } else {
+        console.log("this pause ...");
         pauseAudio();
       }
+      setCurrentMusicPlayed(selectedAudio);
     } else {
       const selectedMusic = musicPlaylistData?.musics?.find(
         (music) => music.musicName === musicName
@@ -86,12 +107,15 @@ const Playlist = () => {
 
       if (selectedMusic) {
         playAudio(selectedMusic);
-        setData("playlist");
+        console.log("this play hello");
 
         setCurrentIndex(musicPlaylistData?.musics?.indexOf(selectedMusic));
       }
       setCurrentMusicPlayed(selectedMusic);
     }
+
+    setData("playlist");
+    setSelectedPlayedPlaylist(selectedPlaylist);
   };
 
   const handleDeletePlaylist = async (e) => {
@@ -116,11 +140,6 @@ const Playlist = () => {
       }, 1500);
     }
   };
-
-  const getFirstMusic =
-    musicPlaylistData?.musics && musicPlaylistData.musics.length > 0
-      ? musicPlaylistData.musics[0].musicName
-      : "error";
 
   const IMAGE_URL = `${
     host + "playlist/img/" + selectedPlaylist?.playlistImage
@@ -204,10 +223,13 @@ const Playlist = () => {
                     <button
                       title="Play"
                       aria-label="Play"
-                      onClick={() => handlePlayClick(getFirstMusic)}
+                      onClick={() => handlePlayClick(firstMusic)}
                       className={`flex items-center justify-center p-4 rounded-full bg-green-500/90 text-black button-transition hover:scale-110 hover:bg-green-500 hover:shadow-md`}
                     >
-                      {selectedAudio && !isPause ? (
+                      {selectedPlayedPlaylist.id === selectedPlaylist.id &&
+                      currentMusicPlayed &&
+                      selectedAudio &&
+                      !isPause ? (
                         <Pause fill="black" />
                       ) : (
                         <Play fill="black" className="ml-1" />

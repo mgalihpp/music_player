@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <footer className="flex flex-row justify-between px-4 sm:px-8 pt-24 pb-32">
+    <footer className="max-w-screen-xl flex flex-row justify-between px-4 sm:px-8 pt-24 pb-32">
       <div className="flex flex-col items-start justify-center gap-2">
         <h1 className="text-lg font-bold">This Page</h1>
         <Link

@@ -40,7 +40,7 @@ const AuthenticatedLayout = () => {
   }, [pathname]);
 
   return (
-    <div className="max-h-screen flex p-0 lg:p-2 flex-col justify-between overflow-y-hidden max-w-screen-2xl w-full box-border">
+    <div className="h-screen flex p-0 lg:p-2 flex-col justify-between overflow-y-hidden max-w-screen-xxll w-full box-border">
       <div className="flex flex-1 overflow-hidden">
         <aside className="w-72 p-0 pr-2 sm:block hidden">
           <NavbarWrapper />

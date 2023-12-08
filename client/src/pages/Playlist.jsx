@@ -88,15 +88,11 @@ const Playlist = () => {
     }
   }, [musicPlaylistData, currentIndex]);
 
-  console.log(firstMusic);
-
   const handlePlayClick = (musicName) => {
     if (selectedAudio?.musicName === musicName) {
       if (isPause) {
         playAudio(selectedAudio);
-        console.log("this play...");
       } else {
-        console.log("this pause ...");
         pauseAudio();
       }
       setCurrentMusicPlayed(selectedAudio);
@@ -107,7 +103,6 @@ const Playlist = () => {
 
       if (selectedMusic) {
         playAudio(selectedMusic);
-        console.log("this play hello");
 
         setCurrentIndex(musicPlaylistData?.musics?.indexOf(selectedMusic));
       }

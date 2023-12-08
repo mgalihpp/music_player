@@ -37,8 +37,6 @@ export function AudioProvider({ children }) {
     }
   }, []);
 
-  console.log(currentMusicPlayed);
-
   const pauseAudio = useCallback(() => {
     setIsPause(true);
   }, []);

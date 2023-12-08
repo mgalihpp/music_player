@@ -304,7 +304,7 @@ const SingleMusicCard = () => {
                     <Toast.Viewport className="[--viewport-padding:_25px] fixed bottom-0 right-0 flex flex-col p-[var(--viewport-padding)] gap-[10px] w-[390px] max-w-[100vw] m-0 list-none z-[2147483647] outline-none" />
                   </Toast.Provider>
 
-                  <div className="px-6 py-3.5 flex flex-row items-center justify-start cursor-pointer bg-black/20 hover:bg-black/30 transition-all ease-in-out duration-300">
+                  <div className="px-6 pt-3.5 pb-6 md:pb-12 lg:pb-20 xl:pb-36 flex flex-row items-center justify-start cursor-pointer bg-black/20 transition-all ease-in-out duration-300">
                     <div className="relative w-[80px] h-[80px]">
                       <User2
                         alt="profile"

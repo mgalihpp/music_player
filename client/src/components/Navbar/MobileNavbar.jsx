@@ -39,7 +39,7 @@ const MobileNavbar = () => {
 
   useEffect(() => {
     // Add or remove 'overflow-hidden' class based on the 'open' state
-    const mainElement = document.getElementsByClassName("scroll")[0];
+    const mainElement = document.querySelector(".scroll");
 
     if (mainElement) {
       mainElement.style.overflow = open ? "hidden" : "";
@@ -54,7 +54,7 @@ const MobileNavbar = () => {
   }, [open]);
 
   return (
-    <div className="block sm:hidden z-[999]">
+    <div className="block sm:hidden z-[998]">
       <button onClick={toggleMenu}>
         <Menu />
       </button>

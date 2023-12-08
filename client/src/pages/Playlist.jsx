@@ -328,7 +328,7 @@ const Playlist = () => {
                             </span>
                           </div>
                         </div>
-                        <div className="flex flex-col items-center justify-between px-4 border-b border-zinc-800 gap-2">
+                        <div className="flex flex-col items-center justify-between px-4 pb-4 border-b border-zinc-800 gap-2">
                           {isMPLoading ? (
                             <Loading />
                           ) : (

@@ -13,13 +13,13 @@ const AuthenticatedLayout = lazy(() =>
 function App() {
   const { setUser } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
+  const { pathname } = useLocation();
 
   useEffect(() => {
-    if (location.pathname !== "/login") {
-      localStorage.setItem("current_path", location.pathname);
+    if (pathname !== "/login") {
+      localStorage.setItem("current_path", pathname);
     }
-  }, [location.pathname]);
+  }, [pathname]);
 
   useEffect(() => {
     const token = localStorage.getItem("access_token");
@@ -27,13 +27,13 @@ function App() {
 
     if (token) {
       setUser(true);
-      if (location.pathname === "/login") {
+      if (pathname === "/login") {
         navigate(storedCurrentPath || "/");
       }
     } else {
       navigate("/login");
     }
-  }, [navigate, setUser, location.pathname]);
+  }, [navigate, setUser, pathname]);
 
   return (
     <ErrorBoundary>

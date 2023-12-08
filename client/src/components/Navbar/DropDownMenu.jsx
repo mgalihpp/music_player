@@ -71,7 +71,10 @@ const DropdownMenu = () => {
           />
           <MenuButton
             title="User Profile"
-            onClick={() => navigate("/profile")}
+            onClick={() => {
+              navigate("/profile");
+              setIsMenuOpen(false);
+            }}
             label="Profile"
             icon={<Settings className="w-5 h-5" />}
           />

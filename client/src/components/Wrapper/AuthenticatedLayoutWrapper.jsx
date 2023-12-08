@@ -14,37 +14,44 @@ import {
   ProfileWrapper,
 } from ".";
 import TopNavbar from "../Navbar/TopNavbar";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import AudioPlayerComponent from "../AudioPlayerComponents";
+import { useTheme } from "../../Context/ThemeContext";
 
 const AuthenticatedLayout = () => {
   const [scrollPos, setScrollPos] = useState(0);
-  const location = useLocation();
+  const { pathname } = useLocation();
   const isDesktop = useMediaQuery({ minWidth: 650 });
+  const { currentTheme } = useTheme();
+  const scrollRef = useRef();
 
-  const handleScroll = (e) => {
-    const { scrollTop } = e.target;
+  const handleScroll = () => {
+    const { scrollTop } = scrollRef.current;
     setScrollPos(scrollTop);
   };
 
   useEffect(() => {
-    setScrollPos(0);
-  }, [location.pathname]);
+    if (scrollRef.current)
+      scrollRef.current.scrollTo({
+        top: 0,
+      });
+  }, [pathname]);
 
   return (
-    <div className="h-screen flex p-0 lg:p-2 flex-col overflow-hidden max-w-screen-2xl w-full">
+    <div className="max-h-screen flex p-0 lg:p-2 flex-col justify-between overflow-y-hidden max-w-screen-2xl w-full box-border">
       <div className="flex flex-1 overflow-hidden">
         <aside className="w-72 p-0 pr-2 sm:block hidden">
           <NavbarWrapper />
         </aside>
         <div
           className="flex-1 rounded-t-md bg-white/5 overflow-x-auto justify-between relative scroll"
+          ref={scrollRef}
           onScroll={handleScroll}
         >
-          <main className="max-w-screen-xl w-full">
-            {location.pathname !== "/search" && (
+          <main className="max-w-screen-xl h-auto w-full">
+            {pathname !== "/search" && (
               <TopNavbar
                 className="px-6 py-2 absolute w-inherit"
                 position={scrollPos}
@@ -56,7 +63,16 @@ const AuthenticatedLayout = () => {
           <FooterWrapper />
         </div>
       </div>
-      <div className="bg-white/5 border-t mb-12 sm:mb-0 sm:flex border-zinc-700 p-0 items-center justify-between rounded-b-md">
+      <div
+        className={`${
+          currentTheme === "dark" ? "bg-zinc-900" : "bg-white/5"
+        } w-full z-[999] border-t fixed bottom-0 sm:flex border-zinc-700 p-0 items-center justify-between rounded-b-md`}
+        style={
+          currentTheme === "dark"
+            ? { backdropFilter: "blur(5px)" }
+            : { backdropFilter: "blur(10px)" }
+        }
+      >
         {isDesktop ? (
           <AudioPlayerComponentWrapper />
         ) : (

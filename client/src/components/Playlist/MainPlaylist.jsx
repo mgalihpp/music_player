@@ -10,7 +10,7 @@ const MainPlaylist = ({ id, name, image }) => {
       key={id}
       onClick={() => navigate(`/playlist/${name}`)}
       className={` cursor-pointer
-        bg-white/5 group rounded w-72 sm:w-64 flex items-center gap-2 overflow-hidden hover:bg-white/20 transition-all
+        bg-white/5 group rounded hhh flex items-center gap-2 overflow-hidden hover:bg-white/20 transition-all
         `}
     >
       <img

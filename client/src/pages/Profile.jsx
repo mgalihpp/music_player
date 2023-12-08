@@ -14,7 +14,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Button, DropdownMenu } from "@radix-ui/themes";
 import MusicCard from "../components/MusicCard";
 import MainPlaylist from "../components/Playlist/MainPlaylist";
-import SkelMusicCard from "../components/Skeleton/SkelMusicCard";
+import Loading from "./../components/Loading";
 
 const Settings = () => {
   const { userInfo, setUpdateUser, token } = useAuth();
@@ -184,23 +184,21 @@ const Settings = () => {
         <section className="space-y-2">
           <h1 className="text-2xl font-bold">Top played musics</h1>
           <div className="flex flex-col flex-wrap sm:flex-row items-center justify-start gap-4">
-            {isLoading
-              ? Array.from({ length: 3 }, (_, index) => (
-                  <div key={index}>
-                    <SkelMusicCard />
-                  </div>
-                ))
-              : musicData.length !== 0 &&
-                musicData.map((music) => (
-                  <div key={music.id}>
-                    <MusicCard
-                      musicName={music.musicName}
-                      musicArtist={music.musicArtist}
-                      musicImage={music.musicImage}
-                      musicPath={music.musicPath}
-                    />
-                  </div>
-                ))}
+            {isLoading ? (
+              <Loading />
+            ) : (
+              musicData.length !== 0 &&
+              musicData.map((music) => (
+                <div key={music.id}>
+                  <MusicCard
+                    musicName={music.musicName}
+                    musicArtist={music.musicArtist}
+                    musicImage={music.musicImage}
+                    musicPath={music.musicPath}
+                  />
+                </div>
+              ))
+            )}
           </div>
         </section>
         <section className="space-y-2">

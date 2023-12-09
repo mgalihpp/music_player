@@ -16,6 +16,8 @@ const Login = () => {
   const pwdRef = useRef();
   const loadingRef = useRef();
 
+  document.title = "Login - Music Player";
+
   const handleAuth = async (e) => {
     e.preventDefault();
     loadingRef.current.continuousStart();

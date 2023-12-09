@@ -879,7 +879,7 @@ def get_most_music_played():
 
 
 @api_v1.route("/protected", methods=["GET"])
-@jwt_required()  # This decorator ensures a valid token is present
+@jwt_required()
 def protected():
     # Get the identity from the token
     current_user = get_jwt_identity()

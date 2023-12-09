@@ -149,7 +149,7 @@ const Settings = () => {
           ) : (
             <User2
               alt="profile"
-              className="object-cover rounded-full w-full h-full bg-zinc-800 p-0.5"
+              className="object-cover rounded-full w-40 h-40 max-w-[160px] max-h-[160px] bg-zinc-800"
             />
           )}
         </div>

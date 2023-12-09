@@ -10,7 +10,7 @@ from werkzeug.utils import secure_filename
 import os
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import desc
-from mutagen.mp3 import MP3
+from mutagen.mp3 import MP3, HeaderNotFoundError
 from PIL import Image
 from io import BytesIO
 from datetime import datetime, timedelta
@@ -386,6 +386,7 @@ def upload_music():
         music_file
         and allowed_file(music_file.filename)
         and allowed_image(music_image.filename)
+        and validate_audio(music_file)
     ):
         try:
             # Secure the filename to prevent directory traversal
@@ -908,6 +909,18 @@ def get_all_music():
     response = make_response(jsonify({"musics": music_list}))
     response.headers["Cache-Control"] = "public, max-age=0"
     return response, 200
+
+
+# validasi file mp3
+def validate_audio(file):
+    try:
+        # Check if Mutagen can parse the file as an MP3
+        audio = MP3(file)
+        # If Mutagen can parse it without errors, it's likely an MP3 file
+        return True
+    except HeaderNotFoundError:
+        # Mutagen couldn't recognize the file as an MP3
+        return False
 
 
 # membuat handler untuk upload file

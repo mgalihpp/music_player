@@ -1,8 +1,8 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { api } from "./../../utils";
 import { useAuth } from "../../Context/AuthContext";
 import LoadingBar from "react-top-loading-bar";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [auth, setAuth] = useState("login");
@@ -11,12 +11,16 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [userTaken, setUserTaken] = useState(false);
   const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   const userRef = useRef();
   const pwdRef = useRef();
   const loadingRef = useRef();
 
-  document.title = "Login - Music Player";
+  useEffect(() => {
+    if (pathname === "/login") document.title = "Login - Music Player";
+    return () => (document.title = "Music Player");
+  }, [pathname]);
 
   const handleAuth = async (e) => {
     e.preventDefault();

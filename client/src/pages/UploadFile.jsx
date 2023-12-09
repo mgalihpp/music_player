@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { useUploadContext } from "../Context/UploadContext";
-import { Image, Play, Upload } from "lucide-react";
+import { Image, Loader2, Play, Upload } from "lucide-react";
 import LoadingBar from "react-top-loading-bar";
 import { api } from "../utils";
 import { Button } from "@radix-ui/themes";
@@ -201,7 +201,11 @@ const UploadFile = () => {
                 onClick={() => setIsFetching(true)}
                 disabled={isSubmit}
               >
-                Submit
+                {isSubmit ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  "Submit"
+                )}
               </button>
             </form>
             {previewImage && (

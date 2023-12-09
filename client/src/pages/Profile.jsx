@@ -15,6 +15,7 @@ import { Button, DropdownMenu } from "@radix-ui/themes";
 import MusicCard from "../components/MusicCard";
 import MainPlaylist from "../components/Playlist/MainPlaylist";
 import Loading from "./../components/Loading";
+import { useLocation } from "react-router-dom";
 
 const Settings = () => {
   const { userInfo, setUpdateUser, token } = useAuth();
@@ -30,6 +31,15 @@ const Settings = () => {
   const [isUsernameChanged, setIsUsernameChanged] = useState(false);
   const [isImageChanged, setIsImageChanged] = useState(false);
   const imageRef = useRef();
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    if (pathname === "/profile") {
+      document.title = `${userInfo?.username ?? ""} - Music Player`;
+    }
+
+    return () => (document.title = "Music Player");
+  }, [pathname, userInfo.username]);
 
   const getUserMostPlayedMusic = useCallback(async () => {
     try {

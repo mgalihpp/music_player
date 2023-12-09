@@ -1,4 +1,4 @@
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
 import { useMusicContext } from "../Context/MusicContext";
 import { useEffect, useState } from "react";
 import { Clock, Dot, MoreHorizontal, Pause, Play } from "lucide-react";
@@ -44,6 +44,18 @@ const Playlist = () => {
     setSelectedPlayedPlaylist,
     selectedPlayedPlaylist,
   } = useAudioContext();
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    const pathParts = pathname.split("/");
+    const playlistPath = pathParts[1];
+
+    if (playlistPath === "playlist") {
+      document.title = `${selectedPlaylist?.playlistName ?? ""} - Music Player`;
+    }
+
+    return () => (document.title = "Music Player");
+  }, [pathname, selectedPlaylist]);
 
   useEffect(() => {
     if (selectedAudio?.musicName === (currentMusicPlayed !== null)) {

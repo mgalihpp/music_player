@@ -1,25 +1,17 @@
 import { Suspense, lazy, useEffect, useState } from "react";
 import { SortAsc, SortDesc } from "lucide-react";
-import { useMusicContext } from "../../Context/MusicContext";
-import Loading from "../../components/Loading";
-import { useAuth } from "../../Context/AuthContext";
+import { useMusicContext } from "../Context/MusicContext";
+import Loading from "../components/Loading";
 const SkelMusicCard = lazy(() =>
-  import("../../components/Skeleton/SkelMusicCard")
+  import("../components/Skeleton/SkelMusicCard")
 );
-const SkelPlayCard = lazy(() =>
-  import("./../../components/Skeleton/SkelPlayCard")
-);
-const MusicCard = lazy(() => import("../../components/MusicCard"));
-const MainPlaylist = lazy(() =>
-  import("../../components/Playlist/MainPlaylist")
-);
+const MusicCard = lazy(() => import("../components/MusicCard"));
 
 const Main = () => {
-  const { musicData, isLoading, playlistData, isPLoading } = useMusicContext();
+  const { musicData, isLoading } = useMusicContext();
   const [sortOrder, setSortOrder] = useState("asc");
   const [sortedMusicData, setSortedMusicData] = useState([]);
   const [isDisable, setDisable] = useState(false);
-  const { userInfo } = useAuth();
 
   useEffect(() => {
     const sortMusicData = () => {
@@ -65,9 +57,9 @@ const Main = () => {
   };
 
   return (
-    <div className="px-6 py-8">
-      <div className="flex flex-row items-center justify-between space-y-2 mt-6 mb-4">
-        <h1 className="text-md md:text-3xl font-semibold text-zinc-50">
+    <div className="px-4 py-8">
+      {/* <div className="flex flex-row items-center justify-between space-y-2 mt-6 mb-4">
+        <h1 className="text-md md:text-2xl font-semibold text-zinc-50">
           {getGreeting()} {userInfo.username ?? ""}
           {"!"}
         </h1>
@@ -82,7 +74,7 @@ const Main = () => {
             ))
           ) : playlistData.length === 0 ? (
             <div>
-              {/* <h1>
+              <h1>
                 No Playlist Found.{" "}
                 <Link
                   className="underline underline-offset-2"
@@ -90,7 +82,7 @@ const Main = () => {
                 >
                   Want to Create?
                 </Link>
-              </h1> */}
+              </h1>
             </div>
           ) : (
             playlistData.map((playlist) => (
@@ -102,10 +94,10 @@ const Main = () => {
             ))
           )}
         </div>
-      </Suspense>
-      <div className="flex flex-row items-center justify-between space-y-2 mt-6 mb-4">
-        <h1 className="text-md md:text-3xl font-semibold text-zinc-50">
-          Let&apos;s Play a Music!
+      </Suspense> */}
+      <div className="flex flex-row items-center justify-between px-4 lg:px-4 space-y-2 mt-8 mb-4">
+        <h1 className="text-md md:text-2xl font-semibold text-zinc-50">
+          All musics!
         </h1>
 
         <button
@@ -113,7 +105,7 @@ const Main = () => {
           title="Sort Music"
           aria-label="Sort music"
           disabled={isDisable}
-          className="bg-white/5 text-zinc-100 disabled:bg-transparent hover:bg-white/10 p-1.5 text-xs  sm:text-md sm:p-2.5 rounded-full flex items-center justify-center gap-2 font-semibold"
+          className="bg-white/5 text-zinc-100 disabled:bg-transparent hover:bg-white/10 p-1.5 text-xs  sm:text-md sm:p-2 rounded-full flex items-center justify-center gap-2 font-semibold"
         >
           Sort{" "}
           {sortOrder === "asc" ? (
@@ -125,7 +117,7 @@ const Main = () => {
       </div>
       <Suspense fallback={<Loading />}>
         <div
-          className={`flex flex-row flex-wrap items-center justify-center gap-4 mt-4
+          className={`flex flex-row flex-wrap items-center justify-center sm:justify-start lg:justify-center gap-4 mt-4
         `}
         >
           {isLoading ? (
@@ -157,17 +149,17 @@ const Main = () => {
   );
 };
 
-function getGreeting() {
-  const now = new Date();
-  const currentHour = now.getHours();
+// function getGreeting() {
+//   const now = new Date();
+//   const currentHour = now.getHours();
 
-  if (currentHour >= 6 && currentHour < 12) {
-    return "Good Morning";
-  } else if (currentHour >= 12 && currentHour < 18) {
-    return "Good Afternoon";
-  } else {
-    return "Good Night";
-  }
-}
+//   if (currentHour >= 6 && currentHour < 12) {
+//     return "Good Morning";
+//   } else if (currentHour >= 12 && currentHour < 18) {
+//     return "Good Afternoon";
+//   } else {
+//     return "Good Night";
+//   }
+// }
 
 export default Main;

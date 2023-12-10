@@ -3,12 +3,14 @@ import LoadingBar from "react-top-loading-bar";
 import Loading from "../Loading";
 
 const Login = lazy(() => import("../../pages/Auth/Login"));
-const Main = lazy(() => import("../../pages/Home/Main"));
+const Home = lazy(() => import("../../pages/Home"));
+const AllMusics = lazy(() => import("../../pages/AllMusics"));
 const UploadFile = lazy(() => import("./../../pages/UploadFile"));
 const SingleMusicCard = lazy(() => import("../../components/SingleMusicCard"));
 const SearchMusic = lazy(() => import("../../pages/SearchMusic"));
 const CreatePlaylist = lazy(() => import("../Playlist/CreatePlaylist"));
 const Playlist = lazy(() => import("../../pages/Playlist"));
+const Recomendation = lazy(() => import("../../pages/Recomendation"));
 const Category = lazy(() => import("../../pages/Category"));
 const AudioPlayerComponent = lazy(() => import("../AudioPlayerComponents"));
 const Navbar = lazy(() => import("./../Navbar/Navbar"));
@@ -26,12 +28,22 @@ export const LoginWrapper = () => {
   );
 };
 
-export const MainWrapper = () => {
+export const HomeWrapper = () => {
   return (
     <Suspense
       fallback={<LoadingBar color="#00a827" shadow={true} progress={100} />}
     >
-      <Main />
+      <Home />
+    </Suspense>
+  );
+};
+
+export const AllMusicsWrapper = () => {
+  return (
+    <Suspense
+      fallback={<LoadingBar color="#00a827" shadow={true} progress={100} />}
+    >
+      <AllMusics />
     </Suspense>
   );
 };
@@ -79,6 +91,16 @@ export const PlaylistWrapper = () => {
       fallback={<LoadingBar color="#00a827" shadow={true} progress={100} />}
     >
       <Playlist />
+    </Suspense>
+  );
+};
+
+export const RecomendationWrapper = () => {
+  return (
+    <Suspense
+      fallback={<LoadingBar color="#00a827" shadow={true} progress={100} />}
+    >
+      <Recomendation />
     </Suspense>
   );
 };

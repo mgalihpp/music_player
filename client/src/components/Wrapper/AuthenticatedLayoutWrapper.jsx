@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import {
   NavbarWrapper,
-  MainWrapper,
+  AllMusicsWrapper,
   AudioPlayerComponentWrapper,
   CategoryWrapper,
   CreatePlaylistWrapper,
@@ -12,6 +12,8 @@ import {
   FooterWrapper,
   AboutWrapper,
   ProfileWrapper,
+  HomeWrapper,
+  RecomendationWrapper,
 } from ".";
 import TopNavbar from "../Navbar/TopNavbar";
 import { useEffect, useRef, useState } from "react";
@@ -66,7 +68,7 @@ const AuthenticatedLayout = () => {
       <div
         className={`${
           currentTheme === "dark" ? "bg-zinc-900" : "bg-white/5"
-        } w-full z-[999] border-t fixed bottom-0 sm:flex border-zinc-700 p-0 items-center justify-between rounded-b-md`}
+        } w-full z-[999] border-t fixed bottom-0 left-0 sm:flex border-zinc-700 p-0 items-center justify-between rounded-b-md`}
         style={
           currentTheme === "dark"
             ? { backdropFilter: "blur(5px)" }
@@ -86,12 +88,14 @@ const AuthenticatedLayout = () => {
 const Router = () => {
   return (
     <Routes>
-      <Route path="/" element={<MainWrapper />} />
+      <Route path="/" element={<HomeWrapper />} />
+      <Route path="/all-musics" element={<AllMusicsWrapper />} />
       <Route path="/upload" element={<UploadFileWrapper />} />
       <Route path="/music/:musicName" element={<SingleMusicCardWrapper />} />
       <Route path="/search" element={<SearchMusicWrapper />} />
       <Route path="/create/playlist" element={<CreatePlaylistWrapper />} />
       <Route path="/playlist/:playlistName" element={<PlaylistWrapper />} />
+      <Route path="/user/playlist/:id" element={<RecomendationWrapper />} />
       <Route path="/category/:name" element={<CategoryWrapper />} />
       <Route path="/profile" element={<ProfileWrapper />} />
       <Route path="/about" element={<AboutWrapper />} />

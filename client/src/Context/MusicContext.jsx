@@ -21,6 +21,7 @@ export function MusicProvider({ children }) {
   const [musicData, setMusicData] = useState([]);
   const [playlistData, setPlaylistData] = useState([]);
   const [musicPlaylistData, setMusicPlaylistData] = useState([]);
+  const [recomendationData, setRecomendationData] = useState([]);
   const [isMPLoading, setIsMPLoading] = useState(true);
   const [isPLoading, setIsPLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
@@ -116,6 +117,29 @@ export function MusicProvider({ children }) {
     }
   };
 
+  const getRecomendationData = () => {
+    fetch(`${api}recomendation`, {
+      method: "GET",
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+        throw new Error("Network response was not ok.");
+      })
+      .then((data) => {
+        setRecomendationData(data.playlist);
+      })
+      .catch((error) => {
+        // Handle errors here
+        console.error("Error fetching recommendation data:", error);
+      });
+  };
+
+  useEffect(() => {
+    getRecomendationData();
+  }, []);
+
   useEffect(() => {
     if (musicData.length === 0 && isLoading && !isFetching && user) {
       fetchData();
@@ -134,6 +158,7 @@ export function MusicProvider({ children }) {
   useEffect(() => {
     if (musicData.length !== 0 && isPLoading && user) {
       getPlaylist();
+      getRecomendationData();
     }
     if (isPFetching && user) {
       setTimeout(() => {
@@ -160,6 +185,7 @@ export function MusicProvider({ children }) {
         setMusicPlaylistData,
         isMPLoading,
         setIsMPLoading,
+        recomendationData,
       }}
     >
       {children}

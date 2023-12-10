@@ -7,7 +7,14 @@ import { useMusicContext } from "../Context/MusicContext";
 import { host } from "../utils";
 
 const MusicCard = (props) => {
-  const { musicName, musicImage, musicArtist } = props;
+  const {
+    musicName,
+    musicImage,
+    musicArtist,
+    playlistImage,
+    playlist,
+    playlistId,
+  } = props;
   const {
     selectedAudio,
     playAudio,
@@ -40,7 +47,6 @@ const MusicCard = (props) => {
       );
     }
   };
-
   const isCurrentSelected = selectedAudio?.musicName === musicName;
 
   return (
@@ -57,6 +63,8 @@ const MusicCard = (props) => {
                     src={
                       musicImage
                         ? `${host + "img/" + musicImage}`
+                        : playlistImage
+                        ? `${host + "playlist/img/" + playlistImage}`
                         : "/img/download.jpeg"
                     }
                     alt="cover"
@@ -64,7 +72,13 @@ const MusicCard = (props) => {
                   />
                 </div>
                 <div className="flex flex-col items-start">
-                  <Link to={"/music/" + musicName}>
+                  <Link
+                    to={
+                      playlist
+                        ? "/user/playlist/" + playlistId
+                        : "/music/" + musicName
+                    }
+                  >
                     <span className="text-xs max-w-[150px] whitespace-nowrap overflow-hidden overflow-ellipsis">
                       {musicName}
                     </span>
@@ -106,17 +120,19 @@ const MusicCard = (props) => {
       {/* Dekstop */}
       <div
         className={` cursor-pointer
-          hidden sm:flex items-center justify-center p-4 group min-w-[135px] min-h-[135px] w-[135px] sm:w-[180px] flex-col text-base text-zinc-200 gap-3 font-semibold rounded-md bg-white/5 hover:bg-white/10 transition-all`}
+          hidden sm:flex items-start justify-center p-4 group responsive-card flex-col text-base text-zinc-200 gap-3 font-semibold rounded-md bg-white/5 hover:bg-white/10 transition-all`}
       >
         <div className="relative flex items-center justify-center">
           <img
             src={
               musicImage
                 ? `${host + "img/" + musicImage}`
+                : playlistImage
+                ? `${host + "playlist/img/" + playlistImage}`
                 : "/img/download.jpeg"
             }
             alt="cover"
-            className="rounded-lg relative object-cover w-[105px] h-[105px] min-h-[105px] min-w-[105px] max-w-[105px] max-h-[105px] sm:min-w-[150px] sm:min-h-[150px]  sm:w-[150px] sm:h-[150px] sm:max-w-[150px] sm:max-h-[150px]"
+            className="rounded-lg relative object-cover responsive-card-img"
           />
           <div
             className={`playing-ui ${
@@ -145,12 +161,16 @@ const MusicCard = (props) => {
           </button>
         </div>
         <div className="flex flex-col items-start sm:p-0">
-          <Link to={"/music/" + musicName}>
-            <p className="font-semibold px-2 sm:px-0 hover:underline text-[10px] sm:text-sm whitespace-nowrap overflow-hidden overflow-ellipsis w-32">
+          <Link
+            to={
+              playlist ? "/user/playlist/" + playlistId : "/music/" + musicName
+            }
+          >
+            <p className="font-semibold px-2 sm:px-0 hover:underline text-[10px] sm:text-sm whitespace-nowrap overflow-hidden overflow-ellipsis w-full max-w-[100px]">
               <strong title={musicName}>{musicName}</strong>
             </p>
           </Link>
-          <p className="font-normal px-2 sm:px-0 text-xs text-zinc-400 whitespace-nowrap overflow-hidden overflow-ellipsis w-32">
+          <p className="font-normal px-2 sm:px-0 text-xs text-zinc-400 whitespace-nowrap overflow-hidden overflow-ellipsis w-full max-w-[100px]">
             {musicArtist}
           </p>
         </div>

@@ -21,11 +21,11 @@ const MainPlaylist = ({ id, name, image }) => {
         width={50}
         height={50}
         style={{
-          minWidth: "50px",
-          minHeight: "50px",
+          minWidth: "48px",
+          minHeight: "48px",
           objectFit: "cover",
-          maxWidth: "50px",
-          maxHeight: "50px",
+          maxWidth: "48px",
+          maxHeight: "48px",
         }}
       />
       <Link to={"/playlist/" + name}>

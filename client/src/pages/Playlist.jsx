@@ -45,6 +45,7 @@ const Playlist = () => {
     selectedPlayedPlaylist,
   } = useAudioContext();
   const { pathname } = useLocation();
+  const { token } = useAuth();
 
   useEffect(() => {
     const pathParts = pathname.split("/");
@@ -129,6 +130,10 @@ const Playlist = () => {
     try {
       const res = await fetch(`${api}playlist/${currentPlaylistId}`, {
         method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       });
       return res;
     } catch (error) {
@@ -347,7 +352,7 @@ const Playlist = () => {
                             musicPlaylistData?.musics?.map((music, index) => (
                               <div
                                 key={index}
-                                className="flex flex-row items-center gap-2 w-full"
+                                className="flex flex-row items-center gap-2 w-full group hover:bg-white/5 rounded-md"
                               >
                                 <div className="w-8 h-8 lg:w-4 lg:h-4 relative group">
                                   <span
@@ -357,8 +362,8 @@ const Playlist = () => {
                                       selectedAudio &&
                                       !isPause
                                         ? "hidden"
-                                        : "flex"
-                                    }  text-zinc-400 text-sm items-center justify-start h-full absolute top-0 left-0 opacity-100 group-hover:opacity-0 transition-opacity`}
+                                        : "group-hover:hidden"
+                                    }  text-zinc-400 text-sm flex items-center justify-start h-full absolute top-0 left-0 opacity-100 group-hover:opacity-0 transition-opacity`}
                                   >
                                     {index + 1}
                                   </span>
@@ -414,7 +419,7 @@ const Playlist = () => {
                                         host + "img/" + music.musicImage
                                       }`}
                                       alt="cover"
-                                      className="object-cover w-10 h-10 rounded-md"
+                                      className="object-cover min-w-[40px] min-h-[40px] max-w-[40px] max-h-[40px] rounded-md"
                                     />
                                     <figcaption className="text-sm font-semibold text-zinc-200 w-24 xl:w-96 lg:whitespace-normal overflow-hidden overflow-ellipsis whitespace-nowrap">
                                       <Link

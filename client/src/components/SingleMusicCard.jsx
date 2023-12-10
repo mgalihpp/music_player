@@ -30,6 +30,7 @@ const SingleMusicCard = () => {
     setData,
   } = useAudioContext();
   const [open, setOpen] = useState(false);
+  const [toastError, setToastError] = useState(false);
   const [playlistName, setPlaylistName] = useState("Liked Songs");
   const [progress, setprogress] = useState(0);
   const [compLoad, setComLoad] = useState(true);
@@ -83,8 +84,13 @@ const SingleMusicCard = () => {
           method: "POST",
         }
       );
-      return res;
+      if (res.status === 400) {
+        setToastError(true);
+      } else {
+        return res;
+      }
     } catch (error) {
+      setToastError(true);
       console.error(error);
     }
   };
@@ -281,12 +287,16 @@ const SingleMusicCard = () => {
                   </div>
                   <Toast.Provider swipeDirection="right">
                     <Toast.Root
-                      className="bg-green-500 rounded-md shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] p-[15px] grid [grid-template-areas:_'title_action'_'description_action'] grid-cols-[auto_max-content] gap-x-[15px] items-center data-[state=open]:animate-slideIn data-[state=closed]:animate-hide data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=cancel]:translate-x-0 data-[swipe=cancel]:transition-[transform_200ms_ease-out] data-[swipe=end]:animate-swipeOut"
+                      className={`${
+                        toastError ? "bg-red-500" : "bg-green-500"
+                      } rounded-md shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] p-[15px] grid [grid-template-areas:_'title_action'_'description_action'] grid-cols-[auto_max-content] gap-x-[15px] items-center data-[state=open]:animate-slideIn data-[state=closed]:animate-hide data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=cancel]:translate-x-0 data-[swipe=cancel]:transition-[transform_200ms_ease-out] data-[swipe=end]:animate-swipeOut`}
                       open={open}
                       onOpenChange={setOpen}
                     >
                       <Toast.Title className="[grid-area:_title] mb-[5px] font-medium text-slate12 text-[15px]">
-                        Added {selectedMusic.musicName} To {playlistName}!
+                        {toastError
+                          ? "Music already exists in the playlist"
+                          : `Added ${selectedMusic.musicName} To ${playlistName}!`}
                       </Toast.Title>
                       <Toast.Action
                         className="[grid-area:_action]"

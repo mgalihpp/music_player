@@ -362,8 +362,8 @@ const Playlist = () => {
                                       selectedAudio &&
                                       !isPause
                                         ? "hidden"
-                                        : "group-hover:hidden"
-                                    }  text-zinc-400 text-sm flex items-center justify-start h-full absolute top-0 left-0 opacity-100 group-hover:opacity-0 transition-opacity`}
+                                        : "flex"
+                                    }  text-zinc-400 text-sm items-center justify-start h-full absolute top-0 left-0 opacity-100 group-hover:opacity-0 transition-opacity`}
                                   >
                                     {index + 1}
                                   </span>

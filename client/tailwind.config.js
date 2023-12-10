@@ -37,6 +37,9 @@ export default {
       screens: {
         xxll: "max-width: 2560px;",
       },
+      margin: {
+        dynamic: "calc(2vw + 2px)",
+      },
     },
   },
   plugins: [],

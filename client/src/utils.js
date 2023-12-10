@@ -3,7 +3,7 @@ export const api = "https://mgpp.pythonanywhere.com/api/v1/";
 
 export const category = [
   {
-    link: "/",
+    link: "/all-musics",
     name: "All Musics",
     label: "All Musics",
     color: "bg-white/5",

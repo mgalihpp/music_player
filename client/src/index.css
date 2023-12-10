@@ -81,19 +81,53 @@ html {
   }
 }
 
-@media (min-width: 600px) {
+@media (min-width: 640px) {
   .hhh {
-    width: 475px;
+    width: 280px;
   }
   ::-webkit-scrollbar {
     width: 12px;
+  }
+  .responsive-card-img {
+    width: calc(10vw + 60px - 16px);
+    height: calc(10vw + 60px - 16px);
+    max-height: calc(10vw + 60px - 16px);
   }
 }
 
 @media (min-width: 768px) {
   .hhh {
+    width: 400px;
+  }
+  .responsive-card-img {
+    width: calc(10vw + 100px - 16px);
+    height: calc(10vw + 100px - 16px);
+    max-height: calc(10vw + 100px - 16px);
+  }
+}
+
+@media (min-width: 1024px) {
+  .hhh {
     width: 280px;
   }
+  .responsive-card-img {
+    width: calc(10vw + 30px - 16px);
+    height: calc(10vw + 30px - 16px);
+    max-height: calc(10vw + 30px - 16px);
+  }
+}
+
+@media (min-width: 1440px) {
+  .responsive-card-img {
+    width: calc(10vw + 5px - 16px);
+    height: calc(10vw + 5px - 16px);
+    max-width: 180px;
+    max-height: 180px;
+  }
+}
+
+.responsive-card {
+  box-sizing: border-box;
 }
 
 .w-inherit {

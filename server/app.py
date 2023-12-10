@@ -19,7 +19,7 @@ app = Flask(__name__)
 CORS(app)
 app.config["SECRET_KEY"] = "22334111"
 app.config["JWT_SECRET_KEY"] = "music_player_mgpp"
-app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=24)
 jwt = JWTManager(app)
 
 SQLALCHEMY_DATABASE_URI = (
@@ -116,7 +116,7 @@ class MusicPlayCount(db.Model):
 
 
 class Users(db.Model):
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(255), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
     image = db.Column(db.String(255))
@@ -151,10 +151,12 @@ def stream_audio(audio_filename):
             data = audio.read(content_length)
 
         response = make_response(data)
-        response.headers["Cache-Control"] = "public, max-age=7200"  # Cache for 2 hour
-        response.headers["Expires"] = (datetime.now() + timedelta(hours=2)).strftime(
-            "%a, %d %b %Y %H:%M:%S GMT"
-        )
+        response.headers[
+            "Cache-Control"
+        ] = "public, max-age=31536000"  # Cache for 1 year
+        expires_time = datetime.now() + timedelta(seconds=31536000)
+        response.headers["Expires"] = expires_time.strftime("%a, %d %b %Y %H:%M:%S GMT")
+
         response.headers["Accept-Ranges"] = "bytes"
         response.headers["Content-Range"] = f"bytes {start}-{end}/{file_size}"
         response.headers["Content-Length"] = content_length
@@ -198,12 +200,13 @@ def stream_compressed_image(image_filename):
             )
         )
         # Set cache headers
-        response.headers["Cache-Control"] = "public, max-age=3600"  # Cache for 1 hour
-        response.headers["Expires"] = (datetime.now() + timedelta(hours=1)).strftime(
-            "%a, %d %b %Y %H:%M:%S GMT"
-        )
+        response.headers[
+            "Cache-Control"
+        ] = "public, max-age=31536000"  # Cache for 1 year
+        expires_time = datetime.now() + timedelta(seconds=31536000)
+        response.headers["Expires"] = expires_time.strftime("%a, %d %b %Y %H:%M:%S GMT")
 
-        return response, 200
+        return response
     else:
         return make_response(jsonify("File not found"), 404)
 
@@ -218,14 +221,17 @@ def stream_compressed_profile_image(image_filename):
         # Open the original image
         original_image = Image.open(image_path)
 
+        # Resize profile image to 320x320 pixels
+        resized_image = original_image.resize((320, 320))
+
         # Create an in-memory buffer to save the compressed image
         compressed_image_buffer = BytesIO()
 
         # Compress the image with the desired quality (JPEG) or optimize (PNG)
-        if original_image.format == "PNG":
-            original_image.save(compressed_image_buffer, format="PNG", optimize=True)
+        if resized_image.format == "PNG":
+            resized_image.save(compressed_image_buffer, format="PNG", optimize=True)
         else:
-            original_image.save(compressed_image_buffer, format="JPEG", quality=50)
+            resized_image.save(compressed_image_buffer, format="JPEG", quality=50)
 
         # Set the buffer position to the beginning
         compressed_image_buffer.seek(0)
@@ -239,12 +245,11 @@ def stream_compressed_profile_image(image_filename):
             )
         )
         # Set cache headers
-        response.headers["Cache-Control"] = "public, max-age=3600"  # Cache for 1 hour
-        response.headers["Expires"] = (datetime.now() + timedelta(hours=1)).strftime(
-            "%a, %d %b %Y %H:%M:%S GMT"
-        )
+        response.headers["Cache-Control"] = "public, max-age=10"  # Cache for 1 year
+        expires_time = datetime.now() + timedelta(seconds=10)
+        response.headers["Expires"] = expires_time.strftime("%a, %d %b %Y %H:%M:%S GMT")
 
-        return response, 200
+        return response
     else:
         return make_response(jsonify("File not found"), 404)
 
@@ -280,12 +285,12 @@ def stream_playlist_image(image_filename):
             )
         )
         # Set cache headers
-        response.headers["Cache-Control"] = "public, max-age=3600"  # Cache for 1 hour
-        response.headers["Expires"] = (datetime.now() + timedelta(hours=1)).strftime(
+        response.headers["Cache-Control"] = "public, max-age=36000"  # Cache for 1 hour
+        response.headers["Expires"] = (datetime.now() + timedelta(hours=10)).strftime(
             "%a, %d %b %Y %H:%M:%S GMT"
         )
 
-        return response, 200
+        return response
     else:
         return make_response(jsonify("File not found"), 404)
 
@@ -294,7 +299,6 @@ def stream_playlist_image(image_filename):
 @jwt_required()
 def get_user():
     current_user_id = get_jwt_identity()
-    token = request.args.get("id")
 
     if request.method == "GET":
         user = Users.query.filter_by(id=current_user_id).first()
@@ -329,46 +333,70 @@ def get_user():
             return make_response(jsonify({"message": "Failed to Update User"})), 400
 
 
-@api_v1.delete("/delete/<int:music_id>")
-def delete_music(music_id):
-    try:
-        music = Musics.query.get(music_id)
+@api_v1.get("/recomendation")
+def get_all_playlist():
+    user_ids = [1, 101212242]
+    user_playlists = Playlists.query.filter(Playlists.user_id.in_(user_ids)).all()
 
-        if music:
-            # Delete the music record
-            db.session.delete(music)
-            db.session.commit()
+    # Create a list to store the results
+    playlist_list = []
 
-            return (
-                make_response(
-                    jsonify({"message": f"Music with ID {music_id} has been deleted"})
-                ),
-                202,
-            )
-        else:
-            return (
-                make_response(
-                    jsonify(
-                        {
-                            "message": f"Music with ID {music_id} not found in the database"
-                        },
-                    )
-                ),
-                404,
-            )
-    except Exception as e:
-        # Handle any errors that might occur during the database operation
-        db.session.rollback()
-        return (
-            make_response(
-                jsonify(
-                    {
-                        "message": f"Failed to delete music with ID {music_id}",
-                        "error": str(e),
-                    }
-                ),
-            )
-        ), 500
+    # Iterate over the query result and create a dictionary for each record
+    for playlist in user_playlists:
+        playlist_info = {
+            "id": playlist.id,
+            "playlistName": playlist.name,
+            "playlistImage": playlist.image,
+            "username": playlist.user.username,
+        }
+        playlist_list.append(playlist_info)
+
+    # Create a JSON response
+    response = make_response(jsonify({"playlist": playlist_list}))
+    response.headers["Cache-Control"] = "public, max-age=10"
+    return response, 200
+
+
+# @api_v1.delete("/delete/<int:music_id>")
+# def delete_music(music_id):
+#     try:
+#         music = Musics.query.get(music_id)
+
+#         if music:
+#             # Delete the music record
+#             db.session.delete(music)
+#             db.session.commit()
+
+#             return (
+#                 make_response(
+#                     jsonify({"message": f"Music with ID {music_id} has been deleted"})
+#                 ),
+#                 202,
+#             )
+#         else:
+#             return (
+#                 make_response(
+#                     jsonify(
+#                         {
+#                             "message": f"Music with ID {music_id} not found in the database"
+#                         },
+#                     )
+#                 ),
+#                 404,
+#             )
+#     except Exception as e:
+#         # Handle any errors that might occur during the database operation
+#         db.session.rollback()
+#         return (
+#             make_response(
+#                 jsonify(
+#                     {
+#                         "message": f"Failed to delete music with ID {music_id}",
+#                         "error": str(e),
+#                     }
+#                 ),
+#             )
+#         ), 500
 
 
 @api_v1.post("/upload")
@@ -674,7 +702,7 @@ def get_all_category():
 
     # Create a JSON response
     response = make_response(jsonify({"cat": cat_list}))
-
+    response.headers["Cache-Control"] = "public, max-age=10"
     return response, 200
 
 
@@ -697,7 +725,9 @@ def get_category_music(name):
                 }
                 music_list.append(music_info)
 
-            return make_response(jsonify({"cat": music_list})), 200
+            response = make_response(jsonify({"cat": music_list}))
+            response.headers["Cache-Control"] = "public, max-age=10"
+            return response, 200
         else:
             return (
                 make_response(
@@ -763,7 +793,6 @@ def login():
         response_data = {
             "message": "Registration successful",
             "access_token": access_token,
-            "user_id": user.id,
         }
         return make_response(jsonify(response_data)), 200
     else:
@@ -791,7 +820,6 @@ def register():
     response_data = {
         "message": "Registration successful",
         "access_token": access_token,
-        "user_id": new_user.id,
     }
 
     return make_response(jsonify(response_data)), 201
@@ -830,16 +858,7 @@ def event():
 
         # Return the updated play count as a response
         return (
-            make_response(
-                jsonify(
-                    {
-                        "error": [],
-                        "play_count": play_count_entry.play_count
-                        if play_count_entry
-                        else 1,
-                    }
-                )
-            ),
+            make_response(jsonify("OK")),
             200,
         )
 
@@ -880,7 +899,7 @@ def get_most_music_played():
 
 
 @api_v1.route("/protected", methods=["GET"])
-@jwt_required()
+@jwt_required()  # This decorator ensures a valid token is present
 def protected():
     # Get the identity from the token
     current_user = get_jwt_identity()
@@ -907,7 +926,7 @@ def get_all_music():
 
     # Create a JSON response
     response = make_response(jsonify({"musics": music_list}))
-    response.headers["Cache-Control"] = "public, max-age=0"
+    response.headers["Cache-Control"] = "public, max-age=10"
     return response, 200
 
 

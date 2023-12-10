@@ -42,7 +42,7 @@ const Playlist = () => {
 
   useEffect(() => {
     const pathParts = pathname.split("/");
-    const playlistPath = pathParts[1];
+    const playlistPath = pathParts[2];
 
     if (playlistPath === "playlist") {
       document.title = `${selectedPlaylist?.playlistName ?? ""} - Music Player`;

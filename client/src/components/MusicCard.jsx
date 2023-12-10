@@ -1,7 +1,7 @@
 import { Play } from "lucide-react";
 import { useEffect } from "react";
 import { useAudioContext } from "../Context/AudioContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { PropTypes } from "prop-types";
 import { useMusicContext } from "../Context/MusicContext";
 import { host } from "../utils";
@@ -25,6 +25,7 @@ const MusicCard = (props) => {
     setData,
   } = useAudioContext();
   const { musicData } = useMusicContext();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (selectedAudio?.musicName === musicName) {
@@ -53,7 +54,16 @@ const MusicCard = (props) => {
     <>
       {/* Mobile */}
 
-      <div className="flex hhh min-w-[270px] h-full sm:hidden flex-col justify-center items-center text-zinc-200 gap-2 font-semibold rounded-md bg-white/5 hover:bg-white/10 transition-all">
+      <div
+        onClick={() => {
+          if (playlist) {
+            navigate("/user/playlist/" + playlistId);
+          } else {
+            return;
+          }
+        }}
+        className="flex hhh min-w-[270px] h-full sm:hidden flex-col justify-center items-center text-zinc-200 gap-2 font-semibold rounded-md bg-white/5 hover:bg-white/10 transition-all"
+      >
         <table className="w-full h-full">
           <tbody>
             <tr className="flex items-center">
@@ -119,8 +129,17 @@ const MusicCard = (props) => {
 
       {/* Dekstop */}
       <div
+        onClick={() => {
+          if (playlist) {
+            navigate("/user/playlist/" + playlistId);
+          } else {
+            return;
+          }
+        }}
         className={` cursor-pointer
-          hidden sm:flex items-start justify-center p-4 group responsive-card flex-col text-base text-zinc-200 gap-3 font-semibold rounded-md bg-white/5 hover:bg-white/10 transition-all`}
+          hidden sm:flex items-start justify-center p-4 ${
+            playlist ? "" : "group"
+          } responsive-card flex-col text-base text-zinc-200 gap-3 font-semibold rounded-md bg-white/5 hover:bg-white/10 transition-all`}
       >
         <div className="relative flex items-center justify-center">
           <img
@@ -166,7 +185,11 @@ const MusicCard = (props) => {
               playlist ? "/user/playlist/" + playlistId : "/music/" + musicName
             }
           >
-            <p className="font-semibold px-2 sm:px-0 hover:underline text-[10px] sm:text-sm whitespace-nowrap overflow-hidden overflow-ellipsis w-full max-w-[100px]">
+            <p
+              className={`font-semibold px-2 sm:px-0 ${
+                playlist ? "" : "hover:underline"
+              } text-[10px] sm:text-sm whitespace-nowrap overflow-hidden overflow-ellipsis w-full max-w-[100px]`}
+            >
               <strong title={musicName}>{musicName}</strong>
             </p>
           </Link>

@@ -137,10 +137,6 @@ export function MusicProvider({ children }) {
   };
 
   useEffect(() => {
-    getRecomendationData();
-  }, []);
-
-  useEffect(() => {
     if (musicData.length === 0 && isLoading && !isFetching && user) {
       fetchData();
     }

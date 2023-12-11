@@ -199,6 +199,7 @@ const Playlist = () => {
                           selectedPlaylist?.playlistImage
                         }`}
                         alt="cover"
+                        loading="lazy"
                         className="object-cover min-w-[150px] rounded min-h-[150px] w-[250px] h-[250px] max-w-[250px] max-h-[250px]"
                       />
                     </div>

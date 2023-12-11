@@ -51,6 +51,7 @@ const DropdownMenu = () => {
             <img
               src={`${host}img/profile/${userInfo.profile}`}
               alt="profile"
+              loading="lazy"
               className="object-cover w-9 h-9 max-w-[40px] max-h-[40px] rounded-full"
             />
           </div>

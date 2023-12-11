@@ -144,6 +144,7 @@ const Settings = () => {
             <img
               src={`${host}img/profile/${userInfo.profile}`}
               alt="profile"
+              loading="lazy"
               className="object-cover rounded-full w-40 h-40 max-w-[160px] max-h-[160px]"
             />
           ) : (

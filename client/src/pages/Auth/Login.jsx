@@ -85,6 +85,7 @@ const Login = () => {
                 alt="logo"
                 width={180}
                 height={180}
+                loading="lazy"
                 className="max-w-full max-h-full object-cover"
                 style={{
                   position: "relative",

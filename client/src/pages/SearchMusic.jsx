@@ -63,6 +63,7 @@ const SearchMusic = () => {
                       <img
                         src={cat.images}
                         alt="cover"
+                        loading="lazy"
                         className="rotate-[15deg] w-16 h-16 sm:w-24 sm:h-24 object-cover"
                       />
                     ) : (

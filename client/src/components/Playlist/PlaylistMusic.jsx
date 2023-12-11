@@ -13,6 +13,7 @@ const PlaylistMusic = ({ children, image }) => {
         <img
           src={`${host + "playlist/img/" + image}`}
           alt="cover"
+          loading="lazy"
           className="rounded object-cover min-w-[100px] min-h-[100px] max-w-[100px] max-h-[100px] w-[100px] h-[100px]"
         />
         <button

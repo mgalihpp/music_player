@@ -47,6 +47,7 @@ const AudioPlayerComponent = ({ showJumpControls }) => {
           alt="cover"
           width={56}
           height={56}
+          loading="lazy"
           className="rounded-md"
           style={{
             objectFit: "cover",

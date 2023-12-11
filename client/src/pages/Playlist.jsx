@@ -212,6 +212,7 @@ const Playlist = () => {
                           selectedPlaylist?.playlistImage
                         }`}
                         alt="cover"
+                        loading="lazy"
                         className="object-cover min-w-[150px] rounded min-h-[150px] w-[250px] h-[250px] max-w-[250px] max-h-[250px]"
                       />
                     </div>
@@ -345,14 +346,14 @@ const Playlist = () => {
                             </span>
                           </div>
                         </div>
-                        <div className="flex flex-col items-center justify-between px-4 pb-4 border-b border-zinc-800 gap-2">
+                        <div className="flex flex-col items-center justify-between pb-4 border-b border-zinc-800 gap-1.5">
                           {isMPLoading ? (
                             <Loading />
                           ) : (
                             musicPlaylistData?.musics?.map((music, index) => (
                               <div
                                 key={index}
-                                className="flex flex-row items-center gap-2 w-full group hover:bg-white/5 rounded-md"
+                                className="flex flex-row items-center gap-2 w-full group px-4 hover:bg-white/5 rounded-md"
                               >
                                 <div className="w-8 h-8 lg:w-4 lg:h-4 relative group">
                                   <span
@@ -419,6 +420,7 @@ const Playlist = () => {
                                         host + "img/" + music.musicImage
                                       }`}
                                       alt="cover"
+                                      loading="lazy"
                                       className="object-cover min-w-[40px] min-h-[40px] max-w-[40px] max-h-[40px] rounded-md"
                                     />
                                     <figcaption className="text-sm font-semibold text-zinc-200 w-24 xl:w-96 lg:whitespace-normal overflow-hidden overflow-ellipsis whitespace-nowrap">

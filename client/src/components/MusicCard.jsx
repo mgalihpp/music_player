@@ -82,6 +82,7 @@ const MusicCard = (props) => {
                           : "/img/download.jpeg"
                       }
                       alt="cover"
+                      loading="lazy"
                       className="rounded-lg object-cover w-[50px] h-[50px]"
                     />
                   </div>
@@ -157,6 +158,7 @@ const MusicCard = (props) => {
                   : "/img/download.jpeg"
               }
               alt="cover"
+              loading="lazy"
               className="rounded-lg relative object-cover responsive-card-img"
             />
             <div

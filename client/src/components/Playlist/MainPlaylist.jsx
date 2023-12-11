@@ -2,6 +2,7 @@ import { Play } from "lucide-react";
 import { host } from "../../utils";
 import { PropTypes } from "prop-types";
 import { Link, useNavigate } from "react-router-dom";
+import { memo } from "react";
 
 const MainPlaylist = ({ id, name, image }) => {
   const navigate = useNavigate();
@@ -50,4 +51,4 @@ MainPlaylist.propTypes = {
   image: PropTypes.string,
 };
 
-export default MainPlaylist;
+export default memo(MainPlaylist);

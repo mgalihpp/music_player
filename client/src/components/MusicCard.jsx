@@ -1,5 +1,5 @@
 import { Play } from "lucide-react";
-import { useEffect } from "react";
+import { memo, useEffect, useMemo } from "react";
 import { useAudioContext } from "../Context/AudioContext";
 import { Link, useNavigate } from "react-router-dom";
 import { PropTypes } from "prop-types";
@@ -53,6 +53,16 @@ const MusicCard = (props) => {
   };
   const isCurrentSelected = selectedAudio?.musicName === musicName;
 
+  const imageUrl = useMemo(() => {
+    if (musicImage) {
+      return `${host + "img/" + musicImage}`;
+    } else if (playlistImage) {
+      return `${host + "playlist/img/" + playlistImage}`;
+    } else {
+      return "/img/download.jpeg";
+    }
+  }, [musicImage, playlistImage]);
+
   return (
     <>
       {/* Mobile */}
@@ -74,13 +84,7 @@ const MusicCard = (props) => {
                 <td className="flex flex-row items-center justify-center gap-2">
                   <div className="relative flex items-center justify-center">
                     <img
-                      src={
-                        musicImage
-                          ? `${host + "img/" + musicImage}`
-                          : playlistImage
-                          ? `${host + "playlist/img/" + playlistImage}`
-                          : "/img/download.jpeg"
-                      }
+                      src={imageUrl}
                       alt="cover"
                       loading="lazy"
                       className="rounded-lg object-cover w-[50px] h-[50px]"
@@ -150,13 +154,7 @@ const MusicCard = (props) => {
         >
           <div className="relative flex items-center justify-center">
             <img
-              src={
-                musicImage
-                  ? `${host + "img/" + musicImage}`
-                  : playlistImage
-                  ? `${host + "playlist/img/" + playlistImage}`
-                  : "/img/download.jpeg"
-              }
+              src={imageUrl}
               alt="cover"
               loading="lazy"
               className="rounded-lg relative object-cover responsive-card-img"
@@ -219,4 +217,4 @@ MusicCard.propTypes = {
   musicImage: PropTypes.string,
 };
 
-export default MusicCard;
+export default memo(MusicCard);

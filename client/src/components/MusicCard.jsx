@@ -86,7 +86,7 @@ const MusicCard = (props) => {
                     <img
                       src={imageUrl}
                       alt="cover"
-                      loading="lazy"
+                      loading="eager"
                       className="rounded-lg object-cover w-[50px] h-[50px]"
                     />
                   </div>
@@ -159,7 +159,7 @@ const MusicCard = (props) => {
             <img
               src={imageUrl}
               alt="cover"
-              loading="lazy"
+              loading="eager"
               className="rounded-lg relative object-cover responsive-card-img"
             />
             <div

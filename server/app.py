@@ -123,6 +123,11 @@ class Users(db.Model):
     playlists = db.relationship("Playlists", back_populates="user")
 
 
+@app.get("/")
+def index():
+    return make_response(jsonify("Hello World!")), 200
+
+
 @app.get("/stream_audio/<audio_filename>")
 def stream_audio(audio_filename):
     audio_path = os.path.join(
@@ -164,11 +169,6 @@ def stream_audio(audio_filename):
         return response, 206  # Partial Content status code
     else:
         return make_response(jsonify("File not found"), 404)
-
-
-@app.get("/")
-def index():
-    return make_response(jsonify("Hello World!")), 200
 
 
 @app.route("/img/<image_filename>")
@@ -295,42 +295,37 @@ def stream_playlist_image(image_filename):
         return make_response(jsonify("File not found"), 404)
 
 
-@api_v1.route("/user", methods=["GET", "PUT"])
-@jwt_required()
-def get_user():
-    current_user_id = get_jwt_identity()
+@api_v1.get("/musics")
+def get_musics():
+    search_query = request.args.get("n")
 
-    if request.method == "GET":
-        user = Users.query.filter_by(id=current_user_id).first()
+    if search_query is None:
+        return get_all_music()
+    else:
+        try:
+            search_results = Musics.query.filter(
+                Musics.name.ilike(f"%{search_query}%")
+            ).all()
 
-        if user:
-            response_data = {"username": user.username, "profile": user.image}
-            return make_response(jsonify(response_data)), 200
-        else:
-            return make_response(jsonify({"message": "Unauthorized"})), 401
-    if request.method == "PUT":
-        username = request.form.get("username")
-        profileImage = request.files.get("profile_image")
+            music_list = []
+            for music in search_results:
+                music_info = {
+                    "id": music.id,
+                    "musicPath": music.path,
+                    "musicName": music.name,
+                    "musicArtist": music.artist,
+                    "musicImage": music.image,
+                }
+                music_list.append(music_info)
 
-        user = Users.query.filter_by(id=current_user_id).first()
+            response = make_response(jsonify({"results": music_list}))
+            return response, 201
 
-        if user:
-            if username:
-                user.username = username
-
-            if profileImage and allowed_image(profileImage.filename):
-                image = secure_filename(profileImage.filename)
-                save_profile_image_to_server(profileImage, image)
-                user.image = image
-
-            db.session.commit()
-
+        except Exception as e:
             return (
-                make_response(jsonify({"message": "Update User Successfull"})),
-                201,
+                make_response(jsonify({"message": "Search failed", "error": str(e)})),
+                500,
             )
-        else:
-            return make_response(jsonify({"message": "Failed to Update User"})), 400
 
 
 @api_v1.get("/recomendation")
@@ -746,39 +741,6 @@ def get_category_music(name):
         )
 
 
-@api_v1.get("/musics")
-def get_musics():
-    search_query = request.args.get("n")
-
-    if search_query is None:
-        return get_all_music()
-    else:
-        try:
-            search_results = Musics.query.filter(
-                Musics.name.ilike(f"%{search_query}%")
-            ).all()
-
-            music_list = []
-            for music in search_results:
-                music_info = {
-                    "id": music.id,
-                    "musicPath": music.path,
-                    "musicName": music.name,
-                    "musicArtist": music.artist,
-                    "musicImage": music.image,
-                }
-                music_list.append(music_info)
-
-            response = make_response(jsonify({"results": music_list}))
-            return response, 201
-
-        except Exception as e:
-            return (
-                make_response(jsonify({"message": "Search failed", "error": str(e)})),
-                500,
-            )
-
-
 @api_v1.post("/auth/login")
 def login():
     username = request.form.get("username")
@@ -823,6 +785,44 @@ def register():
     }
 
     return make_response(jsonify(response_data)), 201
+
+
+@api_v1.route("/user", methods=["GET", "PUT"])
+@jwt_required()
+def get_user():
+    current_user_id = get_jwt_identity()
+
+    if request.method == "GET":
+        user = Users.query.filter_by(id=current_user_id).first()
+
+        if user:
+            response_data = {"username": user.username, "profile": user.image}
+            return make_response(jsonify(response_data)), 200
+        else:
+            return make_response(jsonify({"message": "Unauthorized"})), 401
+    if request.method == "PUT":
+        username = request.form.get("username")
+        profileImage = request.files.get("profile_image")
+
+        user = Users.query.filter_by(id=current_user_id).first()
+
+        if user:
+            if username:
+                user.username = username
+
+            if profileImage and allowed_image(profileImage.filename):
+                image = secure_filename(profileImage.filename)
+                save_profile_image_to_server(profileImage, image)
+                user.image = image
+
+            db.session.commit()
+
+            return (
+                make_response(jsonify({"message": "Update User Successfull"})),
+                201,
+            )
+        else:
+            return make_response(jsonify({"message": "Failed to Update User"})), 400
 
 
 @api_v1.post("/event")

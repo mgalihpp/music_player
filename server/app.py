@@ -36,7 +36,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {"pool_recycle": 280}
 
-# membuat route folder upload file mp3
+# membuat lokasi folder upload file mp3
 UPLOAD_FOLDER = "static/files"
 UPLOAD_IMG = "static/img"
 UPLOAD_PROFILE = "static/img/profile"
@@ -357,46 +357,46 @@ def get_all_playlist():
     return response, 200
 
 
-# @api_v1.delete("/delete/<int:music_id>")
-# def delete_music(music_id):
-#     try:
-#         music = Musics.query.get(music_id)
+@api_v1.delete("/delete/<int:music_id>")
+def delete_music(music_id):
+    try:
+        music = Musics.query.get(music_id)
 
-#         if music:
-#             # Delete the music record
-#             db.session.delete(music)
-#             db.session.commit()
+        if music:
+            # Delete the music record
+            db.session.delete(music)
+            db.session.commit()
 
-#             return (
-#                 make_response(
-#                     jsonify({"message": f"Music with ID {music_id} has been deleted"})
-#                 ),
-#                 202,
-#             )
-#         else:
-#             return (
-#                 make_response(
-#                     jsonify(
-#                         {
-#                             "message": f"Music with ID {music_id} not found in the database"
-#                         },
-#                     )
-#                 ),
-#                 404,
-#             )
-#     except Exception as e:
-#         # Handle any errors that might occur during the database operation
-#         db.session.rollback()
-#         return (
-#             make_response(
-#                 jsonify(
-#                     {
-#                         "message": f"Failed to delete music with ID {music_id}",
-#                         "error": str(e),
-#                     }
-#                 ),
-#             )
-#         ), 500
+            return (
+                make_response(
+                    jsonify({"message": f"Music with ID {music_id} has been deleted"})
+                ),
+                202,
+            )
+        else:
+            return (
+                make_response(
+                    jsonify(
+                        {
+                            "message": f"Music with ID {music_id} not found in the database"
+                        },
+                    )
+                ),
+                404,
+            )
+    except Exception as e:
+        # Handle any errors that might occur during the database operation
+        db.session.rollback()
+        return (
+            make_response(
+                jsonify(
+                    {
+                        "message": f"Failed to delete music with ID {music_id}",
+                        "error": str(e),
+                    }
+                ),
+            )
+        ), 500
 
 
 @api_v1.post("/upload")

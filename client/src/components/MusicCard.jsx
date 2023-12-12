@@ -118,9 +118,12 @@ const MusicCard = (props) => {
                     <span className="playing__bar playing__bar3"></span>
                   </div>
                   <button
-                    onClick={handlePlayClick}
+                    disabled={playlist}
+                    onClick={playlist ? () => {} : handlePlayClick}
                     className={`items-center justify-center mx-auto ${
-                      isCurrentSelected && isPause
+                      playlist
+                        ? "hidden"
+                        : isCurrentSelected && isPause
                         ? "flex"
                         : isCurrentSelected && !isPause
                         ? "hidden"
@@ -171,8 +174,8 @@ const MusicCard = (props) => {
             <button
               title="Play"
               aria-label="Play"
-              onClick={handlePlayClick}
-              className={`absolute flex items-center justify-center bottom-2 transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 right-2 p-4 rounded-full bg-green-500/80 text-black button-transition hover:scale-110 hover:bg-green-500 hover:shadow-md 
+              onClick={playlist ? () => {} : handlePlayClick}
+              className={`cursor-pointer absolute flex items-center justify-center bottom-2 transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 right-2 p-4 rounded-full bg-green-500/80 text-black button-transition hover:scale-110 hover:bg-green-500 hover:shadow-md 
           ${
             isCurrentSelected && isPause
               ? "flex group-hover:flex"

@@ -4,3 +4,4 @@ mutagen
 Pillow
 Flask-SQLAlchemy
 mysql-connector-python
+flask_jwt_extended

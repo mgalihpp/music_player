@@ -340,7 +340,7 @@ const Playlist = () => {
                             musicPlaylistData?.musics?.map((music, index) => (
                               <div
                                 key={index}
-                                className="flex flex-row items-center gap-2 w-full group px-4 hover:bg-white/5"
+                                className="flex flex-row items-center gap-2 w-full group px-4 rounded-md hover:bg-white/5"
                               >
                                 <div className="w-8 h-8 lg:w-4 lg:h-4 relative group">
                                   <span

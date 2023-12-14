@@ -62,7 +62,7 @@ const AuthenticatedLayout = () => {
 
             <Router />
           </main>
-          <FooterWrapper />
+          {/* <FooterWrapper /> */}
         </div>
       </div>
       <div

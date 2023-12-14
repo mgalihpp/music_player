@@ -9,7 +9,6 @@ import {
   SearchMusicWrapper,
   SingleMusicCardWrapper,
   UploadFileWrapper,
-  FooterWrapper,
   AboutWrapper,
   ProfileWrapper,
   HomeWrapper,
@@ -52,7 +51,7 @@ const AuthenticatedLayout = () => {
           ref={scrollRef}
           onScroll={handleScroll}
         >
-          <main className="max-w-screen-xl h-auto w-full">
+          <main className="max-w-screen-xl h-auto w-full mb-32">
             {pathname !== "/search" && (
               <TopNavbar
                 className="px-6 py-2 absolute w-inherit"
@@ -62,7 +61,6 @@ const AuthenticatedLayout = () => {
 
             <Router />
           </main>
-          {/* <FooterWrapper /> */}
         </div>
       </div>
       <div

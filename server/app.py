@@ -328,30 +328,6 @@ def get_musics():
             )
 
 
-@api_v1.get("/recomendation")
-def get_all_playlist():
-    user_ids = [1, 101212242]
-    user_playlists = Playlists.query.filter(Playlists.user_id.in_(user_ids)).all()
-
-    # Create a list to store the results
-    playlist_list = []
-
-    # Iterate over the query result and create a dictionary for each record
-    for playlist in user_playlists:
-        playlist_info = {
-            "id": playlist.id,
-            "playlistName": playlist.name,
-            "playlistImage": playlist.image,
-            "username": playlist.user.username,
-        }
-        playlist_list.append(playlist_info)
-
-    # Create a JSON response
-    response = make_response(jsonify({"playlist": playlist_list}))
-    response.headers["Cache-Control"] = "public, max-age=10"
-    return response, 200
-
-
 @api_v1.delete("/delete/<int:music_id>")
 def delete_music(music_id):
     try:
@@ -521,16 +497,84 @@ def get_user_playlists():
 
         # Iterate over the query result and create a dictionary for each record
         for playlist in user_playlists:
+            music_list = []
+            for music in playlist.musics:
+                music_path = os.path.join(
+                    app.root_path, app.config["UPLOAD_FOLDER"], music.path
+                )
+                audio = MP3(music_path)
+                # Get the duration in seconds
+                duration_in_seconds = audio.info.length
+                # Calculate minutes and seconds
+                minutes = int(duration_in_seconds // 60)
+                seconds = int(duration_in_seconds % 60)
+                # Format as a string
+                formatted_duration = f"{minutes:02}:{seconds:02}"
+                music_info = {
+                    "id": music.id,
+                    "musicName": music.name,
+                    "musicArtist": music.artist,
+                    "musicPath": music.path,
+                    "musicImage": music.image,
+                    "duration": formatted_duration,
+                }
+                music_list.append(music_info)
+
             playlist_info = {
                 "id": playlist.id,
                 "playlistName": playlist.name,
                 "playlistImage": playlist.image,
+                "musics": music_list,
             }
             playlist_list.append(playlist_info)
 
+        # get recomendation playlist
+
+        user_ids = [1, 101212242]
+        recomendation_playlists = Playlists.query.filter(
+            Playlists.user_id.in_(user_ids)
+        ).all()
+
+        # Create a list to store the results
+        recomendation_list = []
+
+        # Iterate over the query result and create a dictionary for each record
+        for playlist in recomendation_playlists:
+            music_list = []
+            for music in playlist.musics:
+                music_path = os.path.join(
+                    app.root_path, app.config["UPLOAD_FOLDER"], music.path
+                )
+                audio = MP3(music_path)
+                # Get the duration in seconds
+                duration_in_seconds = audio.info.length
+                # Calculate minutes and seconds
+                minutes = int(duration_in_seconds // 60)
+                seconds = int(duration_in_seconds % 60)
+                # Format as a string
+                formatted_duration = f"{minutes:02}:{seconds:02}"
+                music_info = {
+                    "id": music.id,
+                    "musicName": music.name,
+                    "musicArtist": music.artist,
+                    "musicPath": music.path,
+                    "musicImage": music.image,
+                    "duration": formatted_duration,
+                }
+                music_list.append(music_info)
+            playlist_info = {
+                "id": playlist.id,
+                "playlistName": playlist.name,
+                "playlistImage": playlist.image,
+                "username": playlist.user.username,
+                "musics": music_list,
+            }
+            recomendation_list.append(playlist_info)
+
         # Create a JSON response
-        response = make_response(jsonify({"playlist": playlist_list}))
-        response.headers["Cache-Control"] = "public, max-age=0"  # Cache for 1 hour
+        response = make_response(
+            jsonify({"playlists": playlist_list, "recomendation": recomendation_list})
+        )
 
         return response, 200
     except Exception as e:

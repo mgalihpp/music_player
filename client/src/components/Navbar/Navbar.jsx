@@ -80,8 +80,12 @@ const playlistItems = (data, isLoading) => {
           ? Array.from({ length: 6 }, (_, index) => (
               <SkelPlaylistCard key={index} />
             ))
-          : data.map((playlist, index) => (
-              <PlaylistMusic key={index} image={playlist.playlistImage}>
+          : data.map((playlist) => (
+              <PlaylistMusic
+                key={playlist.id}
+                id={playlist.id}
+                image={playlist.playlistImage}
+              >
                 {playlist.playlistName}
               </PlaylistMusic>
             ))}

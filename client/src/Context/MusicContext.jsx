@@ -22,7 +22,6 @@ export function MusicProvider({ children }) {
   const [playlistData, setPlaylistData] = useState([]);
   const [musicPlaylistData, setMusicPlaylistData] = useState([]);
   const [recomendationData, setRecomendationData] = useState([]);
-  const [isMPLoading, setIsMPLoading] = useState(true);
   const [isPLoading, setIsPLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const { isFetching, setIsFetching, isPFetching, setIsPFetching } =
@@ -85,7 +84,8 @@ export function MusicProvider({ children }) {
       });
       if (response.ok) {
         const data = await response.json();
-        setPlaylistData(data.playlist);
+        setPlaylistData(data.playlists);
+        setRecomendationData(data.recomendation);
         setIsPLoading(false);
       } else {
         console.error("Failed To Fetch User Playlist");
@@ -94,47 +94,6 @@ export function MusicProvider({ children }) {
       console.error(error);
     }
   }, [token]);
-
-  const getAllMusicAndPlaylist = async (playlist_id) => {
-    try {
-      const response = await fetch(
-        `${url}playlist/music?GOSSondaAKovmVkjrodankkiwS=${playlist_id}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Methods": "GET",
-          },
-        }
-      );
-      if (response.ok) {
-        const data = await response.json();
-        setMusicPlaylistData(data.playlist);
-        setIsMPLoading(false);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const getRecomendationData = () => {
-    fetch(`${api}recomendation`, {
-      method: "GET",
-    })
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        }
-        throw new Error("Network response was not ok.");
-      })
-      .then((data) => {
-        setRecomendationData(data.playlist);
-      })
-      .catch((error) => {
-        // Handle errors here
-        console.error("Error fetching recommendation data:", error);
-      });
-  };
 
   useEffect(() => {
     if (musicData.length === 0 && isLoading && !isFetching && user) {
@@ -154,7 +113,6 @@ export function MusicProvider({ children }) {
   useEffect(() => {
     if (musicData.length !== 0 && isPLoading && user) {
       getPlaylist();
-      getRecomendationData();
     }
     if (isPFetching && user) {
       setTimeout(() => {
@@ -176,11 +134,8 @@ export function MusicProvider({ children }) {
         getPlaylist,
         playlistData,
         isPLoading,
-        getAllMusicAndPlaylist,
         musicPlaylistData,
         setMusicPlaylistData,
-        isMPLoading,
-        setIsMPLoading,
         recomendationData,
       }}
     >

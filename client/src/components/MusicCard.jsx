@@ -24,6 +24,7 @@ const MusicCard = (props) => {
     currentIndex,
     setCurrentIndex,
     setData,
+    setUserPlaylists,
   } = useAudioContext();
   const { musicData } = useMusicContext();
   const navigate = useNavigate();
@@ -71,6 +72,7 @@ const MusicCard = (props) => {
         <div
           onClick={() => {
             if (playlist) {
+              setUserPlaylists(false);
               navigate("/user/playlist/" + playlistId);
             } else {
               return;
@@ -145,7 +147,8 @@ const MusicCard = (props) => {
         <div
           onClick={() => {
             if (playlist) {
-              navigate("/user/playlist/" + playlistId);
+              setUserPlaylists(false);
+              navigate(`/playlist/${playlistId}`);
             } else {
               return;
             }

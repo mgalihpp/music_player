@@ -1,12 +1,18 @@
-import { Play } from "lucide-react";
+import { Pause, Play } from "lucide-react";
 import { Link } from "react-router-dom";
 import { PropTypes } from "prop-types";
 import { host } from "../../utils";
+import { useAudioContext } from "../../Context/AudioContext";
 
-const PlaylistMusic = ({ children, image }) => {
+const PlaylistMusic = ({ id, children, image }) => {
+  const { selectedPlayedPlaylist, isPause, setUserPlaylists } =
+    useAudioContext();
+  const currentPlaylist =
+    selectedPlayedPlaylist && selectedPlayedPlaylist.id === id;
   return (
     <Link
-      to={`/playlist/${children}`}
+      to={`/playlist/${id}`}
+      onClick={() => setUserPlaylists(true)}
       className="flex items-center justify-center group w-[120px] flex-col text-base text-zinc-200 gap-3 font-semibold rounded p-3 hover:bg-white/10 transition-all"
     >
       <div className="relative">
@@ -18,9 +24,15 @@ const PlaylistMusic = ({ children, image }) => {
         />
         <button
           aria-label="Play"
-          className="absolute flex items-center justify-center bottom-2 transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 right-1 pl-3 p-2 rounded-full bg-green-500/80 text-black button-transition hover:scale-110 hover:bg-green-500"
+          className={`absolute flex items-center justify-center bottom-2 transform translate-y-2 ${
+            currentPlaylist ? "opacity-100 translate-y-0" : "opacity-0"
+          } group-hover:translate-y-0 group-hover:opacity-100 right-1 p-2 rounded-full bg-green-500/80 text-black button-transition hover:scale-110 hover:bg-green-500`}
         >
-          <Play fill="black" />
+          {currentPlaylist && !isPause ? (
+            <Pause fill="black" />
+          ) : (
+            <Play fill="black" className="ml-1" />
+          )}
         </button>
       </div>
       <p className="font-semibold text-sm whitespace-nowrap overflow-hidden overflow-ellipsis w-24">

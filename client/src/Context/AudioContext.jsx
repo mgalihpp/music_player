@@ -22,6 +22,7 @@ export function AudioProvider({ children }) {
   const [isPause, setIsPause] = useState(true);
   const [currentMusicPlayed, setCurrentMusicPlayed] = useState(null);
   const [data, setData] = useState("default");
+  const [userPlaylists, setUserPlaylists] = useState(true);
   const { token } = useAuth();
 
   const [currentIndex, setCurrentIndex] = useState(-1);
@@ -48,28 +49,26 @@ export function AudioProvider({ children }) {
         const nextMusic = musicData[nextIndex];
         playAudio(nextMusic);
         setCurrentIndex(nextIndex);
-      }
-      if (currentIndex >= musicData.length - 1) {
+      } else if (currentIndex >= musicData.length - 1) {
         const nextIndex = 0;
         const resetMusic = musicData[nextIndex];
         playAudio(resetMusic);
         setCurrentIndex(nextIndex);
       }
-    }
-    if (data === "playlist") {
+    } else if (data === "playlist") {
       if (
         currentIndex !== -1 &&
-        currentIndex < musicPlaylistData.musics.length - 1
+        currentIndex < selectedPlayedPlaylist.musics.length - 1
       ) {
         const nextIndex = currentIndex + 1;
-        const nextMusic = musicPlaylistData.musics[nextIndex];
+        const nextMusic = selectedPlayedPlaylist.musics[nextIndex];
         playAudio(nextMusic);
         setCurrentMusicPlayed(nextMusic);
         setCurrentIndex(nextIndex);
       }
-      if (currentIndex >= musicPlaylistData.musics.length - 1) {
+      if (currentIndex >= selectedPlayedPlaylist.musics.length - 1) {
         const nextIndex = 0;
-        const resetMusic = musicPlaylistData.musics[nextIndex];
+        const resetMusic = selectedPlayedPlaylist.musics[nextIndex];
         playAudio(resetMusic);
         setCurrentMusicPlayed(resetMusic);
         setCurrentIndex(nextIndex);
@@ -85,16 +84,17 @@ export function AudioProvider({ children }) {
         playAudio(previousMusic);
         setCurrentIndex(previousIndex);
       }
-    }
-    if (data === "playlist")
+    } else if (data === "playlist")
       if (currentIndex > 0) {
         const previousIndex = currentIndex - 1;
-        const previousMusic = musicPlaylistData.musics[previousIndex];
+        const previousMusic = selectedPlayedPlaylist.musics[previousIndex];
         playAudio(previousMusic);
         setCurrentMusicPlayed(previousMusic);
         setCurrentIndex(previousIndex);
       }
   };
+
+  console.log(musicPlaylistData);
 
   const playShuffle = () => {
     const randomIndex = Math.floor(Math.random() * musicData?.length);
@@ -118,10 +118,6 @@ export function AudioProvider({ children }) {
       });
 
       if (res.ok) {
-        // Update play count in localStorage
-        // const musicName = selectedAudio.musicName;
-        // const playCount = localStorage.getItem(musicName) || 0;
-        // localStorage.setItem(musicName, Number(playCount) + 1);
         return res;
       }
     } catch (error) {
@@ -155,6 +151,8 @@ export function AudioProvider({ children }) {
         setCurrentMusicPlayed,
         setSelectedPlayedPlaylist,
         selectedPlayedPlaylist,
+        userPlaylists,
+        setUserPlaylists,
       }}
     >
       {children}

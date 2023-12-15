@@ -1,15 +1,19 @@
-import { Play } from "lucide-react";
+import { Pause, Play } from "lucide-react";
 import { host } from "../../utils";
 import { PropTypes } from "prop-types";
-import { Link, useNavigate } from "react-router-dom";
-import { memo } from "react";
+import { Link } from "react-router-dom";
+import { useAudioContext } from "../../Context/AudioContext";
 
 const MainPlaylist = ({ id, name, image }) => {
-  const navigate = useNavigate();
+  const { selectedPlayedPlaylist, isPause, setUserPlaylists } =
+    useAudioContext();
+  const currentPlaylist =
+    selectedPlayedPlaylist && selectedPlayedPlaylist.id === id;
   return (
-    <div
+    <Link
+      to={`/playlist/${id}`}
+      onClick={() => setUserPlaylists(true)}
       key={id}
-      onClick={() => navigate(`/playlist/${name}`)}
       className={` cursor-pointer
         bg-white/5 group rounded hhh flex items-center gap-2 overflow-hidden hover:bg-white/20 transition-all
         `}
@@ -29,19 +33,24 @@ const MainPlaylist = ({ id, name, image }) => {
           maxHeight: "48px",
         }}
       />
-      <Link to={"/playlist/" + name}>
+      <Link to={`/playlist/${id}`}>
         <strong className="hover:underline text-sm">{name}</strong>
       </Link>
 
       <button
         title="Play Music?"
-        // onClick={handlePlayClick}
         className={`items-center justify-center w-8 h-8 rounded-full bg-green-500/80 hover:bg-green-500 text-black ml-auto mr-4 
-                  opacity-0 group-hover:opacity-100 hover:scale-110 transition-all shadow hover:shadow-lg group`}
+                  ${
+                    currentPlaylist ? "opacity-100" : "opacity-0"
+                  } group-hover:opacity-100 hover:scale-110 transition-all shadow hover:shadow-lg group`}
       >
-        <Play fill="black" size={17} className="flex ml-auto mr-1.5" />
+        {currentPlaylist && !isPause ? (
+          <Pause fill="black" size={17} className="flex mx-auto" />
+        ) : (
+          <Play fill="black" size={17} className="flex mx-auto ml-[9px]" />
+        )}
       </button>
-    </div>
+    </Link>
   );
 };
 
@@ -51,4 +60,4 @@ MainPlaylist.propTypes = {
   image: PropTypes.string,
 };
 
-export default memo(MainPlaylist);
+export default MainPlaylist;

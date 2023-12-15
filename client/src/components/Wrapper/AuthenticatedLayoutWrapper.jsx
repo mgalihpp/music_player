@@ -12,7 +12,6 @@ import {
   AboutWrapper,
   ProfileWrapper,
   HomeWrapper,
-  RecomendationWrapper,
 } from ".";
 import TopNavbar from "../Navbar/TopNavbar";
 import { useEffect, useRef, useState } from "react";
@@ -92,15 +91,14 @@ const Router = () => {
       <Route path="/music/:musicName" element={<SingleMusicCardWrapper />} />
       <Route path="/search" element={<SearchMusicWrapper />} />
       <Route path="/create/playlist" element={<CreatePlaylistWrapper />} />
-      <Route path="/playlist/:playlistName" element={<PlaylistWrapper />} />
-      <Route path="/user/playlist/:id" element={<RecomendationWrapper />} />
+      <Route path="/playlist/:id" element={<PlaylistWrapper />} />
       <Route path="/category/:name" element={<CategoryWrapper />} />
       <Route path="/profile" element={<ProfileWrapper />} />
       <Route path="/about" element={<AboutWrapper />} />
       <Route
         path="*"
         element={
-          <h1 className="flex items-center justify-center h-screen text-2xl mt-4">
+          <h1 className="flex items-center justify-center h-[calc(100vh-150px)] text-2xl mt-4">
             404 Not Found
           </h1>
         }

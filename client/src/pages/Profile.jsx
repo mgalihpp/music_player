@@ -219,6 +219,7 @@ const Settings = () => {
               playlistData.map((playlist) => (
                 <MainPlaylist
                   key={playlist.id}
+                  id={playlist.id}
                   name={playlist.playlistName}
                   image={playlist.playlistImage}
                 />

@@ -89,6 +89,7 @@ const PlaylistHeader = (isPLoading, playlistData, recentMusicCount) => {
           playlistData.map((playlist) => (
             <MainPlaylist
               key={playlist.id}
+              id={playlist.id}
               name={playlist.playlistName}
               image={playlist.playlistImage}
             />
@@ -183,7 +184,7 @@ const Recomendation = ({ isLoading, recentMusicCount, musicData }) => {
                     musicArtist={playlist.username}
                     playlistImage={playlist.playlistImage}
                     playlistId={playlist.id}
-                    playlist={true}
+                    playlist
                   />
                 </div>
               ))

@@ -16,6 +16,7 @@ import { AlertDialog, Button, DropdownMenu, Flex } from "@radix-ui/themes";
 import * as Toast from "@radix-ui/react-toast";
 import LoadingBar from "react-top-loading-bar";
 import { host, api } from "../utils";
+import { useUploadContext } from "../Context/UploadContext";
 
 const SingleMusicCard = () => {
   const { musicName } = useParams();
@@ -29,9 +30,11 @@ const SingleMusicCard = () => {
     setCurrentIndex,
     setData,
   } = useAudioContext();
+  const { setIsPFetching } = useUploadContext();
   const [open, setOpen] = useState(false);
   const [toastError, setToastError] = useState(false);
   const [playlistName, setPlaylistName] = useState("Liked Songs");
+  const [playlistId, setPlaylistId] = useState();
   const [progress, setprogress] = useState(0);
   const [compLoad, setComLoad] = useState(true);
 
@@ -75,6 +78,8 @@ const SingleMusicCard = () => {
     setOpen(true);
     const music_id = e.currentTarget.dataset.musicId;
     const playlist_id = e.currentTarget.dataset.playlistId;
+    setPlaylistId(e.currentTarget.dataset.playlistId);
+    console.log(playlistId);
     setPlaylistName(e.currentTarget.dataset.playlistName);
 
     try {
@@ -87,6 +92,7 @@ const SingleMusicCard = () => {
       if (res.status === 400) {
         setToastError(true);
       } else {
+        setIsPFetching(true);
         return res;
       }
     } catch (error) {
@@ -305,7 +311,7 @@ const SingleMusicCard = () => {
                         altText="Goto Playlist"
                       >
                         <Link
-                          to={`/playlist/${playlistName}`}
+                          to={`/playlist/${playlistId}`}
                           className="inline-flex items-center justify-center rounded font-medium text-xs px-[10px] leading-[25px] h-[25px] bg-green2 text-green11 shadow-[inset_0_0_0_1px] shadow-green7 hover:shadow-[inset_0_0_0_1px] hover:shadow-green8 focus:shadow-[0_0_0_2px] focus:shadow-green8"
                         >
                           Go

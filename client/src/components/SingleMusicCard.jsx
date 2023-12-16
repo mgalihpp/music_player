@@ -79,7 +79,6 @@ const SingleMusicCard = () => {
     const music_id = e.currentTarget.dataset.musicId;
     const playlist_id = e.currentTarget.dataset.playlistId;
     setPlaylistId(e.currentTarget.dataset.playlistId);
-    console.log(playlistId);
     setPlaylistName(e.currentTarget.dataset.playlistName);
 
     try {

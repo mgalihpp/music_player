@@ -26,17 +26,20 @@ export function AudioProvider({ children }) {
   const { token } = useAuth();
 
   const [currentIndex, setCurrentIndex] = useState(-1);
-  const { musicData, musicPlaylistData } = useMusicContext();
+  const { musicData } = useMusicContext();
 
-  const playAudio = useCallback((audio) => {
-    setSelectedAudio(audio);
-    setIsPause(false);
-    if (data === "default") {
-      setCurrentMusicPlayed(null);
-    } else {
-      setCurrentMusicPlayed(audio);
-    }
-  }, []);
+  const playAudio = useCallback(
+    (audio) => {
+      setSelectedAudio(audio);
+      setIsPause(false);
+      if (data === "default") {
+        setCurrentMusicPlayed(null);
+      } else {
+        setCurrentMusicPlayed(audio);
+      }
+    },
+    [data]
+  );
 
   const pauseAudio = useCallback(() => {
     setIsPause(true);
@@ -93,8 +96,6 @@ export function AudioProvider({ children }) {
         setCurrentIndex(previousIndex);
       }
   };
-
-  console.log(musicPlaylistData);
 
   const playShuffle = () => {
     const randomIndex = Math.floor(Math.random() * musicData?.length);

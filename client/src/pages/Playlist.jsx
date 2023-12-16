@@ -258,7 +258,7 @@ const Playlist = () => {
                           </AlertDialog.Trigger>
                           <AlertDialog.Content style={{ maxWidth: 450 }}>
                             <AlertDialog.Title>
-                              {/* Delete Playlist {playlistName} ? */}
+                              Delete Playlist {selectedPlaylist?.playlistName} ?
                             </AlertDialog.Title>
                             <AlertDialog.Description size="2">
                               Are you sure?
@@ -292,7 +292,7 @@ const Playlist = () => {
                     onOpenChange={setOpen}
                   >
                     <Toast.Title className="[grid-area:_title] mb-[5px] font-medium text-slate12 text-[15px]">
-                      {/* Success Delete {playlistName}! */}
+                      Success Delete {selectedPlaylist?.playlistName}!
                     </Toast.Title>
                     <Toast.Action
                       className="[grid-area:_action]"

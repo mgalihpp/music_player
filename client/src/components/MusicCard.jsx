@@ -73,7 +73,7 @@ const MusicCard = (props) => {
           onClick={() => {
             if (playlist) {
               setUserPlaylists(false);
-              navigate("/user/playlist/" + playlistId);
+              navigate("/playlist/" + playlistId);
             } else {
               return;
             }
@@ -96,7 +96,7 @@ const MusicCard = (props) => {
                     <Link
                       to={
                         playlist
-                          ? "/user/playlist/" + playlistId
+                          ? "/playlist/" + playlistId
                           : "/music/" + musicName
                       }
                     >
@@ -193,11 +193,7 @@ const MusicCard = (props) => {
           </div>
           <div className="flex flex-col items-start sm:p-0">
             <Link
-              to={
-                playlist
-                  ? "/user/playlist/" + playlistId
-                  : "/music/" + musicName
-              }
+              to={playlist ? "/playlist/" + playlistId : "/music/" + musicName}
             >
               <p
                 className={`font-semibold px-2 sm:px-0 ${

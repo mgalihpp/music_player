@@ -24,8 +24,10 @@ const PlaylistMusic = ({ id, children, image }) => {
         />
         <button
           aria-label="Play"
-          className={`absolute flex items-center justify-center bottom-2 transform translate-y-2 ${
-            currentPlaylist ? "opacity-100 translate-y-0" : "opacity-0"
+          className={`absolute flex items-center justify-center bottom-2 transform  ${
+            currentPlaylist
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-2"
           } group-hover:translate-y-0 group-hover:opacity-100 right-1 p-2 rounded-full bg-green-500/80 text-black button-transition hover:scale-110 hover:bg-green-500`}
         >
           {currentPlaylist && !isPause ? (

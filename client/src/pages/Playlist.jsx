@@ -18,7 +18,6 @@ const Playlist = () => {
   const { playlistData, isPLoading, recomendationData } = useMusicContext();
   const [loading, setLoading] = useState(true);
   const { userPlaylists } = useAudioContext();
-  const { userInfo } = useAuth();
   const { setIsPFetching } = useUploadContext();
   const [selectedPlaylist, setSelectedPlaylist] = useState(null);
   const [open, setOpen] = useState(false);
@@ -206,7 +205,7 @@ const Playlist = () => {
                       {selectedPlaylist.playlistName}
                     </h1>
                     <h4 className="font-semibold text-xs sm:text-sm text-zinc-100 flex items-center justify-start">
-                      {userInfo.username ?? ""} <Dot size={20} />{" "}
+                      {selectedPlaylist.username ?? ""} <Dot size={20} />{" "}
                       {selectedPlaylist?.musics?.length + " " + "Songs"}
                     </h4>
                   </div>

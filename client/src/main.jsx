@@ -8,6 +8,7 @@ import { MusicProvider } from "./Context/MusicContext.jsx";
 import { UploadProvider } from "./Context/UploadContext.jsx";
 import { ThemeProvider } from "./Context/ThemeContext.jsx";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import { Theme } from "@radix-ui/themes";
 import { AuthProvider } from "./Context/AuthContext.jsx";
 import { BrowserRouter } from "react-router-dom";
@@ -47,6 +48,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
                 <BrowserRouter>
                   <App />
                 </BrowserRouter>
+                <SpeedInsights />
                 <Analytics />
               </Theme>
             </AudioProvider>

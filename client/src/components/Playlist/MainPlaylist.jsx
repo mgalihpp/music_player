@@ -13,7 +13,6 @@ const MainPlaylist = ({ id, name, image }) => {
     <Link
       to={`/playlist/${id}`}
       onClick={() => setUserPlaylists(true)}
-      key={id}
       className={` cursor-pointer
         bg-white/5 group rounded hhh flex items-center gap-2 overflow-hidden hover:bg-white/20 transition-all
         `}

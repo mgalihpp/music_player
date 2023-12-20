@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Music, Search } from "lucide-react";
 import TopNavbar from "../components/Navbar/TopNavbar";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useMusicContext } from "../Context/MusicContext";
 import SkelMusicCard from "../components/Skeleton/SkelMusicCard";
 import MusicCard from "../components/MusicCard";
@@ -10,14 +10,16 @@ import { category } from "../utils";
 const SearchMusic = () => {
   const { searchResults, searchMusic, isLoading, setIsLoading } =
     useMusicContext();
-  const [query, setQuery] = useState("");
   const [timeoutId, setTimeoutId] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const queryValue = queryParams.get("q");
+  const [query, setQuery] = useState(queryValue || "");
 
   const handleInputChange = (e) => {
     setQuery(e.target.value);
     setIsLoading(true);
-    navigate(`/search?q=${e.target.value}`);
 
     if (timeoutId) {
       clearTimeout(timeoutId);
@@ -30,18 +32,31 @@ const SearchMusic = () => {
 
       setTimeoutId(newTimeoutId);
     }
+    navigate(`/search?q=${e.target.value}`);
   };
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      if (query.length === 0 || (query.length > 0 && query.length < 2)) {
+      if (
+        (query.length === 0 && query.length > 0 && query.length < 2) ||
+        (queryValue &&
+          queryValue.length === 0 &&
+          queryValue.length > 0 &&
+          queryValue.length < 2)
+      ) {
         setIsLoading(false);
       }
     }, 3000);
     return () => {
       clearTimeout(timeout);
     };
-  }, [query, setIsLoading]);
+  }, [query, setIsLoading, queryValue]);
+
+  useEffect(() => {
+    if (queryValue && queryValue.length > 1) {
+      searchMusic(queryValue);
+    }
+  }, [queryValue]);
 
   const renderMusicCards = () => {
     if (query.length === 0 || (query.length > 0 && query.length < 2)) {
@@ -123,6 +138,8 @@ const SearchMusic = () => {
               placeholder="Search for music or artist"
               className="p-2 bg-transparent rounded-full w-full focus:outline-none"
               onKeyUp={handleInputChange}
+              value={query}
+              onChange={handleInputChange}
             />
           </div>
         </div>

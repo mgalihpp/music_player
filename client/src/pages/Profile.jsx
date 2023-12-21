@@ -26,8 +26,6 @@ const Settings = () => {
   const [imageSrc, setImageSrc] = useState(null);
   const [open, setIsOpen] = useState(false);
   const [disable, setDisable] = useState(false);
-  // const [musicsData, setMusicsData] = useState([]);
-  // const [isLoading, setIsLoading] = useState(true);
 
   const [isUsernameChanged, setIsUsernameChanged] = useState(false);
   const [isImageChanged, setIsImageChanged] = useState(false);

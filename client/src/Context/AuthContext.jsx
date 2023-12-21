@@ -15,34 +15,6 @@ export function AuthProvider({ children }) {
   const [updateUser, setUpdateUser] = useState(false);
   const token = localStorage.getItem("access_token");
 
-  // const getUser = async () => {
-  //   try {
-  //     const res = await fetch(`${api}user`, {
-  //       method: "GET",
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //         "Content-Type": "application/json",
-  //       },
-  //     });
-  //     if (res.ok) {
-  //       const data = await res.json();
-
-  //       setUserInfo(data);
-  //       setUser(true);
-  //     } else {
-  //       setUser(false);
-  //       throw new Error("Failed to fetch user info");
-  //     }
-  //   } catch (error) {
-  //     setUser(false);
-  //     localStorage.clear("access_token");
-  //     setTimeout(() => {
-  //       window.location.reload();
-  //     }, 2000);
-  //     console.error(error);
-  //   }
-  // };
-
   const {
     data: userData,
     mutate,
@@ -50,8 +22,6 @@ export function AuthProvider({ children }) {
   } = useSWR(user && `${api}user`, (url) => fetcher(url, token), {
     revalidateOnFocus: false,
   });
-
-  console.log(error);
 
   useEffect(() => {
     if (userData) {

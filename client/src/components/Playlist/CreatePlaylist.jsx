@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { useUploadContext } from "../../Context/UploadContext";
 import LoadingBar from "react-top-loading-bar";
-import { api } from "../../utils";
+import { api } from "../../lib/utils";
 import { useAuth } from "../../Context/AuthContext";
 
 const CreatePlaylist = () => {

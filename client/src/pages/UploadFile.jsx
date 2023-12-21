@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { useUploadContext } from "../Context/UploadContext";
 import { Image, Loader2, Play, Upload } from "lucide-react";
 import LoadingBar from "react-top-loading-bar";
-import { api } from "../utils";
+import { api } from "../lib/utils";
 import { Button } from "@radix-ui/themes";
 
 const UploadFile = () => {
@@ -51,11 +51,13 @@ const UploadFile = () => {
       } else {
         throw new Error();
       }
+      ("hello");
     } catch (error) {
       console.log(error);
       setEToast(true);
       setIsFetching(false);
     } finally {
+      setIsFetching(true);
       fileRef.current.value = "";
       fileNameRef.current.value = "";
       fileArtistRef.current.value = "";
@@ -198,7 +200,6 @@ const UploadFile = () => {
                 title="Upload"
                 type="submit"
                 className="bg-green-500 hover:bg-green-500/90 font-bold text-black px-6 py-2 rounded-md mx-auto mt-2"
-                onClick={() => setIsFetching(true)}
                 disabled={isSubmit}
               >
                 {isSubmit ? (

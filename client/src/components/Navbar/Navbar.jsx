@@ -7,7 +7,7 @@ const SkelPlaylistCard = lazy(() => import("../Skeleton/SkelPlaylistCard"));
 import Loading from "../Loading";
 
 const Navbar = () => {
-  const { playlistData, isPLoading } = useMusicContext();
+  const { playlistData, playlistLoading } = useMusicContext();
 
   return (
     <>
@@ -23,7 +23,7 @@ const Navbar = () => {
           {createPlaylistButton()}
         </div>
 
-        {playlistItems(playlistData, isPLoading)}
+        {playlistItems(playlistData, playlistLoading)}
       </div>
     </>
   );
@@ -80,7 +80,7 @@ const playlistItems = (data, isLoading) => {
           ? Array.from({ length: 6 }, (_, index) => (
               <SkelPlaylistCard key={index} />
             ))
-          : data.map((playlist) => (
+          : data?.map((playlist) => (
               <PlaylistMusic
                 key={playlist.id}
                 id={playlist.id}

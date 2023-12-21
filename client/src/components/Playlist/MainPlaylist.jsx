@@ -1,5 +1,5 @@
 import { Pause, Play } from "lucide-react";
-import { host } from "../../utils";
+import { host } from "../../lib/utils";
 import { PropTypes } from "prop-types";
 import { Link } from "react-router-dom";
 import { useAudioContext } from "../../Context/AudioContext";

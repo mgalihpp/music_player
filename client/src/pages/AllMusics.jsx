@@ -8,23 +8,23 @@ const SkelMusicCard = lazy(() =>
 const MusicCard = lazy(() => import("../components/MusicCard"));
 
 const Main = () => {
-  const { musicData, isLoading } = useMusicContext();
+  const { musicsData, musicsLoading } = useMusicContext();
   const [sortOrder, setSortOrder] = useState("asc");
   const [sortedMusicData, setSortedMusicData] = useState([]);
   const [isDisable, setDisable] = useState(false);
 
   useEffect(() => {
     const sortMusicData = () => {
-      return [...musicData].sort((a, b) => {
+      return [...musicsData].sort((a, b) => {
         return sortOrder === "asc"
           ? a.musicName.localeCompare(b.musicName)
           : b.musicName.localeCompare(a.musicName);
       });
     };
-    if (musicData.length > 0 && sortedMusicData.length === 0) {
+    if (musicsData?.length > 0 && sortedMusicData?.length === 0) {
       setSortedMusicData(sortMusicData());
     }
-  }, [isLoading, musicData, sortOrder, sortedMusicData]);
+  }, [musicsData, sortOrder, sortedMusicData]);
 
   const toggleSortingOrder = () => {
     const newSortOrder = sortOrder === "asc" ? "desc" : "asc";
@@ -66,7 +66,7 @@ const Main = () => {
       </div>
       <Suspense fallback={<Loading />}>
         <div className="flex flex-wrap mx-auto flex-row items-center justify-center sm:justify-start gap-4">
-          {isPLoading ? (
+          {playlistLoading ? (
             Array.from({ length: 3 }, (_, index) => (
               <div key={index}>
                 <SkelPlayCard />
@@ -120,16 +120,16 @@ const Main = () => {
           className={`flex flex-row flex-wrap items-center justify-center sm:justify-start lg:justify-center gap-4 mt-4
         `}
         >
-          {isLoading ? (
+          {musicsLoading ? (
             Array.from({ length: 6 }, (_, index) => (
               <div key={index}>
                 <SkelMusicCard />
               </div>
             ))
-          ) : musicData.length === 0 ? (
+          ) : musicsData?.length === 0 ? (
             <h1>No Musics Found</h1>
           ) : (
-            sortedMusicData.map((music, index) => (
+            sortedMusicData?.map((music, index) => (
               <div
                 key={index}
                 className={`music-card ${sortOrder === "asc" ? "asc" : "desc"}`}

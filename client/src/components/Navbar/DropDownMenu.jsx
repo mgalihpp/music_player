@@ -3,7 +3,7 @@ import { useTheme } from "../../Context/ThemeContext";
 import { LogOut, Palette, Settings, User2 } from "lucide-react";
 import { PropTypes } from "prop-types";
 import { useAuth } from "../../Context/AuthContext";
-import { host } from "../../utils";
+import { host } from "../../lib/utils";
 import { useNavigate } from "react-router-dom";
 
 const DropdownMenu = () => {
@@ -83,8 +83,6 @@ const DropdownMenu = () => {
             title="Logout"
             onClick={() => {
               setUser(false);
-              localStorage.clear("user_id");
-              localStorage.clear("current_path");
               localStorage.clear();
               window.location.reload();
             }}

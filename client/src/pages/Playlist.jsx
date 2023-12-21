@@ -5,7 +5,7 @@ import { Clock, Dot, MoreHorizontal, Pause, Play } from "lucide-react";
 import Color from "color-thief-react";
 import LoadingBar from "react-top-loading-bar";
 import { useAudioContext } from "../Context/AudioContext";
-import { host, api } from "../utils";
+import { host, api } from "../lib/utils";
 import { AlertDialog, Button, DropdownMenu, Flex } from "@radix-ui/themes";
 import * as Toast from "@radix-ui/react-toast";
 import { useUploadContext } from "../Context/UploadContext";
@@ -15,7 +15,8 @@ import { useAuth } from "../Context/AuthContext";
 const Playlist = () => {
   const { id } = useParams();
   const ID = Number(id);
-  const { playlistData, isPLoading, recomendationData } = useMusicContext();
+  const { playlistData, playlistLoading, recomendationData } =
+    useMusicContext();
   const [loading, setLoading] = useState(true);
   const { userPlaylists } = useAudioContext();
   const { setIsPFetching } = useUploadContext();
@@ -328,7 +329,7 @@ const Playlist = () => {
                         </div>
                       </div>
                       <div className="flex flex-col items-center justify-between pb-4 border-b border-zinc-800 gap-1.5">
-                        {isPLoading ? (
+                        {playlistLoading ? (
                           <Loading />
                         ) : (
                           selectedPlaylist?.musics?.map((music, index) => (

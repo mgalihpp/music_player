@@ -9,7 +9,8 @@ import { useMediaQuery } from "react-responsive";
 import { Link } from "react-router-dom";
 
 const Home = () => {
-  const { isPLoading, isLoading, playlistData, musicData } = useMusicContext();
+  const { playlistLoading, playlistData, musicsData, musicsLoading } =
+    useMusicContext();
   const isXxl = useMediaQuery({ minWidth: 1440 });
   const isXl = useMediaQuery({ minWidth: 1280 });
   const isLg = useMediaQuery({ minWidth: 1024 });
@@ -29,7 +30,7 @@ const Home = () => {
     recentMusicCount = 6;
   }
 
-  const RecentMusics = musicData.slice(-recentMusicCount).reverse();
+  const RecentMusics = musicsData?.slice(-recentMusicCount).reverse();
 
   return (
     <div className="px-4 py-8 flex flex-col gap-4">
@@ -38,13 +39,12 @@ const Home = () => {
           {getGreeting()}
           {"!"}
         </h1>
-        {PlaylistHeader(isPLoading, playlistData, recentMusicCount)}
+        {PlaylistHeader(playlistLoading, playlistData, recentMusicCount)}
       </div>
-      {RecentAdded(isLoading, recentMusicCount, musicData, RecentMusics)}
+      {RecentAdded(musicsLoading, recentMusicCount, musicsData, RecentMusics)}
       <Recomendation
-        isLoading={isLoading}
+        isLoading={playlistLoading}
         recentMusicCount={recentMusicCount}
-        musicData={musicData}
       />
     </div>
   );
@@ -63,17 +63,17 @@ function getGreeting() {
   }
 }
 
-const PlaylistHeader = (isPLoading, playlistData, recentMusicCount) => {
+const PlaylistHeader = (isLoading, playlistData, recentMusicCount) => {
   return (
     <Suspense fallback={<Loading />}>
       <div className="flex flex-wrap mx-auto flex-row items-center justify-center sm:justify-start gap-4 w-fit max-w-screen-xl">
-        {isPLoading ? (
+        {isLoading ? (
           Array.from({ length: recentMusicCount }, (_, index) => (
             <div key={index}>
               <SkelPlayCard />
             </div>
           ))
-        ) : playlistData.length === 0 ? (
+        ) : playlistData?.length === 0 ? (
           <div>
             {/* <h1>
                 No Playlist Found.{" "}
@@ -86,7 +86,7 @@ const PlaylistHeader = (isPLoading, playlistData, recentMusicCount) => {
               </h1> */}
           </div>
         ) : (
-          playlistData.map((playlist) => (
+          playlistData?.map((playlist) => (
             <MainPlaylist
               key={playlist.id}
               id={playlist.id}
@@ -100,7 +100,7 @@ const PlaylistHeader = (isPLoading, playlistData, recentMusicCount) => {
   );
 };
 
-const RecentAdded = (isLoading, recentMusicCount, musicData, RecentMusics) => {
+const RecentAdded = (isLoading, recentMusicCount, musicsData, RecentMusics) => {
   return (
     <div className="flex items-start justify-start flex-col w-fit max-w-screen-xl mx-dynamic">
       <div className="flex flex-row items-center justify-between space-y-2 mt-6 mb-2 w-full">
@@ -125,10 +125,10 @@ const RecentAdded = (isLoading, recentMusicCount, musicData, RecentMusics) => {
                 <SkelMusicCard />
               </div>
             ))
-          ) : musicData.length === 0 ? (
+          ) : musicsData?.length === 0 ? (
             <h1>No Musics Found</h1>
           ) : (
-            RecentMusics.map((music, index) => (
+            RecentMusics?.map((music, index) => (
               <div key={index}>
                 <MusicCard
                   musicName={music.musicName}
@@ -145,8 +145,9 @@ const RecentAdded = (isLoading, recentMusicCount, musicData, RecentMusics) => {
   );
 };
 
-const Recomendation = ({ isLoading, recentMusicCount, musicData }) => {
+const Recomendation = ({ isLoading, recentMusicCount }) => {
   const { recomendationData } = useMusicContext();
+  console.log(recomendationData);
 
   return (
     <div className="flex items-start justify-start flex-col w-fit mx-dynamic">
@@ -172,8 +173,8 @@ const Recomendation = ({ isLoading, recentMusicCount, musicData }) => {
                 <SkelMusicCard />
               </div>
             ))
-          ) : musicData.length === 0 ? (
-            <h1>No Musics Found</h1>
+          ) : recomendationData?.length === 0 ? (
+            <h1>No Recomendation Found</h1>
           ) : (
             recomendationData
               ?.slice(0, recentMusicCount)

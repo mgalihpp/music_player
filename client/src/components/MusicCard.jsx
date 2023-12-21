@@ -4,7 +4,7 @@ import { useAudioContext } from "../Context/AudioContext";
 import { Link, useNavigate } from "react-router-dom";
 import { PropTypes } from "prop-types";
 import { useMusicContext } from "../Context/MusicContext";
-import { host } from "../utils";
+import { host } from "../lib/utils";
 import { useMediaQuery } from "react-responsive";
 
 const MusicCard = (props) => {
@@ -26,7 +26,7 @@ const MusicCard = (props) => {
     setData,
     setUserPlaylists,
   } = useAudioContext();
-  const { musicData } = useMusicContext();
+  const { musicsData } = useMusicContext();
   const navigate = useNavigate();
   const isMobile = useMediaQuery({ minWidth: 280 });
   const isDesktop = useMediaQuery({ minWidth: 640 });
@@ -48,7 +48,7 @@ const MusicCard = (props) => {
       playAudio({ ...props });
       setData("default");
       setCurrentIndex(
-        musicData.findIndex((music) => music.musicName === musicName)
+        musicsData.findIndex((music) => music.musicName === musicName)
       );
     }
   };

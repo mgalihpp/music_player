@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { api } from "./../../utils";
+import { api } from "./../../lib/utils";
 import { useAuth } from "../../Context/AuthContext";
 import LoadingBar from "react-top-loading-bar";
 import { useLocation, useNavigate } from "react-router-dom";

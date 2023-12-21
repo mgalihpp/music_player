@@ -15,12 +15,12 @@ import Color from "color-thief-react";
 import { AlertDialog, Button, DropdownMenu, Flex } from "@radix-ui/themes";
 import * as Toast from "@radix-ui/react-toast";
 import LoadingBar from "react-top-loading-bar";
-import { host, api } from "../utils";
+import { host, api } from "../lib/utils";
 import { useUploadContext } from "../Context/UploadContext";
 
 const SingleMusicCard = () => {
   const { musicName } = useParams();
-  const { musicData, playlistData, isPLoading } = useMusicContext();
+  const { musicsData, playlistData, playlistLoading } = useMusicContext();
   const {
     selectedAudio,
     isPause,
@@ -38,7 +38,7 @@ const SingleMusicCard = () => {
   const [progress, setprogress] = useState(0);
   const [compLoad, setComLoad] = useState(true);
 
-  const selectedMusic = musicData?.find(
+  const selectedMusic = musicsData?.find(
     (music) => music.musicName === musicName
   );
   const IMAGE_URL = `${host + "img/" + selectedMusic?.musicImage}`;
@@ -69,7 +69,7 @@ const SingleMusicCard = () => {
       playAudio({ ...selectedMusic });
       setData("default");
       setCurrentIndex(
-        musicData.findIndex((music) => music.musicName === musicName)
+        musicsData.findIndex((music) => music.musicName === musicName)
       );
     }
   };
@@ -228,14 +228,14 @@ const SingleMusicCard = () => {
                               </DropdownMenu.Item>
                             </Link>
                             <DropdownMenu.Separator />
-                            {isPLoading ? (
+                            {playlistLoading ? (
                               <Loader2 className="w-4 h-4 animate-spin" />
                             ) : playlistData?.length === 0 ? (
                               <DropdownMenu.Item>
                                 No Playlist Found
                               </DropdownMenu.Item>
                             ) : (
-                              playlistData.map((playlist, index) => (
+                              playlistData?.map((playlist, index) => (
                                 <div key={index} className="mt-1">
                                   <AlertDialog.Root>
                                     <AlertDialog.Trigger>

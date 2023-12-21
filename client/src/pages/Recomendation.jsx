@@ -5,7 +5,7 @@ import { Clock, Dot, Pause, Play } from "lucide-react";
 import Color from "color-thief-react";
 import LoadingBar from "react-top-loading-bar";
 import { useAudioContext } from "../Context/AudioContext";
-import { host } from "../utils";
+import { host } from "../lib/utils";
 import * as Toast from "@radix-ui/react-toast";
 import Loading from "./../components/Loading";
 

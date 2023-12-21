@@ -8,7 +8,7 @@ import {
 import { PropTypes } from "prop-types";
 import { useMusicContext } from "./MusicContext";
 import { useAuth } from "./AuthContext";
-import { api } from "../utils";
+import { api } from "../lib/utils";
 
 export const AudioContext = createContext();
 
@@ -26,7 +26,7 @@ export function AudioProvider({ children }) {
   const { token } = useAuth();
 
   const [currentIndex, setCurrentIndex] = useState(-1);
-  const { musicData } = useMusicContext();
+  const { musicsData } = useMusicContext();
 
   const playAudio = useCallback(
     (audio) => {
@@ -47,14 +47,14 @@ export function AudioProvider({ children }) {
 
   const playNext = () => {
     if (data === "default") {
-      if (currentIndex !== -1 && currentIndex < musicData.length - 1) {
+      if (currentIndex !== -1 && currentIndex < musicsData.length - 1) {
         const nextIndex = currentIndex + 1;
-        const nextMusic = musicData[nextIndex];
+        const nextMusic = musicsData[nextIndex];
         playAudio(nextMusic);
         setCurrentIndex(nextIndex);
-      } else if (currentIndex >= musicData.length - 1) {
+      } else if (currentIndex >= musicsData.length - 1) {
         const nextIndex = 0;
-        const resetMusic = musicData[nextIndex];
+        const resetMusic = musicsData[nextIndex];
         playAudio(resetMusic);
         setCurrentIndex(nextIndex);
       }
@@ -83,7 +83,7 @@ export function AudioProvider({ children }) {
     if (data === "default") {
       if (currentIndex > 0) {
         const previousIndex = currentIndex - 1;
-        const previousMusic = musicData[previousIndex];
+        const previousMusic = musicsData[previousIndex];
         playAudio(previousMusic);
         setCurrentIndex(previousIndex);
       }
@@ -98,9 +98,9 @@ export function AudioProvider({ children }) {
   };
 
   const playShuffle = () => {
-    const randomIndex = Math.floor(Math.random() * musicData?.length);
+    const randomIndex = Math.floor(Math.random() * musicsData?.length);
     const shuffleIndex = randomIndex;
-    const shuffleMusic = musicData[shuffleIndex];
+    const shuffleMusic = musicsData[shuffleIndex];
     setCurrentIndex(shuffleIndex);
     playAudio(shuffleMusic);
   };
@@ -139,7 +139,7 @@ export function AudioProvider({ children }) {
         setSelectedAudio,
         isPause,
         setIsPause,
-        musicData,
+        musicsData,
         playNext,
         playPrevious,
         playShuffle,

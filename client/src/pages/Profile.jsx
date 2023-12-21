@@ -9,24 +9,25 @@ import {
 import { useAuth } from "../Context/AuthContext";
 import { useMusicContext } from "../Context/MusicContext";
 import * as Dialog from "@radix-ui/react-dialog";
-import { host, api } from "../utils";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { host, api, fetcher } from "../lib/utils";
+import { useEffect, useRef, useState } from "react";
 import { Button, DropdownMenu } from "@radix-ui/themes";
 import MusicCard from "../components/MusicCard";
 import MainPlaylist from "../components/Playlist/MainPlaylist";
 import Loading from "./../components/Loading";
 import { useLocation } from "react-router-dom";
+import useSWR from "swr";
 
 const Settings = () => {
-  const { userInfo, setUpdateUser, token } = useAuth();
+  const { userInfo, setUpdateUser, user, token } = useAuth();
   const { playlistData } = useMusicContext();
   const [userImage, setUserImage] = useState(null);
   const [userName, setUserName] = useState("");
   const [imageSrc, setImageSrc] = useState(null);
   const [open, setIsOpen] = useState(false);
   const [disable, setDisable] = useState(false);
-  const [musicData, setMusicData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  // const [musicsData, setMusicsData] = useState([]);
+  // const [isLoading, setIsLoading] = useState(true);
 
   const [isUsernameChanged, setIsUsernameChanged] = useState(false);
   const [isImageChanged, setIsImageChanged] = useState(false);
@@ -41,28 +42,14 @@ const Settings = () => {
     return () => (document.title = "Music Player");
   }, [pathname, userInfo.username]);
 
-  const getUserMostPlayedMusic = useCallback(async () => {
-    try {
-      const res = await fetch(`${api}mostmusics`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await res.json();
-      setMusicData(data.musics);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsLoading(false);
+  const { data, isLoading } = useSWR(
+    user && `${api}mostmusics`,
+    (url) => fetcher(url, token),
+    {
+      revalidateOnFocus: false,
+      revalidateIfStale: false,
     }
-  }, [token]);
-
-  useEffect(() => {
-    if (token) {
-      getUserMostPlayedMusic();
-    }
-  }, [getUserMostPlayedMusic, token]);
+  );
 
   useEffect(() => {
     if (userInfo.username) {
@@ -123,6 +110,8 @@ const Settings = () => {
     // Trigger file input when the image is clicked
     document.getElementById("file-input").click();
   };
+
+  const mostPlayedMusicData = data?.musics;
 
   return (
     <div className="mx-auto pt-12">
@@ -198,8 +187,8 @@ const Settings = () => {
             {isLoading ? (
               <Loading />
             ) : (
-              musicData.length !== 0 &&
-              musicData.map((music) => (
+              mostPlayedMusicData?.length !== 0 &&
+              mostPlayedMusicData?.map((music) => (
                 <div key={music.id}>
                   <MusicCard
                     musicName={music.musicName}
@@ -215,8 +204,8 @@ const Settings = () => {
         <section className="space-y-2">
           <h1 className="text-2xl font-bold">Public Playlists</h1>
           <div className="flex flex-col flex-wrap sm:flex-row items-center justify-start gap-4">
-            {playlistData.length !== 0 &&
-              playlistData.map((playlist) => (
+            {playlistData?.length !== 0 &&
+              playlistData?.map((playlist) => (
                 <MainPlaylist
                   key={playlist.id}
                   id={playlist.id}

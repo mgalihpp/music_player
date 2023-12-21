@@ -2,36 +2,28 @@ import { useEffect, useState } from "react";
 import { Music, Search } from "lucide-react";
 import TopNavbar from "../components/Navbar/TopNavbar";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useMusicContext } from "../Context/MusicContext";
 import SkelMusicCard from "../components/Skeleton/SkelMusicCard";
 import MusicCard from "../components/MusicCard";
-import { category } from "../utils";
+import { fetcher, api, category } from "../lib/utils";
+import useSWR from "swr";
 
 const SearchMusic = () => {
-  const { searchResults, searchMusic, isLoading, setIsLoading } =
-    useMusicContext();
-  const [timeoutId, setTimeoutId] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const queryValue = queryParams.get("q");
   const [query, setQuery] = useState(queryValue || "");
 
+  const { data, isLoading } = useSWR(
+    query.length >= 2 ? `${api}musics?n=${query}` : null,
+    fetcher
+  );
+
+  const searchResults = data?.results;
+
   const handleInputChange = (e) => {
     setQuery(e.target.value);
-    setIsLoading(true);
 
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-    }
-
-    if (e.target.value.length >= 2) {
-      const newTimeoutId = setTimeout(() => {
-        searchMusic(e.target.value);
-      }, 1000);
-
-      setTimeoutId(newTimeoutId);
-    }
     navigate(`/search?q=${e.target.value}`);
   };
 
@@ -44,17 +36,17 @@ const SearchMusic = () => {
           queryValue.length > 0 &&
           queryValue.length < 2)
       ) {
-        setIsLoading(false);
+        return;
       }
     }, 3000);
     return () => {
       clearTimeout(timeout);
     };
-  }, [query, setIsLoading, queryValue]);
+  }, [query, queryValue]);
 
   useEffect(() => {
     if (queryValue && queryValue.length > 1) {
-      searchMusic(queryValue);
+      setQuery(queryValue);
     }
   }, [queryValue]);
 

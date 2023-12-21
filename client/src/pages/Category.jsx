@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { api, category } from "./../utils";
+import { api, category } from "./../lib/utils";
 import MusicCard from "./../components/MusicCard";
 import LoadingBar from "react-top-loading-bar";
 import SkelMusicCard from "../components/Skeleton/SkelMusicCard";

@@ -1,7 +1,7 @@
 import { Pause, Play } from "lucide-react";
 import { Link } from "react-router-dom";
 import { PropTypes } from "prop-types";
-import { host } from "../../utils";
+import { host } from "../../lib/utils";
 import { useAudioContext } from "../../Context/AudioContext";
 
 const PlaylistMusic = ({ id, children, image }) => {

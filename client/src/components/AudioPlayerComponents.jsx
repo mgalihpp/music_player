@@ -3,7 +3,7 @@ import AudioPlayer from "react-h5-audio-player";
 import { useAudioContext } from "../Context/AudioContext";
 import { Shuffle } from "lucide-react";
 import { Link } from "react-router-dom";
-import { host } from "../utils";
+import { host } from "../lib/utils";
 
 const AudioPlayerComponent = ({ showJumpControls }) => {
   const {

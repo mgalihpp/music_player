@@ -147,7 +147,6 @@ const RecentAdded = (isLoading, recentMusicCount, musicsData, RecentMusics) => {
 
 const Recomendation = ({ isLoading, recentMusicCount }) => {
   const { recomendationData } = useMusicContext();
-  console.log(recomendationData);
 
   return (
     <div className="flex items-start justify-start flex-col w-fit mx-dynamic">

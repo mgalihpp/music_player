@@ -70,3 +70,20 @@ export const category = [
     images: "https://mgpp.pythonanywhere.com/img/chill-vibes.jpeg",
   },
 ];
+
+export const fetcher = (url, token) =>
+  fetch(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error(`HTTP error ${res.status}`);
+      }
+      return res.json();
+    })
+    .catch((error) => {
+      console.error("Fetch error:", error);
+      throw error;
+    });
